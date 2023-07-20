@@ -28,7 +28,7 @@ export const Ballots: FC = () => {
   );
 };
 
-const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
+export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
   const { loading, error, data } = DBAllBallots();
   if (loading) return <>Loading Ballots...</>;
   if (error) {
