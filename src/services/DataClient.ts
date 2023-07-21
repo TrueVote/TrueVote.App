@@ -1,9 +1,19 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/typedef */
 import { EnvConfig } from '@/EnvConfig';
-import { ElectionModel, SubmitBallotModel, SubmitBallotModelResponse } from '@/TrueVote.Api';
-import { DocumentNode, gql, useQuery } from '@apollo/client';
+import {
+  BallotHashModel,
+  BallotModel,
+  ElectionModel,
+  SubmitBallotModel,
+  SubmitBallotModelResponse,
+} from '@/TrueVote.Api';
+import { QueryResult, TypedDocumentNode, gql, useQuery } from '@apollo/client';
 
-export const DBGetElectionById: any = (electionId: string | undefined) => {
-  const query: DocumentNode = gql`
+export const DBGetElectionById = (
+  electionId: string | undefined,
+): QueryResult<{ GetElectionById: ElectionModel }> => {
+  const query: TypedDocumentNode<{ GetElectionById: ElectionModel }> = gql`
     query ($ElectionId: String!) {
       GetElectionById(ElectionId: $ElectionId) {
         ElectionId
@@ -30,11 +40,13 @@ export const DBGetElectionById: any = (electionId: string | undefined) => {
     }
   `;
 
-  return useQuery(query, { variables: { ElectionId: electionId } });
+  return useQuery<{ GetElectionById: ElectionModel }>(query, {
+    variables: { ElectionId: electionId },
+  });
 };
 
-export const DBAllElections: any = () => {
-  const query: DocumentNode = gql`
+export const DBAllElections = (): QueryResult<{ GetElection: ElectionModel[] }> => {
+  const query: TypedDocumentNode<{ GetElection: ElectionModel[] }> = gql`
     query {
       GetElection {
         ElectionId
@@ -48,11 +60,21 @@ export const DBAllElections: any = () => {
     }
   `;
 
-  return useQuery(query);
+  return useQuery<{ GetElection: ElectionModel[] }>(query);
 };
 
-export const DBAllBallots: any = () => {
-  const query: DocumentNode = gql`
+export const DBAllBallots = (): QueryResult<{
+  GetBallot: {
+    Ballots: BallotModel[];
+    BallotHashes: BallotHashModel[];
+  };
+}> => {
+  const query: TypedDocumentNode<{
+    GetBallot: {
+      Ballots: BallotModel[];
+      BallotHashes: BallotHashModel[];
+    };
+  }> = gql`
     query {
       GetBallot {
         Ballots {
@@ -88,11 +110,28 @@ export const DBAllBallots: any = () => {
     }
   `;
 
-  return useQuery(query);
+  return useQuery<{
+    GetBallot: {
+      Ballots: BallotModel[];
+      BallotHashes: BallotHashModel[];
+    };
+  }>(query);
 };
 
-export const DBGetBallotById: any = (ballotId: string | undefined) => {
-  const query: DocumentNode = gql`
+export const DBGetBallotById = (
+  ballotId: string | undefined,
+): QueryResult<{
+  GetBallotById: {
+    Ballots: BallotModel[];
+    BallotHashes: BallotHashModel[];
+  };
+}> => {
+  const query: TypedDocumentNode<{
+    GetBallotById: {
+      Ballots: BallotModel[];
+      BallotHashes: BallotHashModel[];
+    };
+  }> = gql`
     query ($BallotId: String!) {
       GetBallotById(BallotId: $BallotId) {
         Ballots {
@@ -134,10 +173,15 @@ export const DBGetBallotById: any = (ballotId: string | undefined) => {
     }
   `;
 
-  return useQuery(query, { variables: { BallotId: ballotId } });
+  return useQuery<{
+    GetBallotById: {
+      Ballots: BallotModel[];
+      BallotHashes: BallotHashModel[];
+    };
+  }>(query, { variables: { BallotId: ballotId } });
 };
 
-export const DBSubmitBallot: any = async (
+export const DBSubmitBallot = async (
   election: ElectionModel,
 ): Promise<SubmitBallotModelResponse> => {
   console.info('DBSubmitBallot->election', election);
@@ -157,7 +201,7 @@ export const DBSubmitBallot: any = async (
         'Content-type': 'application/json; charset=UTF-8',
       },
     })
-      .then((res: any) => {
+      .then((res: Response) => {
         console.info('Response: /ballot/submitballot', res);
         return res.json();
       })
