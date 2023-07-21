@@ -1,9 +1,10 @@
+import { BallotHashModel, BallotList, BallotModel, RaceModel } from '@/TrueVote.Api';
 import { DBGetBallotById } from '@/services/DataClient';
-import { BallotModel, RaceModel } from '@/TrueVote.Api';
 import { Hero } from '@/ui/Hero';
 import { Box, Card, Container, Flex, Group, ScrollArea, Stack, Text, Title } from '@mantine/core';
 import moment from 'moment';
 import { FC } from 'react';
+import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
 
 export const BallotView: FC = () => {
@@ -28,7 +29,23 @@ const Ballot: FC = () => {
   }
   console.info(data);
 
-  const ballot: BallotModel = data.GetBallotById[0];
+  const ballotList: BallotList = data.GetBallotById;
+  if (ballotList === null || ballotList === undefined) {
+    return (
+      <Container size='xs' px='xs'>
+        <Text>BallotList Not Found</Text>
+      </Container>
+    );
+  }
+  const ballot: BallotModel = ballotList!.Ballots![0];
+  if (ballot === null || ballot === undefined) {
+    return (
+      <Container size='xs' px='xs'>
+        <Text>Ballot Not Found</Text>
+      </Container>
+    );
+  }
+  const ballotHash: BallotHashModel = ballotList!.BallotHashes![0];
 
   const races: any = ballot.Election?.Races?.map((e: RaceModel) => (
     <Text key={e.RaceId}>{e.Name}</Text>
@@ -62,7 +79,16 @@ const Ballot: FC = () => {
           <ScrollArea>
             <Text size='xs'>
               <div>
-                <pre>{JSON.stringify(ballot, null, '\t')}</pre>
+                <ReactJson src={ballot} name='Ballot' theme='monokai' />
+              </div>
+            </Text>
+          </ScrollArea>
+        </Group>
+        <Group position='apart' mt='md' mb='xs'>
+          <ScrollArea>
+            <Text size='xs'>
+              <div>
+                <ReactJson src={ballotHash} name='BallotHash' theme='monokai' />
               </div>
             </Text>
           </ScrollArea>

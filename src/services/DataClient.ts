@@ -55,22 +55,34 @@ export const DBAllBallots: any = () => {
   const query: DocumentNode = gql`
     query {
       GetBallot {
-        ElectionId
-        BallotId
-        DateCreated
-        Election {
-          Races {
-            Name
-            RaceId
-            RaceTypeName
-            Candidates {
-              CandidateId
-              DateCreated
+        Ballots {
+          ElectionId
+          BallotId
+          DateCreated
+          Election {
+            Races {
               Name
-              PartyAffiliation
-              Selected
+              RaceId
+              RaceTypeName
+              Candidates {
+                CandidateId
+                DateCreated
+                Name
+                PartyAffiliation
+                Selected
+              }
             }
           }
+        }
+        BallotHashes {
+          BallotId
+          BallotHashId
+          ServerBallotHash
+          ServerBallotHashS
+          ClientBallotHashS
+          DateCreated
+          DateUpdated
+          TimestampId
         }
       }
     }
@@ -83,28 +95,40 @@ export const DBGetBallotById: any = (ballotId: string | undefined) => {
   const query: DocumentNode = gql`
     query ($BallotId: String!) {
       GetBallotById(BallotId: $BallotId) {
-        ElectionId
-        BallotId
-        DateCreated
-        Election {
+        Ballots {
           ElectionId
-          Name
-          Description
+          BallotId
           DateCreated
-          StartDate
-          EndDate
-          Races {
+          Election {
+            ElectionId
             Name
-            RaceId
-            RaceTypeName
-            Candidates {
-              CandidateId
-              DateCreated
+            Description
+            DateCreated
+            StartDate
+            EndDate
+            Races {
               Name
-              PartyAffiliation
-              Selected
+              RaceId
+              RaceTypeName
+              Candidates {
+                CandidateId
+                DateCreated
+                Name
+                PartyAffiliation
+                Selected
+              }
             }
           }
+        }
+        BallotHashes {
+          BallotId
+          BallotHashId
+          ServerBallotHash
+          ServerBallotHashS
+          ClientBallotHashS
+          DateCreated
+          DateUpdated
+          TimestampId
         }
       }
     }
