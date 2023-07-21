@@ -48,7 +48,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
   const getColor: any = (color: string) =>
     theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7];
 
-  const items: any = data.GetBallot.map(
+  const items: any = data.GetBallot.Ballots.map(
     (e: BallotModel, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
