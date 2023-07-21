@@ -79,7 +79,7 @@ const Ballot: FC = () => {
           <ScrollArea>
             <Text size='xs'>
               <div>
-                <ReactJson src={ballot} name='Ballot' theme='monokai' />
+                <ReactJson src={ballot} name='Ballot' collapsed={true} theme='monokai' />
               </div>
             </Text>
           </ScrollArea>
@@ -88,7 +88,7 @@ const Ballot: FC = () => {
           <ScrollArea>
             <Text size='xs'>
               <div>
-                <ReactJson src={ballotHash} name='BallotHash' theme='monokai' />
+                <ReactJson src={ballotHash} name='BallotHash' collapsed={true} theme='monokai' />
               </div>
             </Text>
           </ScrollArea>
