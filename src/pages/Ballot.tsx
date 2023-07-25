@@ -87,24 +87,28 @@ const Election: FC = () => {
 
     // Hash the ballot
     await MerkleTree.getHash(modifiedElection)
-      .then((hash: Uint8Array) => {
-        console.info('Hash', hash);
+      .then((clientHash: Uint8Array) => {
+        console.info('clientHash', clientHash);
 
-        // TODO Send the clientHash
-        DBSubmitBallot(modifiedElection)
+        DBSubmitBallot(modifiedElection, clientHash)
           .then((res: SubmitBallotModelResponse) => {
             console.info('Success from ballot submission', res);
             setVisible((v: any) => !v);
             navigate('/thanks', { state: res });
           })
           .catch((e: any) => {
-            console.error('Error from ballot submission', e);
+            console.error('DBSubmitBallot() - Caught Error from ballot submission', e);
+
+            return e;
+          })
+          .then((res: SubmitBallotModelResponse) => {
+            console.error('DBSubmitBallot() - Processed Error from ballot submission', res);
             setVisible((v: any) => !v);
-            errorModal(e);
+            errorModal(res.Message);
           });
       })
       .catch((e: any) => {
-        console.error('Error from ballot submission', e);
+        console.error('getHash() - Error from ballot submission', e);
         setVisible((v: any) => !v);
         errorModal(e);
       });

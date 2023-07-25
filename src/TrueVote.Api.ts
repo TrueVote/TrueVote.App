@@ -60,7 +60,7 @@ export interface BallotHashModel {
    * Server Ballot Hash
    * @format binary
    */
-  ServerBallotHash?: File | null;
+  ServerBallotHash?: Uint8Array | null;
   /**
    * Server Ballot Hash String
    * @format string
@@ -68,6 +68,11 @@ export interface BallotHashModel {
    * @pattern ^[A-Za-z0-9]
    */
   ServerBallotHashS?: string | null;
+  /**
+   * Client Ballot Hash
+   * @format binary
+   */
+  ClientBallotHash?: Uint8Array | null;
   /**
    * Client Ballot Hash String
    * @format string
@@ -561,10 +566,9 @@ export interface SubmitBallotModel {
   Election: ElectionModel;
   /**
    * Client Ballot Hash
-   * @format string
-   * @maxLength 2048
+   * @format binary
    */
-  ClientBallotHash?: string | null;
+  ClientBallotHash?: Uint8Array | null;
 }
 
 export interface SubmitBallotModelResponse {

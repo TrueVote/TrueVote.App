@@ -1,5 +1,3 @@
-import { TextEncoder } from 'util';
-
 export class MerkleTree {
   // Calculates the Merkle root hash from string (e.g. json)
   public static async calculateMerkleRootString(data: string): Promise<Uint8Array | null> {

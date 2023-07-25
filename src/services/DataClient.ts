@@ -183,12 +183,17 @@ export const DBGetBallotById = (
 
 export const DBSubmitBallot = async (
   election: ElectionModel,
+  clientHash: Uint8Array,
 ): Promise<SubmitBallotModelResponse> => {
   console.info('DBSubmitBallot->election', election);
+
+  // Convert the hash from bytes to string
+  console.info('clientHash', clientHash);
 
   const submitBallotModel: SubmitBallotModel = <SubmitBallotModel>{};
   submitBallotModel.Election = election;
   submitBallotModel.ElectionId = election.ElectionId;
+  submitBallotModel.ClientBallotHash = clientHash;
 
   const body: string = JSON.stringify(submitBallotModel);
   console.info('Body: /ballot/submitballot', body);
@@ -203,6 +208,12 @@ export const DBSubmitBallot = async (
     })
       .then((res: Response) => {
         console.info('Response: /ballot/submitballot', res);
+        if (res.status === 409) {
+          const j = res.json();
+
+          console.error('409 Error', j);
+          return Promise.reject<SubmitBallotModelResponse>(j);
+        }
         return res.json();
       })
       .then((data: SubmitBallotModelResponse) => {
