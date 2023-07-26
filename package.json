@@ -19,8 +19,11 @@
     "format": "prettier --write \"**/*.{ts,tsx}\" --config ./.prettierrc",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "refresh-api:prod": "npx swagger-typescript-api --no-client --path https://truevote-api.azurewebsites.net/api/swagger.json --output ./src --name TrueVote.Api.ts",
-    "refresh-api:local": "curl --insecure --output TrueVote.Api.swagger.json https://localhost:7071/api/swagger.json && npx swagger-typescript-api --no-client --path ./TrueVote.Api.swagger.json --output ./src --name TrueVote.Api.ts",
+    "build-api:local": "curl --insecure --output TrueVote.Api.swagger.json https://localhost:7071/api/swagger.json && npx swagger-typescript-api --no-client --path ./TrueVote.Api.swagger.json --output ./src --name TrueVote.Api.ts",
+    "build-api:prod": "npx swagger-typescript-api --no-client --path https://truevote-api.azurewebsites.net/api/swagger.json --output ./src --name TrueVote.Api.ts",
+    "refresh-api:local": "yarn build-api:local && yarn fix-api",
+    "refresh-api:prod": "yarn build-api:local && yarn fix-api",
+    "fix-api": "ts-node -P tsconfig.commonjs.json ./fixApi.ts",
     "update-packages": "ncu -u"
   },
   "dependencies": {
@@ -65,6 +68,7 @@
     "prettier-plugin-organize-imports": "^3.2.3",
     "storybook": "^7.1.0",
     "swagger-typescript-api": "^13.0.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.7",
     "vite-plugin-environment": "^1.1.3"
