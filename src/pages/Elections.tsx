@@ -47,7 +47,7 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
   const getColor: any = (color: string) =>
     theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7];
 
-  const items: any = data.GetElection.map(
+  const items: any = data!.GetElection.map(
     (e: ElectionModel, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>

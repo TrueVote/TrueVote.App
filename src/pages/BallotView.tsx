@@ -29,7 +29,7 @@ const Ballot: FC = () => {
   }
   console.info(data);
 
-  const ballotList: BallotList = data.GetBallotById;
+  const ballotList: BallotList = data!.GetBallotById;
   if (ballotList === null || ballotList === undefined) {
     return (
       <Container size='xs' px='xs'>

@@ -54,7 +54,7 @@ const Election: FC = () => {
   }
   console.info(data);
 
-  const election: ElectionModel = data.GetElectionById[0];
+  const election: ElectionModel = data!.GetElectionById[0];
 
   const modifiedElection: ElectionModel = _.cloneDeep(election);
 

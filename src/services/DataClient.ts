@@ -12,8 +12,8 @@ import { QueryResult, TypedDocumentNode, gql, useQuery } from '@apollo/client';
 
 export const DBGetElectionById = (
   electionId: string | undefined,
-): QueryResult<{ GetElectionById: ElectionModel }> => {
-  const query: TypedDocumentNode<{ GetElectionById: ElectionModel }> = gql`
+): QueryResult<{ GetElectionById: ElectionModel[] }> => {
+  const query: TypedDocumentNode<{ GetElectionById: ElectionModel[] }> = gql`
     query ($ElectionId: String!) {
       GetElectionById(ElectionId: $ElectionId) {
         ElectionId
@@ -40,7 +40,7 @@ export const DBGetElectionById = (
     }
   `;
 
-  return useQuery<{ GetElectionById: ElectionModel }>(query, {
+  return useQuery<{ GetElectionById: ElectionModel[] }>(query, {
     variables: { ElectionId: electionId },
   });
 };
