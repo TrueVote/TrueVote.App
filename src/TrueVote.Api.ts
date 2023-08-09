@@ -69,18 +69,6 @@ export interface BallotHashModel {
    */
   ServerBallotHashS?: string | null;
   /**
-   * Client Ballot Hash
-   * @format binary
-   */
-  ClientBallotHash?: Uint8Array | null;
-  /**
-   * Client Ballot Hash String
-   * @format string
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
-  ClientBallotHashS?: string | null;
-  /**
    * DateCreated
    * @format date
    * @maxLength 2048
@@ -121,21 +109,14 @@ export interface BallotModel {
    * @maxLength 2048
    * @pattern ^[A-Za-z0-9]
    */
-  BallotId?: string | null;
-  /**
-   * Election Id
-   * @format string
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
-  ElectionId?: string | null;
+  BallotId: string;
+  Election?: ElectionModel;
   /**
    * DateCreated
    * @format date
    * @maxLength 2048
    */
   DateCreated?: string | null;
-  Election?: ElectionModel;
 }
 
 export interface BaseCandidateModel {
@@ -556,19 +537,7 @@ export interface StatusModel {
 }
 
 export interface SubmitBallotModel {
-  /**
-   * Election Id
-   * @format string
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
-  ElectionId?: string | null;
   Election: ElectionModel;
-  /**
-   * Client Ballot Hash
-   * @format binary
-   */
-  ClientBallotHash?: Uint8Array | null;
 }
 
 export interface SubmitBallotModelResponse {

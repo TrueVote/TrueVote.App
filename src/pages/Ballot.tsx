@@ -1,6 +1,5 @@
+import { ElectionModel, RaceModel, SubmitBallotModel } from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
-import { MerkleTree } from '@/services/MerkleTree';
-import { ElectionModel, RaceModel, SubmitBallotModelResponse } from '@/TrueVote.Api';
 import { objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
@@ -85,32 +84,19 @@ const Election: FC = () => {
 
     setVisible((v: any) => !v);
 
-    // Hash the ballot
-    await MerkleTree.getHash(modifiedElection)
-      .then((clientHash: Uint8Array) => {
-        console.info('clientHash', clientHash);
+    const submitBallotModel: SubmitBallotModel = {} as SubmitBallotModel;
+    submitBallotModel.Election = modifiedElection;
 
-        DBSubmitBallot(modifiedElection, clientHash)
-          .then((res: SubmitBallotModelResponse) => {
-            console.info('Success from ballot submission', res);
-            setVisible((v: any) => !v);
-            navigate('/thanks', { state: res });
-          })
-          .catch((e: any) => {
-            console.error('DBSubmitBallot() - Caught Error from ballot submission', e);
-
-            return e;
-          })
-          .then((res: SubmitBallotModelResponse) => {
-            console.error('DBSubmitBallot() - Processed Error from ballot submission', res);
-            setVisible((v: any) => !v);
-            errorModal(res.Message);
-          });
+    DBSubmitBallot(submitBallotModel)
+      .then((res: SubmitBallotModelResponse) => {
+        console.info('Success from ballot submission', res);
+        setVisible((v: any) => !v);
+        navigate('/thanks', { state: res });
       })
       .catch((e: any) => {
-        console.error('getHash() - Error from ballot submission', e);
-        setVisible((v: any) => !v);
-        errorModal(e);
+        console.error('DBSubmitBallot() - Caught Error from ballot submission', e);
+
+        return e;
       });
   };
 

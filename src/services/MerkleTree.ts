@@ -70,7 +70,7 @@ export class MerkleTree {
   }
 }
 
-// Example usage:
+/* Example usage:
 const data: string = 'example data';
 MerkleTree.calculateMerkleRootString(data)
   .then((merkleRoot: Uint8Array | null) => {
@@ -86,3 +86,4 @@ MerkleTree.calculateMerkleRootString(data)
   .catch((error: Error) => {
     console.error('Error calculating Merkle root:', error);
   });
+*/

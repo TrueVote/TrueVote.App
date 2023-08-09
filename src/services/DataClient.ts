@@ -78,10 +78,10 @@ export const DBAllBallots = (): QueryResult<{
     query {
       GetBallot {
         Ballots {
-          ElectionId
           BallotId
           DateCreated
           Election {
+            ElectionId
             Races {
               Name
               RaceId
@@ -135,7 +135,6 @@ export const DBGetBallotById = (
     query ($BallotId: String!) {
       GetBallotById(BallotId: $BallotId) {
         Ballots {
-          ElectionId
           BallotId
           DateCreated
           Election {
@@ -182,18 +181,9 @@ export const DBGetBallotById = (
 };
 
 export const DBSubmitBallot = async (
-  election: ElectionModel,
-  clientHash: Uint8Array,
+  submitBallotModel: SubmitBallotModel,
 ): Promise<SubmitBallotModelResponse> => {
-  console.info('DBSubmitBallot->election', election);
-
-  // Convert the hash from bytes to string
-  console.info('clientHash', clientHash);
-
-  const submitBallotModel: SubmitBallotModel = <SubmitBallotModel>{};
-  submitBallotModel.Election = election;
-  submitBallotModel.ElectionId = election.ElectionId;
-  submitBallotModel.ClientBallotHash = clientHash;
+  console.info('DBSubmitBallot->submitBallotModel', submitBallotModel);
 
   const body: string = JSON.stringify(submitBallotModel);
   console.info('Body: /ballot/submitballot', body);
