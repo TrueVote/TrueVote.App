@@ -1,4 +1,9 @@
-import { ElectionModel, RaceModel, SubmitBallotModel } from '@/TrueVote.Api';
+import {
+  ElectionModel,
+  RaceModel,
+  SubmitBallotModel,
+  SubmitBallotModelResponse,
+} from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
 import { objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
@@ -94,9 +99,9 @@ const Election: FC = () => {
         navigate('/thanks', { state: res });
       })
       .catch((e: any) => {
-        console.error('DBSubmitBallot() - Caught Error from ballot submission', e);
-
-        return e;
+        console.error('Error from ballot submission', e);
+        setVisible((v: any) => !v);
+        errorModal(e);
       });
   };
 
