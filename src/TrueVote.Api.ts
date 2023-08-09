@@ -41,7 +41,14 @@ export interface AddRacesModel {
   RaceIds: string[];
 }
 
-export interface BallotModel {
+export interface BallotHashModel {
+  /**
+   * Ballot Hash Id
+   * @format string
+   * @maxLength 2048
+   * @pattern ^[A-Za-z0-9]
+   */
+  BallotHashId?: string | null;
   /**
    * Ballot Id
    * @format string
@@ -50,27 +57,66 @@ export interface BallotModel {
    */
   BallotId?: string | null;
   /**
-   * Election Id
+   * Server Ballot Hash
+   * @format binary
+   */
+  ServerBallotHash?: Uint8Array | null;
+  /**
+   * Server Ballot Hash String
    * @format string
    * @maxLength 2048
    * @pattern ^[A-Za-z0-9]
    */
-  ElectionId?: string | null;
+  ServerBallotHashS?: string | null;
   /**
    * DateCreated
    * @format date
    * @maxLength 2048
    */
   DateCreated?: string | null;
-  Election?: ElectionModel;
+  /**
+   * DateUpdated
+   * @format date
+   * @maxLength 2048
+   */
+  DateUpdated?: string | null;
+  /**
+   * Timestamp Id
+   * @format string
+   * @maxLength 2048
+   * @pattern ^[A-Za-z0-9]
+   */
+  TimestampId: string | null;
 }
 
-export interface BallotModelList {
+export interface BallotList {
   /**
    * List of Ballots
    * @maxItems 2048
    */
   Ballots?: BallotModel[] | null;
+  /**
+   * List of Ballot Hashes
+   * @maxItems 2048
+   */
+  BallotHashes?: BallotHashModel[] | null;
+}
+
+export interface BallotModel {
+  /**
+   * Ballot Id
+   * @format string
+   * @maxLength 2048
+   * @pattern ^[A-Za-z0-9]
+   */
+  BallotId: string;
+  Election?: ElectionModel;
+  /**
+   * DateCreated
+   * @format date
+   * @maxLength 2048
+   */
+  DateCreated?: string | null;
 }
 
 export interface BaseCandidateModel {
@@ -230,6 +276,21 @@ export interface CandidateModelList {
   Candidates?: CandidateModel[] | null;
 }
 
+export interface CountBallotModel {
+  /**
+   * DateCreatedStart
+   * @format date
+   * @maxLength 2048
+   */
+  DateCreatedStart: string;
+  /**
+   * DateCreatedEnd
+   * @format date
+   * @maxLength 2048
+   */
+  DateCreatedEnd: string;
+}
+
 export interface ElectionModel {
   /**
    * Election Id
@@ -294,6 +355,16 @@ export interface ElectionModelList {
   Elections?: ElectionModel[] | null;
 }
 
+export interface FindBallotHashModel {
+  /**
+   * Ballot Id
+   * @format string
+   * @maxLength 2048
+   * @pattern ^[A-Za-z0-9]
+   */
+  BallotId?: string | null;
+}
+
 export interface FindBallotModel {
   /**
    * Ballot Id
@@ -339,6 +410,21 @@ export interface FindRaceModel {
    * @pattern ^[A-Za-z0-9]
    */
   Name?: string | null;
+}
+
+export interface FindTimestampModel {
+  /**
+   * DateCreatedStart
+   * @format date
+   * @maxLength 2048
+   */
+  DateCreatedStart: string;
+  /**
+   * DateCreatedEnd
+   * @format date
+   * @maxLength 2048
+   */
+  DateCreatedEnd: string;
 }
 
 export interface FindUserModel {
@@ -451,13 +537,6 @@ export interface StatusModel {
 }
 
 export interface SubmitBallotModel {
-  /**
-   * Election Id
-   * @format string
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
-  ElectionId?: string | null;
   Election: ElectionModel;
 }
 

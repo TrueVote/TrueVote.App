@@ -1,5 +1,5 @@
+import { ElectionModel, RaceModel, SubmitBallotModel } from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
-import { ElectionModel, RaceModel, SubmitBallotModelResponse } from '@/TrueVote.Api';
 import { objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
@@ -53,7 +53,7 @@ const Election: FC = () => {
   }
   console.info(data);
 
-  const election: ElectionModel = data.GetElectionById[0];
+  const election: ElectionModel = data!.GetElectionById[0];
 
   const modifiedElection: ElectionModel = _.cloneDeep(election);
 
@@ -77,22 +77,26 @@ const Election: FC = () => {
     }
   };
 
-  const submitBallot: any = () => {
+  const submitBallot: any = async () => {
     console.info('Election', election);
     console.info('modifiedElection', modifiedElection);
     console.info('Diff', objectDifference(election, modifiedElection));
 
     setVisible((v: any) => !v);
-    DBSubmitBallot(modifiedElection)
+
+    const submitBallotModel: SubmitBallotModel = {} as SubmitBallotModel;
+    submitBallotModel.Election = modifiedElection;
+
+    DBSubmitBallot(submitBallotModel)
       .then((res: SubmitBallotModelResponse) => {
         console.info('Success from ballot submission', res);
         setVisible((v: any) => !v);
         navigate('/thanks', { state: res });
       })
       .catch((e: any) => {
-        console.error('Error from ballot submission', e);
-        setVisible((v: any) => !v);
-        errorModal(e);
+        console.error('DBSubmitBallot() - Caught Error from ballot submission', e);
+
+        return e;
       });
   };
 
