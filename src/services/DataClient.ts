@@ -101,7 +101,6 @@ export const DBAllBallots = (): QueryResult<{
           BallotHashId
           ServerBallotHash
           ServerBallotHashS
-          ClientBallotHashS
           DateCreated
           DateUpdated
           TimestampId
@@ -163,7 +162,6 @@ export const DBGetBallotById = (
           BallotHashId
           ServerBallotHash
           ServerBallotHashS
-          ClientBallotHashS
           DateCreated
           DateUpdated
           TimestampId
