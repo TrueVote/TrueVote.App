@@ -1,11 +1,28 @@
 import { BallotHashModel, BallotList, BallotModel, RaceModel } from '@/TrueVote.Api';
 import { DBGetBallotById } from '@/services/DataClient';
 import { Hero } from '@/ui/Hero';
-import { Box, Card, Container, Flex, Group, ScrollArea, Stack, Text, Title } from '@mantine/core';
+import {
+  Box,
+  Card,
+  Container,
+  Flex,
+  Group,
+  ScrollArea,
+  Stack,
+  Text,
+  Title,
+  createStyles,
+} from '@mantine/core';
 import moment from 'moment';
 import { FC } from 'react';
 import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
+
+const ballotViewStyles: any = createStyles(() => ({
+  boxGap: {
+    height: '15px',
+  },
+}));
 
 export const BallotView: FC = () => {
   return (
@@ -20,6 +37,7 @@ export const BallotView: FC = () => {
 
 const Ballot: FC = () => {
   const params: Params<string> = useParams();
+  const { classes, cx } = ballotViewStyles();
 
   const { loading, error, data } = DBGetBallotById(params.ballotId);
   if (loading) return <>Loading Ballot...</>;
@@ -47,16 +65,18 @@ const Ballot: FC = () => {
   }
   const ballotHash: BallotHashModel = ballotList!.BallotHashes![0];
 
-  const races: any = ballot.Election?.Races?.map((e: RaceModel) => (
+  const races: RaceModel[] = ballot.Election?.Races?.map((e: RaceModel) => (
     <Text key={e.RaceId}>{e.Name}</Text>
-  ));
+  )) as unknown as RaceModel[];
 
   return (
     <Container size='xs' px='xs'>
       <Title size='h3'>{ballot.Election?.Name}</Title>
+      <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
         Submitted: {moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:SS')}
       </Card>
+      <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
         <Group position='center' spacing='xl' grow>
           <Card.Section>
@@ -69,12 +89,14 @@ const Ballot: FC = () => {
               direction='column'
               wrap='nowrap'
             >
-              <Box sx={(): any => ({ height: '5px' })}></Box>
-              {races}
-              <Box sx={(): any => ({ height: '5px' })}></Box>
+              {races as any}
             </Flex>
           </Card.Section>
         </Group>
+      </Card>
+      <Box className={cx(classes.boxGap)}></Box>
+      <Card shadow='sm' p='lg' radius='md' withBorder>
+        <Title size='h6'>Raw Data</Title>
         <Group position='apart' mt='md' mb='xs'>
           <ScrollArea>
             <Text size='xs'>

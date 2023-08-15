@@ -62,9 +62,9 @@ const Election: FC = () => {
 
   const modifiedElection: ElectionModel = _.cloneDeep(election);
 
-  const races: any = election.Races?.map((e: RaceModel) => (
+  const races: RaceModel[] = election.Races?.map((e: RaceModel) => (
     <Race race={e} key={e.RaceId} election={modifiedElection} />
-  ));
+  )) as unknown as RaceModel[];
 
   const HeaderImage: any = ({ election }: { election: ElectionModel }) => {
     if (
@@ -144,7 +144,7 @@ const Election: FC = () => {
             wrap='nowrap'
           >
             <Box sx={(): any => ({ height: '5px' })}></Box>
-            {races}
+            {races as any}
             <Box sx={(): any => ({ height: '5px' })}></Box>
           </Flex>
         </Card.Section>
