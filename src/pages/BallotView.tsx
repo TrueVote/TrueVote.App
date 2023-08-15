@@ -1,14 +1,24 @@
-import { BallotHashModel, BallotList, BallotModel, RaceModel } from '@/TrueVote.Api';
+import {
+  BallotHashModel,
+  BallotList,
+  BallotModel,
+  CandidateModel,
+  RaceModel,
+} from '@/TrueVote.Api';
 import { DBGetBallotById } from '@/services/DataClient';
+import { formatCandidateName } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import {
   Box,
   Card,
+  Checkbox,
+  CheckboxIcon,
   Container,
   Flex,
   Group,
   ScrollArea,
   Stack,
+  Table,
   Text,
   Title,
   createStyles,
@@ -22,13 +32,18 @@ const ballotViewStyles: any = createStyles(() => ({
   boxGap: {
     height: '15px',
   },
+  checkboxLabel: {
+    label: {
+      color: 'lightgreen',
+    },
+  },
 }));
 
 export const BallotView: FC = () => {
   return (
     <Container size='xs' px='xs'>
       <Stack spacing={32}>
-        <Hero title='Ballot' />
+        <Hero title='Ballot Explorer' />
       </Stack>
       <Ballot />
     </Container>
@@ -65,19 +80,50 @@ const Ballot: FC = () => {
   }
   const ballotHash: BallotHashModel = ballotList!.BallotHashes![0];
 
-  const races: RaceModel[] = ballot.Election?.Races?.map((e: RaceModel) => (
-    <Text key={e.RaceId}>{e.Name}</Text>
-  )) as unknown as RaceModel[];
+  const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
+    return (
+      <>
+        <Text key={r.RaceId} color='gold'>
+          {r.Name}
+        </Text>
+        {r.Candidates?.map((c: CandidateModel) => (
+          <>
+            {c.Selected === true ? (
+              <>
+                <Checkbox
+                  size={'xs'}
+                  icon={CheckboxIcon}
+                  color='green'
+                  radius={'xl'}
+                  labelPosition='left'
+                  label={formatCandidateName(c)}
+                  className={cx(classes.checkboxLabel)}
+                  checked
+                />
+              </>
+            ) : (
+              <Text size={'xs'} key={c.CandidateId}>
+                {formatCandidateName(c)}
+              </Text>
+            )}
+          </>
+        ))}
+      </>
+    );
+  });
 
   return (
     <Container size='xs' px='xs'>
       <Title size='h3'>{ballot.Election?.Name}</Title>
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        Submitted: {moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:SS')}
+        <Text color='yellow' size={'md'}>
+          Submitted: {moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
+        </Text>
       </Card>
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
+        <Title size='h4'>Ballot</Title>
         <Group position='center' spacing='xl' grow>
           <Card.Section>
             <Flex
@@ -91,6 +137,40 @@ const Ballot: FC = () => {
             >
               {races as any}
             </Flex>
+          </Card.Section>
+        </Group>
+      </Card>
+      <Box className={cx(classes.boxGap)}></Box>
+      <Card shadow='sm' p='lg' radius='md' withBorder>
+        <Title size='h4'>Ballot Hash</Title>
+        <Group position='left' spacing='xl' grow>
+          <Card.Section>
+            <Table verticalSpacing='xs' fontSize={'xs'} striped withBorder withColumnBorders>
+              <tbody>
+                <tr>
+                  <td>Created:</td>
+                  <td>{moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
+                </tr>
+                <tr>
+                  <td>Updated:</td>
+                  <td>{moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
+                </tr>
+                <tr>
+                  <td>Hash:</td>
+                  <td>{ballotHash.ServerBallotHashS}</td>
+                </tr>
+                <tr>
+                  <td>Timestamp Id:</td>
+                  <td>
+                    {ballotHash.TimestampId ? (
+                      ballotHash.TimestampId
+                    ) : (
+                      <Text color='red'>UNSET</Text>
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
           </Card.Section>
         </Group>
       </Card>
