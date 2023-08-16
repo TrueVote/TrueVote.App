@@ -17,7 +17,6 @@ import {
   Flex,
   Group,
   ScrollArea,
-  Stack,
   Table,
   Text,
   Title,
@@ -28,7 +27,7 @@ import { FC } from 'react';
 import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
 
-const ballotViewStyles: any = createStyles(() => ({
+const ballotViewStyles: any = createStyles((theme: any) => ({
   boxGap: {
     height: '15px',
   },
@@ -37,17 +36,21 @@ const ballotViewStyles: any = createStyles(() => ({
       color: 'lightgreen',
     },
   },
+  tdLeft: {
+    textAlign: 'right',
+  },
+  tdFixedWidth: {
+    [theme.fn.smallerThan(400)]: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      width: '160px',
+    },
+  },
 }));
 
 export const BallotView: FC = () => {
-  return (
-    <Container size='xs' px='xs'>
-      <Stack spacing={32}>
-        <Hero title='Ballot Explorer' />
-      </Stack>
-      <Ballot />
-    </Container>
-  );
+  return <Ballot />;
 };
 
 const Ballot: FC = () => {
@@ -114,12 +117,28 @@ const Ballot: FC = () => {
 
   return (
     <Container size='xs' px='xs'>
-      <Title size='h3'>{ballot.Election?.Name}</Title>
+      <Hero title='Ballot Explorer' />
+      <Box className={cx(classes.boxGap)}></Box>
+      <Title size='h4'>{ballot.Election?.Name}</Title>
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Text color='yellow' size={'md'}>
-          Submitted: {moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
-        </Text>
+        <Title size='h4'>Ballot Info</Title>
+        <Group position='center' spacing='xl' grow>
+          <Card.Section>
+            <Table verticalSpacing='xs' fontSize={'xs'} striped withBorder withColumnBorders>
+              <tbody>
+                <tr>
+                  <td className={cx(classes.tdLeft)}>Submitted:</td>
+                  <td>{moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
+                </tr>
+                <tr>
+                  <td className={cx(classes.tdLeft)}>Ballot Id:</td>
+                  <td>{ballot.BallotId}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Card.Section>
+        </Group>
       </Card>
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
@@ -143,24 +162,26 @@ const Ballot: FC = () => {
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
         <Title size='h4'>Ballot Hash</Title>
-        <Group position='left' spacing='xl' grow>
+        <Group position='center' spacing='xl' grow>
           <Card.Section>
             <Table verticalSpacing='xs' fontSize={'xs'} striped withBorder withColumnBorders>
               <tbody>
                 <tr>
-                  <td>Created:</td>
+                  <td className={cx(classes.tdLeft)}>Created:</td>
                   <td>{moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td>Updated:</td>
+                  <td className={cx(classes.tdLeft)}>Updated:</td>
                   <td>{moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td>Hash:</td>
-                  <td>{ballotHash.ServerBallotHashS}</td>
+                  <td className={cx(classes.tdLeft)}>Hash:</td>
+                  <td>
+                    <Text className={cx(classes.tdFixedWidth)}>{ballotHash.ServerBallotHashS}</Text>
+                  </td>
                 </tr>
                 <tr>
-                  <td>Timestamp Id:</td>
+                  <td className={cx(classes.tdLeft)}>Timestamp Id:</td>
                   <td>
                     {ballotHash.TimestampId ? (
                       ballotHash.TimestampId

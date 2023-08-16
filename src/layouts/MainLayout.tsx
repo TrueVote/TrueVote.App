@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom';
 export const MainLayout: FC = () => {
   return (
     <AppShell
-      padding='md'
+      padding='xs'
       fixed={false}
       // Enables top header
       header={<AppHeader />}
@@ -20,7 +20,7 @@ export const MainLayout: FC = () => {
         },
       })}
     >
-      <Group>
+      <Group position='center' grow>
         <Outlet />
       </Group>
     </AppShell>
