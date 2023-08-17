@@ -16,6 +16,7 @@ import {
   Container,
   Flex,
   Group,
+  MantineTheme,
   ScrollArea,
   Table,
   Text,
