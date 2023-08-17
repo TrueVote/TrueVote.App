@@ -7,7 +7,7 @@ export const AppFooter: FC = () => {
 
   return (
     <Footer height={60} p='xs'>
-      <Group position='left' spacing={20}>
+      <Group position='center' spacing={20}>
         <Anchor href='//truevote.org' className={cx(classes.link)} target='_blank'>
           <Text size={'xs'}>Copyright © 2023 TrueVote, Inc.</Text>
         </Anchor>

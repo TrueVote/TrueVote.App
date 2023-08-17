@@ -21,6 +21,7 @@ import {
   Text,
   Title,
   createStyles,
+  useMantineTheme,
 } from '@mantine/core';
 import moment from 'moment';
 import { FC } from 'react';
@@ -31,6 +32,9 @@ const ballotViewStyles: any = createStyles((theme: any) => ({
   boxGap: {
     height: '15px',
   },
+  titleSpaces: {
+    paddingBottom: '7px',
+  },
   checkboxLabel: {
     label: {
       color: 'lightgreen',
@@ -40,12 +44,16 @@ const ballotViewStyles: any = createStyles((theme: any) => ({
     textAlign: 'right',
   },
   tdFixedWidth: {
-    [theme.fn.smallerThan(400)]: {
+    [theme.fn.smallerThan(440)]: {
       textOverflow: 'ellipsis',
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       width: '160px',
     },
+  },
+  flexGap: {
+    padding: '10px',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[0],
   },
 }));
 
@@ -54,6 +62,7 @@ export const BallotView: FC = () => {
 };
 
 const Ballot: FC = () => {
+  const theme: MantineTheme = useMantineTheme();
   const params: Params<string> = useParams();
   const { classes, cx } = ballotViewStyles();
 
@@ -86,7 +95,7 @@ const Ballot: FC = () => {
   const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
     return (
       <>
-        <Text key={r.RaceId} color='gold'>
+        <Text key={r.RaceId} color='yellow'>
           {r.Name}
         </Text>
         {r.Candidates?.map((c: CandidateModel) => (
@@ -117,12 +126,14 @@ const Ballot: FC = () => {
 
   return (
     <Container size='xs' px='xs'>
-      <Hero title='Ballot Explorer' />
-      <Box className={cx(classes.boxGap)}></Box>
-      <Title size='h4'>{ballot.Election?.Name}</Title>
-      <Box className={cx(classes.boxGap)}></Box>
+      <Hero className={cx(classes.titleSpaces)} title='Ballot Explorer' />
+      <Title className={cx(classes.titleSpaces)} size='h4'>
+        {ballot.Election?.Name}
+      </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title size='h4'>Ballot Info</Title>
+        <Title className={cx(classes.titleSpaces)} size='h4'>
+          Ballot Info
+        </Title>
         <Group position='center' spacing='xl' grow>
           <Card.Section>
             <Table verticalSpacing='xs' fontSize={'xs'} striped withBorder withColumnBorders>
@@ -142,12 +153,14 @@ const Ballot: FC = () => {
       </Card>
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title size='h4'>Ballot</Title>
+        <Title className={cx(classes.titleSpaces)} size='h4'>
+          Ballot
+        </Title>
         <Group position='center' spacing='xl' grow>
           <Card.Section>
             <Flex
+              className={cx(classes.flexGap)}
               miw='50'
-              bg='rgba(0, 0, 0, .3)'
               gap='sm'
               justify='flex-start'
               align='flex-start'
@@ -161,7 +174,9 @@ const Ballot: FC = () => {
       </Card>
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title size='h4'>Ballot Hash</Title>
+        <Title className={cx(classes.titleSpaces)} size='h4'>
+          Ballot Hash
+        </Title>
         <Group position='center' spacing='xl' grow>
           <Card.Section>
             <Table verticalSpacing='xs' fontSize={'xs'} striped withBorder withColumnBorders>
@@ -197,12 +212,19 @@ const Ballot: FC = () => {
       </Card>
       <Box className={cx(classes.boxGap)}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title size='h6'>Raw Data</Title>
+        <Title className={cx(classes.titleSpaces)} size='h6'>
+          Raw Data
+        </Title>
         <Group position='apart' mt='md' mb='xs'>
           <ScrollArea>
             <Text size='xs'>
               <div>
-                <ReactJson src={ballot} name='Ballot' collapsed={true} theme='monokai' />
+                <ReactJson
+                  src={ballot}
+                  name='Ballot'
+                  collapsed={true}
+                  theme={theme.colorScheme === 'dark' ? 'monokai' : 'rjv-default'}
+                />
               </div>
             </Text>
           </ScrollArea>
@@ -211,7 +233,12 @@ const Ballot: FC = () => {
           <ScrollArea>
             <Text size='xs'>
               <div>
-                <ReactJson src={ballotHash} name='BallotHash' collapsed={true} theme='monokai' />
+                <ReactJson
+                  src={ballotHash}
+                  name='BallotHash'
+                  collapsed={true}
+                  theme={theme.colorScheme === 'dark' ? 'monokai' : 'rjv-default'}
+                />
               </div>
             </Text>
           </ScrollArea>
