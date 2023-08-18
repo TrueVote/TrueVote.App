@@ -75,3 +75,32 @@ export const headerFooterStyles: any = createStyles((theme: any) => ({
     },
   },
 }));
+
+export const ballotViewStyles: any = createStyles((theme: any) => ({
+  boxGap: {
+    height: '15px',
+  },
+  titleSpaces: {
+    paddingBottom: '7px',
+  },
+  checkboxLabel: {
+    label: {
+      color: 'lightgreen',
+    },
+  },
+  tdLeft: {
+    textAlign: 'right',
+  },
+  tdFixedWidth: {
+    [theme.fn.smallerThan(440)]: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      width: '160px',
+    },
+  },
+  flexGap: {
+    padding: '10px',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[0],
+  },
+}));
