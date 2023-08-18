@@ -81,6 +81,7 @@ export const ballotViewStyles: any = createStyles((theme: any) => ({
     height: '15px',
   },
   titleSpaces: {
+    paddingTop: '1px',
     paddingBottom: '7px',
   },
   checkboxLabel: {
@@ -102,5 +103,23 @@ export const ballotViewStyles: any = createStyles((theme: any) => ({
   flexGap: {
     padding: '10px',
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[0],
+  },
+  accordion: {
+    item: {
+      // styles added to expanded item
+      '&[data-active]': {
+        filter: `brightness(100%)`,
+      },
+    },
+
+    chevron: {
+      '&[data-rotate]': {
+        transform: 'rotate(90deg)',
+      },
+    },
+
+    control: {
+      padding: '2px',
+    },
   },
 }));

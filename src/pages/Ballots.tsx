@@ -1,6 +1,7 @@
 import { DBAllBallots } from '@/services/DataClient';
 import { BallotModel } from '@/TrueVote.Api';
 import { Hero } from '@/ui/Hero';
+import { ballotViewStyles } from '@/ui/shell/AppStyles';
 import { Accordion, Button, Container, Flex, MantineTheme, useMantineTheme } from '@mantine/core';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
@@ -19,6 +20,7 @@ export const Ballots: FC = () => {
 };
 
 export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
+  const { classes, cx } = ballotViewStyles(theme);
   const { loading, error, data } = DBAllBallots();
   if (loading) return <>Loading Ballots...</>;
   if (error) {
@@ -71,24 +73,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
         chevronPosition='right'
         variant='contained'
         chevron={<IconChevronRight size={26} />}
-        styles={{
-          item: {
-            // styles added to expanded item
-            '&[data-active]': {
-              filter: `brightness(100%)`,
-            },
-          },
-
-          chevron: {
-            '&[data-rotate]': {
-              transform: 'rotate(90deg)',
-            },
-          },
-
-          control: {
-            padding: '2px',
-          },
-        }}
+        className={cx(classes.accordion)}
       >
         {items}
       </Accordion>

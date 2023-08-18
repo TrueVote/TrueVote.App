@@ -1,15 +1,8 @@
 import { DBAllElections } from '@/services/DataClient';
 import { ElectionModel } from '@/TrueVote.Api';
 import { Hero } from '@/ui/Hero';
-import {
-  Accordion,
-  Button,
-  Container,
-  Flex,
-  MantineTheme,
-  Stack,
-  useMantineTheme,
-} from '@mantine/core';
+import { ballotViewStyles } from '@/ui/shell/AppStyles';
+import { Accordion, Button, Container, Flex, MantineTheme, useMantineTheme } from '@mantine/core';
 import { IconCheckbox, IconChecklist, IconChevronRight } from '@tabler/icons-react';
 import { FC, Fragment, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
@@ -19,15 +12,14 @@ export const Elections: FC = () => {
 
   return (
     <Container size='xs' px='xs'>
-      <Stack spacing={32}>
-        <Hero title='Elections' />
-      </Stack>
+      <Hero title='Elections' />
       <AllElections theme={theme} />
     </Container>
   );
 };
 
 const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
+  const { classes, cx } = ballotViewStyles(theme);
   const { loading, error, data } = DBAllElections();
   if (loading) return <>Loading Elections...</>;
   if (error) {
@@ -51,7 +43,7 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
     (e: ElectionModel, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
-          <Accordion.Control key={i} icon={<IconChecklist size={20} color={getColor('orange')} />}>
+          <Accordion.Control key={i} icon={<IconChecklist size={26} color={getColor('orange')} />}>
             {e.Name}
           </Accordion.Control>
           <Accordion.Panel>
@@ -80,22 +72,9 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
     <>
       <Accordion
         chevronPosition='right'
-        sx={{ maxWidth: 420, minWidth: 420 }}
-        chevron={<IconChevronRight size={16} />}
-        styles={{
-          item: {
-            // styles added to expanded item
-            '&[data-active]': {
-              filter: `brightness(100%)`,
-            },
-          },
-
-          chevron: {
-            '&[data-rotate]': {
-              transform: 'rotate(90deg)',
-            },
-          },
-        }}
+        variant='contained'
+        chevron={<IconChevronRight size={26} />}
+        className={cx(classes.accordion)}
       >
         {items}
       </Accordion>
