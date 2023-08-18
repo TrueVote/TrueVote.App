@@ -1,15 +1,7 @@
 import { DBAllBallots } from '@/services/DataClient';
 import { BallotModel } from '@/TrueVote.Api';
 import { Hero } from '@/ui/Hero';
-import {
-  Accordion,
-  Button,
-  Container,
-  Flex,
-  MantineTheme,
-  Stack,
-  useMantineTheme,
-} from '@mantine/core';
+import { Accordion, Button, Container, Flex, MantineTheme, useMantineTheme } from '@mantine/core';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement } from 'react';
@@ -20,9 +12,7 @@ export const Ballots: FC = () => {
 
   return (
     <Container size='xs' px='xs'>
-      <Stack spacing={32}>
-        <Hero title='Ballots' />
-      </Stack>
+      <Hero title='Ballots' />
       <AllBallots theme={theme} />
     </Container>
   );
@@ -40,8 +30,6 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
   const buttonStyle: any = () => ({
     root: {
       marginTop: 5,
-      marginLeft: -10,
-      width: 400,
     },
   });
 
@@ -52,7 +40,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
     (e: BallotModel, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
-          <Accordion.Control key={i} icon={<IconChecklist size={20} color={getColor('orange')} />}>
+          <Accordion.Control key={i} icon={<IconChecklist size={26} color={getColor('orange')} />}>
             {moment(e.DateCreated).format('MMMM DD, YYYY')}
           </Accordion.Control>
           <Accordion.Panel>
@@ -81,8 +69,8 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
     <>
       <Accordion
         chevronPosition='right'
-        sx={{ maxWidth: 420, minWidth: 420 }}
-        chevron={<IconChevronRight size={16} />}
+        variant='contained'
+        chevron={<IconChevronRight size={26} />}
         styles={{
           item: {
             // styles added to expanded item
@@ -95,6 +83,10 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
             '&[data-rotate]': {
               transform: 'rotate(90deg)',
             },
+          },
+
+          control: {
+            padding: '2px',
           },
         }}
       >
