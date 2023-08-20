@@ -74,6 +74,16 @@ export const headerFooterStyles: any = createStyles((theme: any) => ({
       color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
     },
   },
+
+  headerImage: {
+    position: 'absolute',
+    marginLeft: '50px',
+    height: '45px',
+    maxWidth: '45px',
+    backgroundSize: '45px',
+    backgroundImage:
+      theme.colorScheme === 'dark' ? `url('./static/tv01@2x.png')` : `url('./static/tv03@2x.png')`,
+  },
 }));
 
 export const ballotViewStyles: any = createStyles((theme: any) => ({
