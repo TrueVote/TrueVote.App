@@ -75,11 +75,14 @@ export const headerFooterStyles: any = createStyles((theme: any) => ({
     },
   },
 
-  headerImage: {
-    position: 'absolute',
+  headerLink: {
+    position: 'fixed',
+    width: '45px',
     marginLeft: '50px',
+  },
+
+  headerImage: {
     height: '45px',
-    maxWidth: '45px',
     backgroundSize: '45px',
     backgroundImage:
       theme.colorScheme === 'dark' ? `url('./static/tv01@2x.png')` : `url('./static/tv03@2x.png')`,

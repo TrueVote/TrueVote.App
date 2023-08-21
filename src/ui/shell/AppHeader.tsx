@@ -1,4 +1,14 @@
-import { Avatar, Burger, Container, Group, Header, Image, Paper, Transition } from '@mantine/core';
+import {
+  Anchor,
+  Avatar,
+  Burger,
+  Container,
+  Group,
+  Header,
+  Image,
+  Paper,
+  Transition,
+} from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { FC } from 'react';
 import { Link, useMatch } from 'react-router-dom';
@@ -29,7 +39,9 @@ export const AppHeader: FC = () => {
     <Header height={HEADER_HEIGHT} className={cx(classes.root)}>
       <Container className={cx(classes.header)}>
         <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
-        <Image className={cx(classes.headerImage)}></Image>
+        <Anchor href='/' className={cx(classes.headerLink)}>
+          <Image className={cx(classes.headerImage)}></Image>
+        </Anchor>
         <Group spacing={5} className={cx(classes.links)}>
           {items}
         </Group>
