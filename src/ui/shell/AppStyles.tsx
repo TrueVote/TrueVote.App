@@ -132,4 +132,14 @@ export const ballotViewStyles: any = createStyles((theme: any) => ({
       padding: '2px',
     },
   },
+  radioBody: {
+    paddingBottom: '15px',
+  },
+  cardWide: {
+    width: '100%',
+  },
 }));
+
+export const linkStyle: any = {
+  textDecoration: 'none',
+};

@@ -1,8 +1,8 @@
 import { DBAllBallots } from '@/services/DataClient';
 import { BallotModel } from '@/TrueVote.Api';
 import { Hero } from '@/ui/Hero';
-import { ballotViewStyles } from '@/ui/shell/AppStyles';
-import { Accordion, Button, Container, Flex, MantineTheme, useMantineTheme } from '@mantine/core';
+import { ballotViewStyles, linkStyle } from '@/ui/shell/AppStyles';
+import { Accordion, Button, Container, MantineTheme, Text, useMantineTheme } from '@mantine/core';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement } from 'react';
@@ -29,12 +29,6 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
   }
   console.info(data);
 
-  const buttonStyle: any = () => ({
-    root: {
-      marginTop: 5,
-    },
-  });
-
   const getColor: any = (color: string) =>
     theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7];
 
@@ -46,21 +40,19 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
             {moment(e.DateCreated).format('MMMM DD, YYYY')}
           </Accordion.Control>
           <Accordion.Panel>
-            {e.BallotId}
-            <Flex>
-              <Link to={`/ballotview/${e.BallotId}`}>
-                <Button
-                  radius='md'
-                  styles={buttonStyle}
-                  compact
-                  color='green'
-                  leftIcon={<IconZoomIn size={16} />}
-                  variant='light'
-                >
-                  Details
-                </Button>
-              </Link>
-            </Flex>
+            <Text>{e.BallotId}</Text>
+            <Link to={`/ballotview/${e.BallotId}`} style={linkStyle}>
+              <Button
+                radius='md'
+                fullWidth
+                compact
+                color='green'
+                leftIcon={<IconZoomIn size={16} />}
+                variant='light'
+              >
+                Details
+              </Button>
+            </Link>
           </Accordion.Panel>
         </Accordion.Item>
       </Fragment>
