@@ -19,6 +19,7 @@ import {
   Group,
   MantineTheme,
   ScrollArea,
+  SimpleGrid,
   Table,
   Text,
   Title,
@@ -66,33 +67,30 @@ const Ballot: FC = () => {
 
   const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
     return (
-      <>
+      <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
         <Text key={r.RaceId} color='yellow'>
           {r.Name}
         </Text>
-        {r.Candidates?.map((c: CandidateModel) => (
-          <>
-            {c.Selected === true ? (
-              <>
-                <Checkbox
-                  size={'xs'}
-                  icon={CheckboxIcon}
-                  color='green'
-                  radius={'xl'}
-                  labelPosition='left'
-                  label={formatCandidateName(c)}
-                  className={cx(classes.checkboxLabel)}
-                  checked
-                />
-              </>
-            ) : (
-              <Text size={'xs'} key={c.CandidateId}>
-                {formatCandidateName(c)}
-              </Text>
-            )}
-          </>
-        ))}
-      </>
+        {r.Candidates?.map((c: CandidateModel) =>
+          c.Selected === true ? (
+            <Checkbox
+              key={c.CandidateId}
+              size={'xs'}
+              icon={CheckboxIcon}
+              color='green'
+              radius={'xl'}
+              labelPosition='left'
+              label={formatCandidateName(c)}
+              className={cx(classes.checkboxLabel)}
+              defaultChecked
+            />
+          ) : (
+            <Text size={'xs'} key={c.CandidateId}>
+              {formatCandidateName(c)}
+            </Text>
+          ),
+        )}
+      </SimpleGrid>
     );
   });
 
