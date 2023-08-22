@@ -85,7 +85,7 @@ export const headerFooterStyles: any = createStyles((theme: any) => ({
     height: '45px',
     backgroundSize: '45px',
     backgroundImage:
-      theme.colorScheme === 'dark' ? `url('./static/tv01@2x.png')` : `url('./static/tv03@2x.png')`,
+      theme.colorScheme === 'dark' ? `url('/static/tv01@2x.png')` : `url('/static/tv03@2x.png')`,
   },
 }));
 
