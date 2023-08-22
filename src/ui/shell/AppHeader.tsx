@@ -38,10 +38,13 @@ export const AppHeader: FC = () => {
   return (
     <Header height={HEADER_HEIGHT} className={cx(classes.root)}>
       <Container className={cx(classes.header)}>
-        <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
-        <Anchor href='/' className={cx(classes.headerLink)}>
-          <Image className={cx(classes.headerImage)}></Image>
-        </Anchor>
+        <Group spacing={6}>
+          <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+          <Anchor href='/' className={cx(classes.headerLink)}>
+            <Image className={cx(classes.headerImage)}></Image>
+          </Anchor>
+        </Group>
+
         <Group spacing={5} className={cx(classes.links)}>
           {items}
         </Group>

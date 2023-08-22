@@ -76,12 +76,11 @@ export const headerFooterStyles: any = createStyles((theme: any) => ({
   },
 
   headerLink: {
-    position: 'fixed',
     width: '45px',
-    marginLeft: '50px',
   },
 
   headerImage: {
+    width: '45px',
     height: '45px',
     backgroundSize: '45px',
     backgroundImage:
