@@ -17,9 +17,8 @@ import { HEADER_HEIGHT, headerFooterStyles } from './AppStyles';
 
 export const AppHeader: FC = () => {
   const links: any = [
-    { id: '0', link: '/', label: 'Home', matched: useMatch('/') },
-    { id: '1', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
-    { id: '2', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
+    { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
+    { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
   ];
   const [opened, toggle] = useToggle();
   const { classes, cx } = headerFooterStyles();
