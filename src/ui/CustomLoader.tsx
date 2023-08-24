@@ -1,6 +1,6 @@
 import { LoadingOverlay } from '@mantine/core';
 
-export const customLoader: any = (
+export const customLoader: React.JSX.Element = (
   <svg width='154' height='154' viewBox='0 0 38 38' xmlns='http://www.w3.org/2000/svg'>
     <g fill='none' fillRule='evenodd'>
       <g transform='translate(1 1)' strokeWidth='2'>
@@ -19,10 +19,18 @@ export const customLoader: any = (
   </svg>
 );
 
-export const TrueVoteLoader: any = ({ visible = true }: { visible: boolean }) => {
-  return (
-    <>
-      <LoadingOverlay visible={visible} loader={customLoader} overlayBlur={2} />
-    </>
-  );
+interface TrueVoteLoaderProps {
+  visible?: boolean;
+}
+
+// eslint-disable-next-line @typescript-eslint/typedef
+export const TrueVoteLoader: React.FC<TrueVoteLoaderProps> = ({
+  // eslint-disable-next-line react/prop-types
+  visible = true,
+}): React.JSX.Element => {
+  return <LoadingOverlay visible={visible} loader={customLoader} overlayBlur={2} />;
+};
+
+TrueVoteLoader.defaultProps = {
+  visible: true,
 };
