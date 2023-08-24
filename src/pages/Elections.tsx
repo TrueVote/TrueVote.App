@@ -1,5 +1,6 @@
 import { DBAllElections } from '@/services/DataClient';
 import { ElectionModel } from '@/TrueVote.Api';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import { ballotViewStyles, linkStyle } from '@/ui/shell/AppStyles';
 import { Accordion, Button, Container, MantineTheme, Text, useMantineTheme } from '@mantine/core';
@@ -21,7 +22,9 @@ export const Elections: FC = () => {
 const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
   const { classes, cx } = ballotViewStyles(theme);
   const { loading, error, data } = DBAllElections();
-  if (loading) return <>Loading Elections...</>;
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;

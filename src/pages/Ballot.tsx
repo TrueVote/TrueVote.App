@@ -5,6 +5,7 @@ import {
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
@@ -18,7 +19,6 @@ import {
   Flex,
   Group,
   Image,
-  LoadingOverlay,
   MantineTheme,
   Modal,
   Text,
@@ -49,7 +49,9 @@ const Election: FC = () => {
   };
 
   const { loading, error, data } = DBGetElectionById(params.electionId);
-  if (loading) return <>Loading Ballot...</>;
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;
@@ -110,11 +112,7 @@ const Election: FC = () => {
         Complete your ballot below
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <LoadingOverlay
-          visible={visible}
-          overlayBlur={2}
-          loaderProps={{ size: 'xl', color: 'green', variant: 'bars' }}
-        />
+        <TrueVoteLoader visible={visible} />
         <Modal
           centered
           withCloseButton={true}

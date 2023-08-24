@@ -6,6 +6,7 @@ import {
   RaceModel,
 } from '@/TrueVote.Api';
 import { DBGetBallotById } from '@/services/DataClient';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatCandidateName } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { ballotViewStyles } from '@/ui/shell/AppStyles';
@@ -40,7 +41,9 @@ const Ballot: FC = () => {
   const { classes, cx } = ballotViewStyles(theme);
 
   const { loading, error, data } = DBGetBallotById(params.ballotId);
-  if (loading) return <>Loading Ballot...</>;
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;
