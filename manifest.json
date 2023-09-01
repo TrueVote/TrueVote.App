@@ -1,0 +1,16 @@
+{
+  "name": "TrueVote App",
+  "short_name": "TrueVote",
+  "description": "It's time we vote on our phones",
+  "icons": [
+    {
+      "src": "/static/TrueVote_Logo.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#34A26B",
+  "theme_color": "#5E77B3"
+}
