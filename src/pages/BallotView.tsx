@@ -68,40 +68,47 @@ const Ballot: FC = () => {
   }
   const ballotHash: BallotHashModel = ballotList!.BallotHashes![0];
 
-  const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
-    return (
-      <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
-        <Text key={r.RaceId} color='yellow'>
-          {r.Name}
-        </Text>
-        {r.Candidates?.map((c: CandidateModel) =>
-          c.Selected === true ? (
-            <Checkbox
-              key={c.CandidateId}
-              size={'xs'}
-              icon={CheckboxIcon}
-              color='green'
-              radius={'xl'}
-              labelPosition='left'
-              label={formatCandidateName(c)}
-              className={cx(classes.checkboxLabel)}
-              defaultChecked
-            />
-          ) : (
-            <Text size={'xs'} key={c.CandidateId}>
-              {formatCandidateName(c)}
+  const races: any =
+    ballot.Election == null || ballot.Election.Races == null ? (
+      <></>
+    ) : (
+      ballot.Election.Races.map((r: RaceModel) => {
+        return (
+          <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
+            <Text key={r.RaceId} color='yellow'>
+              {r.Name}
             </Text>
-          ),
-        )}
-      </SimpleGrid>
+            {r.Candidates == null
+              ? undefined
+              : r.Candidates.map((c: CandidateModel) =>
+                  c.Selected === true ? (
+                    <Checkbox
+                      key={c.CandidateId}
+                      size={'xs'}
+                      icon={CheckboxIcon}
+                      color='green'
+                      radius={'xl'}
+                      labelPosition='left'
+                      label={formatCandidateName(c)}
+                      className={cx(classes.checkboxLabel)}
+                      defaultChecked
+                    />
+                  ) : (
+                    <Text size={'xs'} key={c.CandidateId}>
+                      {formatCandidateName(c)}
+                    </Text>
+                  ),
+                )}
+          </SimpleGrid>
+        );
+      })
     );
-  });
 
   return (
     <Container size='xs' px='xs'>
       <Hero title='Ballot Explorer' />
       <Title className={cx(classes.titleSpaces)} size='h4'>
-        {ballot.Election?.Name}
+        {ballot.Election == null ? '' : ballot.Election.Name}
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
         <Title className={cx(classes.titleSpaces)} size='h4'>

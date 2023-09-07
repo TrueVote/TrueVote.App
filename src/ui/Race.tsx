@@ -13,24 +13,28 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
     console.info('setVal()', cc, val);
 
     // Find the race for this election
-    const r: RaceModel | undefined = election?.Races?.find(
-      (rm: RaceModel) => rm.RaceId == race.RaceId,
-    );
+    const r: RaceModel | undefined =
+      election.Races == null
+        ? undefined
+        : election.Races.find((rm: RaceModel) => rm.RaceId == race.RaceId);
 
     if (r) {
       // If this Race is a "choose one", need to loop through all the candidates and
       // unselect them in the data model.
       if (r.RaceType.toString() === RaceTypes.ChooseOne) {
-        r.Candidates?.map((cm: CandidateModel) => {
-          console.info('Setting choice to false for candidate: ', cm.Name);
-          cm.Selected = JSON.parse('false');
-        });
+        r.Candidates == null
+          ? undefined
+          : r.Candidates.map((cm: CandidateModel) => {
+              console.info('Setting choice to false for candidate: ', cm.Name);
+              cm.Selected = JSON.parse('false');
+            });
       }
 
       // Find the candidate user clicked on
-      const c: CandidateModel | undefined = r.Candidates?.find(
-        (cm: CandidateModel) => cm.CandidateId == cc.CandidateId,
-      );
+      const c: CandidateModel | undefined =
+        r.Candidates == null
+          ? undefined
+          : r.Candidates.find((cm: CandidateModel) => cm.CandidateId == cc.CandidateId);
 
       // Finally, set the candidate selected state to user selection
       // This will likely always be 'true' for 'choose one' and 'toggle' for 'choose many'
@@ -50,16 +54,20 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
         description={'Choose One'} // TODO Localize English
       >
         <Space h='md'></Space>
-        {race.Candidates?.map((e: CandidateModel) => (
-          <Radio
-            value={e.Name}
-            label={formatCandidateName(e)}
-            key={e.CandidateId}
-            size='sm'
-            className={cx(classes.radioBody)}
-            onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
-          />
-        ))}
+        {race.Candidates == null ? (
+          <></>
+        ) : (
+          race.Candidates.map((e: CandidateModel) => (
+            <Radio
+              value={e.Name}
+              label={formatCandidateName(e)}
+              key={e.CandidateId}
+              size='sm'
+              className={cx(classes.radioBody)}
+              onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
+            />
+          ))
+        )}
       </Radio.Group>
     );
   } else {
@@ -70,16 +78,20 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
         description={'Choose Multiple'} // TODO Localize English
       >
         <Space h='md'></Space>
-        {race.Candidates?.map((e: CandidateModel) => (
-          <Checkbox
-            value={e.Name}
-            label={formatCandidateName(e)}
-            key={e.CandidateId}
-            size='sm'
-            className={cx(classes.radioBody)}
-            onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
-          />
-        ))}
+        {race.Candidates == null ? (
+          <></>
+        ) : (
+          race.Candidates.map((e: CandidateModel) => (
+            <Checkbox
+              value={e.Name}
+              label={formatCandidateName(e)}
+              key={e.CandidateId}
+              size='sm'
+              className={cx(classes.radioBody)}
+              onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
+            />
+          ))
+        )}
       </Checkbox.Group>
     );
   }
