@@ -1,4 +1,4 @@
-[![Logo](static/TrueVote_Logo_Text_on_Black.png)](https://truevote.org)
+[![Logo](public/static/TrueVote_Logo_Text_on_Black.png)](https://truevote.org)
 
 [![Twitter](https://img.shields.io/twitter/follow/TrueVoteOrg?style=social)](https://twitter.com/TrueVoteOrg)
 [![Keybase Chat](https://img.shields.io/badge/chat-on%20keybase-7793d8)](https://keybase.io/team/truevote)
@@ -29,7 +29,7 @@ Serve up the instance of the app locally, using [Vite](https://vitejs.dev/).
 
 `$ yarn dev`
 
-![](static/vite-output.png)
+![](public/static/vite-output.png)
 
 Vite expects the local TrueVote.Api to be listening on port 8080. See [vite.config.ts](vite.config.ts).
 
