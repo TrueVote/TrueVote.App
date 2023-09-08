@@ -5,12 +5,9 @@ import _ from 'lodash';
 
 export const formatCandidateName: any = (candidate: CandidateModel) =>
   candidate.Name +
-  (candidate !== undefined &&
-  candidate.PartyAffiliation !== undefined &&
-  candidate.PartyAffiliation !== null &&
-  candidate.PartyAffiliation.length !== undefined &&
-  candidate.PartyAffiliation.length !== null &&
-  candidate.PartyAffiliation.length > 0
+  (candidate.PartyAffiliation !== undefined &&
+  candidate?.PartyAffiliation?.length !== undefined &&
+  candidate?.PartyAffiliation?.length > 0
     ? ', ' + candidate.PartyAffiliation
     : '');
 

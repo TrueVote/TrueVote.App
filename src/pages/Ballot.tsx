@@ -62,21 +62,15 @@ const Election: FC = () => {
 
   const modifiedElection: ElectionModel = _.cloneDeep(election);
 
-  const races: RaceModel[] | undefined =
-    election.Races == null
-      ? undefined
-      : (election.Races.map((e: RaceModel) => (
-          <Race race={e} key={e.RaceId} election={modifiedElection} />
-        )) as unknown as RaceModel[]);
+  const races: RaceModel[] = election.Races?.map((e: RaceModel) => (
+    <Race race={e} key={e.RaceId} election={modifiedElection} />
+  )) as unknown as RaceModel[];
 
   const HeaderImage: any = ({ election }: { election: ElectionModel }) => {
     if (
-      election !== undefined &&
       election.HeaderImageUrl !== undefined &&
-      election.HeaderImageUrl != null &&
-      election.HeaderImageUrl.length !== undefined &&
-      election.HeaderImageUrl.length !== null &&
-      election.HeaderImageUrl.length > 0
+      election.HeaderImageUrl?.length !== undefined &&
+      election.HeaderImageUrl?.length > 0
     ) {
       return (
         <Card.Section>
