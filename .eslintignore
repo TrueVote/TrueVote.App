@@ -3,3 +3,6 @@
 /public
 .eslintrc.js
 /.storybook
+tsconfig.json
+vite.config.ts
+fixApi.ts
