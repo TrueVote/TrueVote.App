@@ -1,15 +1,9 @@
 import { DBAllBallots } from '@/services/DataClient';
 import { BallotModel } from '@/TrueVote.Api';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
-import {
-  Accordion,
-  Button,
-  Container,
-  Flex,
-  MantineTheme,
-  Stack,
-  useMantineTheme,
-} from '@mantine/core';
+import { ballotViewStyles, linkStyle } from '@/ui/shell/AppStyles';
+import { Accordion, Button, Container, MantineTheme, Text, useMantineTheme } from '@mantine/core';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement } from 'react';
@@ -20,30 +14,23 @@ export const Ballots: FC = () => {
 
   return (
     <Container size='xs' px='xs'>
-      <Stack spacing={32}>
-        <Hero title='Ballots' />
-      </Stack>
+      <Hero title='Ballots' />
       <AllBallots theme={theme} />
     </Container>
   );
 };
 
 export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
+  const { classes, cx } = ballotViewStyles(theme);
   const { loading, error, data } = DBAllBallots();
-  if (loading) return <>Loading Ballots...</>;
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;
   }
   console.info(data);
-
-  const buttonStyle: any = () => ({
-    root: {
-      marginTop: 5,
-      marginLeft: -10,
-      width: 400,
-    },
-  });
 
   const getColor: any = (color: string) =>
     theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7];
@@ -52,25 +39,23 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
     (e: BallotModel, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
-          <Accordion.Control key={i} icon={<IconChecklist size={20} color={getColor('orange')} />}>
+          <Accordion.Control key={i} icon={<IconChecklist size={26} color={getColor('orange')} />}>
             {moment(e.DateCreated).format('MMMM DD, YYYY')}
           </Accordion.Control>
           <Accordion.Panel>
-            {e.BallotId}
-            <Flex>
-              <Link to={`/ballotview/${e.BallotId}`}>
-                <Button
-                  radius='md'
-                  styles={buttonStyle}
-                  compact
-                  color='green'
-                  leftIcon={<IconZoomIn size={16} />}
-                  variant='light'
-                >
-                  Details
-                </Button>
-              </Link>
-            </Flex>
+            <Text>{e.BallotId}</Text>
+            <Link to={`/ballotview/${e.BallotId}`} style={linkStyle}>
+              <Button
+                radius='md'
+                fullWidth
+                compact
+                color='green'
+                leftIcon={<IconZoomIn size={16} />}
+                variant='light'
+              >
+                Details
+              </Button>
+            </Link>
           </Accordion.Panel>
         </Accordion.Item>
       </Fragment>
@@ -81,22 +66,9 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
     <>
       <Accordion
         chevronPosition='right'
-        sx={{ maxWidth: 420, minWidth: 420 }}
-        chevron={<IconChevronRight size={16} />}
-        styles={{
-          item: {
-            // styles added to expanded item
-            '&[data-active]': {
-              filter: `brightness(100%)`,
-            },
-          },
-
-          chevron: {
-            '&[data-rotate]': {
-              transform: 'rotate(90deg)',
-            },
-          },
-        }}
+        variant='contained'
+        chevron={<IconChevronRight size={26} />}
+        className={cx(classes.accordion)}
       >
         {items}
       </Accordion>

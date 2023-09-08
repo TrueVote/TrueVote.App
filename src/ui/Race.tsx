@@ -1,17 +1,13 @@
 import { CandidateModel, ElectionModel, RaceModel } from '@/TrueVote.Api';
 import { RaceTypes } from '@/TrueVote.Api.ManualModels';
-import { Box, Card, Checkbox, Container, Radio, Space, Title, createStyles } from '@mantine/core';
+import { Card, Checkbox, MantineTheme, Radio, Space, Title, useMantineTheme } from '@mantine/core';
 import { formatCandidateName } from './Helpers';
-
-const raceStyles: any = createStyles(() => ({
-  radioBody: {
-    paddingBottom: '15px',
-  },
-}));
+import { ballotViewStyles } from './shell/AppStyles';
 
 const RaceGroup: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
+  const theme: MantineTheme = useMantineTheme();
+  const { classes, cx } = ballotViewStyles(theme);
   const raceLabel: React.ReactNode = <Title order={4}>{race.Name}</Title>;
-  const { classes, cx } = raceStyles();
 
   const setVal: any = (cc: CandidateModel, val: string) => {
     console.info('setVal()', cc, val);
@@ -50,7 +46,7 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
       <Radio.Group
         name={race.Name}
         label={raceLabel}
-        size='md'
+        size='sm'
         description={'Choose One'} // TODO Localize English
       >
         <Space h='md'></Space>
@@ -59,7 +55,7 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
             value={e.Name}
             label={formatCandidateName(e)}
             key={e.CandidateId}
-            size='md'
+            size='sm'
             className={cx(classes.radioBody)}
             onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
           />
@@ -70,7 +66,7 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
     return (
       <Checkbox.Group
         label={raceLabel}
-        size='md'
+        size='sm'
         description={'Choose Multiple'} // TODO Localize English
       >
         <Space h='md'></Space>
@@ -79,7 +75,7 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
             value={e.Name}
             label={formatCandidateName(e)}
             key={e.CandidateId}
-            size='md'
+            size='sm'
             className={cx(classes.radioBody)}
             onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
           />
@@ -90,12 +86,12 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
 };
 
 export const Race: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
+  const theme: MantineTheme = useMantineTheme();
+  const { classes, cx } = ballotViewStyles(theme);
+
   return (
-    <Container sx={(): any => ({ width: '100%' })}>
-      <Card shadow='sm' p='xs' radius='lg' withBorder>
-        <RaceGroup race={race} election={election} />
-        <Box sx={(): any => ({ height: '5px' })}></Box>
-      </Card>
-    </Container>
+    <Card className={cx(classes.cardWide)} shadow='sm' p='xs' radius='lg' withBorder>
+      <RaceGroup race={race} election={election} />
+    </Card>
   );
 };

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/typedef */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import babel from '@rollup/plugin-babel';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
@@ -11,7 +12,11 @@ export default defineConfig({
   resolve: {
     alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
   },
-  plugins: [react(), basicSsl(), EnvironmentPlugin({ API_ROOT: '' })],
+  plugins: [react(), basicSsl(), EnvironmentPlugin({ API_ROOT: '' }), babel({
+    extensions: ['.js', '.ts', '.tsx'],
+    babelHelpers: 'bundled',
+    include: ['src/**/*'], // Adjust this to match your source file structure
+  }),],
   server: {
     https: true,
     proxy: {

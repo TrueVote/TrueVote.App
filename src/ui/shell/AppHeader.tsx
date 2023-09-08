@@ -1,4 +1,14 @@
-import { Avatar, Burger, Container, Group, Header, Paper, Transition } from '@mantine/core';
+import {
+  Anchor,
+  Avatar,
+  Burger,
+  Container,
+  Group,
+  Header,
+  Image,
+  Paper,
+  Transition,
+} from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { FC } from 'react';
 import { Link, useMatch } from 'react-router-dom';
@@ -7,9 +17,8 @@ import { HEADER_HEIGHT, headerFooterStyles } from './AppStyles';
 
 export const AppHeader: FC = () => {
   const links: any = [
-    { id: '0', link: '/', label: 'Home', matched: useMatch('/') },
-    { id: '1', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
-    { id: '2', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
+    { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
+    { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
   ];
   const [opened, toggle] = useToggle();
   const { classes, cx } = headerFooterStyles();
@@ -18,7 +27,7 @@ export const AppHeader: FC = () => {
     <Link
       key={link.id}
       to={link.link}
-      className={cx(classes.link, { [classes.linkActive]: link.matched })}
+      className={cx(classes.link, { [cx(classes.linkActive)]: link.matched })}
       onClick={(): any => toggle(false)}
     >
       {link.label}
@@ -26,10 +35,16 @@ export const AppHeader: FC = () => {
   ));
 
   return (
-    <Header height={HEADER_HEIGHT} className={classes.root}>
-      <Container className={classes.header}>
-        <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
-        <Group spacing={5} className={classes.links}>
+    <Header height={HEADER_HEIGHT} className={cx(classes.root)}>
+      <Container className={cx(classes.header)}>
+        <Group spacing={6}>
+          <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+          <Anchor href='/' className={cx(classes.headerLink)}>
+            <Image className={cx(classes.headerImage)}></Image>
+          </Anchor>
+        </Group>
+
+        <Group spacing={5} className={cx(classes.links)}>
           {items}
         </Group>
 
@@ -38,7 +53,7 @@ export const AppHeader: FC = () => {
           <Burger
             opened={opened}
             onClick={(): any => toggle()}
-            className={classes.burger}
+            className={cx(classes.burger)}
             aria-label='links dropdown menu'
             size='sm'
           />
@@ -46,7 +61,7 @@ export const AppHeader: FC = () => {
 
         <Transition transition='pop-top-right' duration={200} mounted={opened}>
           {(styles: any): any => (
-            <Paper className={classes.dropdown} withBorder style={styles}>
+            <Paper className={cx(classes.dropdown)} withBorder style={styles}>
               {items}
             </Paper>
           )}

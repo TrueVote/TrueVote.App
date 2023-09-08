@@ -6,8 +6,10 @@ import {
   RaceModel,
 } from '@/TrueVote.Api';
 import { DBGetBallotById } from '@/services/DataClient';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatCandidateName } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
+import { ballotViewStyles } from '@/ui/shell/AppStyles';
 import {
   Box,
   Card,
@@ -18,45 +20,16 @@ import {
   Group,
   MantineTheme,
   ScrollArea,
+  SimpleGrid,
   Table,
   Text,
   Title,
-  createStyles,
   useMantineTheme,
 } from '@mantine/core';
 import moment from 'moment';
 import { FC } from 'react';
 import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
-
-const ballotViewStyles: any = createStyles((theme: any) => ({
-  boxGap: {
-    height: '15px',
-  },
-  titleSpaces: {
-    paddingBottom: '7px',
-  },
-  checkboxLabel: {
-    label: {
-      color: 'lightgreen',
-    },
-  },
-  tdLeft: {
-    textAlign: 'right',
-  },
-  tdFixedWidth: {
-    [theme.fn.smallerThan(440)]: {
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      width: '160px',
-    },
-  },
-  flexGap: {
-    padding: '10px',
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[0],
-  },
-}));
 
 export const BallotView: FC = () => {
   return <Ballot />;
@@ -65,10 +38,12 @@ export const BallotView: FC = () => {
 const Ballot: FC = () => {
   const theme: MantineTheme = useMantineTheme();
   const params: Params<string> = useParams();
-  const { classes, cx } = ballotViewStyles();
+  const { classes, cx } = ballotViewStyles(theme);
 
   const { loading, error, data } = DBGetBallotById(params.ballotId);
-  if (loading) return <>Loading Ballot...</>;
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;
@@ -95,39 +70,36 @@ const Ballot: FC = () => {
 
   const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
     return (
-      <>
+      <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
         <Text key={r.RaceId} color='yellow'>
           {r.Name}
         </Text>
-        {r.Candidates?.map((c: CandidateModel) => (
-          <>
-            {c.Selected === true ? (
-              <>
-                <Checkbox
-                  size={'xs'}
-                  icon={CheckboxIcon}
-                  color='green'
-                  radius={'xl'}
-                  labelPosition='left'
-                  label={formatCandidateName(c)}
-                  className={cx(classes.checkboxLabel)}
-                  checked
-                />
-              </>
-            ) : (
-              <Text size={'xs'} key={c.CandidateId}>
-                {formatCandidateName(c)}
-              </Text>
-            )}
-          </>
-        ))}
-      </>
+        {r.Candidates?.map((c: CandidateModel) =>
+          c.Selected === true ? (
+            <Checkbox
+              key={c.CandidateId}
+              size={'xs'}
+              icon={CheckboxIcon}
+              color='green'
+              radius={'xl'}
+              labelPosition='left'
+              label={formatCandidateName(c)}
+              className={cx(classes.checkboxLabel)}
+              defaultChecked
+            />
+          ) : (
+            <Text size={'xs'} key={c.CandidateId}>
+              {formatCandidateName(c)}
+            </Text>
+          ),
+        )}
+      </SimpleGrid>
     );
   });
 
   return (
     <Container size='xs' px='xs'>
-      <Hero className={cx(classes.titleSpaces)} title='Ballot Explorer' />
+      <Hero title='Ballot Explorer' />
       <Title className={cx(classes.titleSpaces)} size='h4'>
         {ballot.Election?.Name}
       </Title>

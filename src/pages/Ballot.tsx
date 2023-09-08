@@ -5,9 +5,11 @@ import {
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
+import { ballotViewStyles } from '@/ui/shell/AppStyles';
 import {
   Badge,
   Box,
@@ -17,10 +19,11 @@ import {
   Flex,
   Group,
   Image,
-  LoadingOverlay,
+  MantineTheme,
   Modal,
-  Stack,
   Text,
+  Title,
+  useMantineTheme,
 } from '@mantine/core';
 import _ from 'lodash';
 import moment from 'moment';
@@ -28,18 +31,13 @@ import { FC, useState } from 'react';
 import { NavigateFunction, Params, useNavigate, useParams } from 'react-router-dom';
 
 export const Ballot: FC = () => {
-  return (
-    <Container size='xs' px='xs'>
-      <Stack spacing={32}>
-        <Hero title='Ballot' />
-      </Stack>
-      <Election />
-    </Container>
-  );
+  return <Election />;
 };
 
 const Election: FC = () => {
+  const theme: MantineTheme = useMantineTheme();
   const params: Params<string> = useParams();
+  const { classes, cx } = ballotViewStyles(theme);
   const navigate: NavigateFunction = useNavigate();
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
@@ -51,7 +49,9 @@ const Election: FC = () => {
   };
 
   const { loading, error, data } = DBGetElectionById(params.electionId);
-  if (loading) return <>Loading Ballot...</>;
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;
@@ -106,59 +106,59 @@ const Election: FC = () => {
   };
 
   return (
-    <Card shadow='sm' p='lg' radius='md' withBorder>
-      <LoadingOverlay
-        visible={visible}
-        overlayBlur={2}
-        loaderProps={{ size: 'xl', color: 'green', variant: 'bars' }}
-      />
-      <Modal
-        centered
-        withCloseButton={true}
-        title='Ballot Submission Error'
-        onClose={(): void => setOpened(false)}
-        opened={opened}
-      >
-        <Text>Error: {errorMessage}</Text>
-      </Modal>
-      <HeaderImage election={election} />
-      <Group position='apart' mt='md' mb='xs'>
-        <Text size='xl'>{election.Name}</Text>
-        <Badge color='pink' variant='light'>
-          Starts: {moment(election.StartDate).format('MMMM DD, YYYY')}
-        </Badge>
-      </Group>
-      <Text size='sm' color='dimmed'>
-        {election.Description}
-      </Text>
-      <Box sx={(): any => ({ height: '5px' })}></Box>
-      <Group position='center' spacing='xl' grow>
-        <Card.Section>
-          <Flex
-            miw='50'
-            bg='rgba(0, 0, 0, .3)'
-            gap='sm'
-            justify='flex-start'
-            align='flex-start'
-            direction='column'
-            wrap='nowrap'
-          >
-            <Box sx={(): any => ({ height: '5px' })}></Box>
-            {races as any}
-            <Box sx={(): any => ({ height: '5px' })}></Box>
-          </Flex>
-        </Card.Section>
-      </Group>
-      <Button
-        variant='light'
-        color='blue'
-        fullWidth
-        mt='md'
-        radius='md'
-        onClick={(): void => submitBallot()}
-      >
-        Submit Ballot
-      </Button>
-    </Card>
+    <Container size='xs' px='xs'>
+      <Hero title='Ballot' />
+      <Title className={cx(classes.titleSpaces)} size='h4'>
+        Complete your ballot below
+      </Title>
+      <Card shadow='sm' p='lg' radius='md' withBorder>
+        <TrueVoteLoader visible={visible} />
+        <Modal
+          centered
+          withCloseButton={true}
+          title='Ballot Submission Error'
+          onClose={(): void => setOpened(false)}
+          opened={opened}
+        >
+          <Text>Error: {errorMessage}</Text>
+        </Modal>
+        <HeaderImage election={election} />
+        <Group position='apart' mt='md' mb='xs'>
+          <Text size='xl'>{election.Name}</Text>
+          <Badge color='pink' variant='light'>
+            Starts: {moment(election.StartDate).format('MMMM DD, YYYY')}
+          </Badge>
+        </Group>
+        <Text size='sm' color='dimmed'>
+          {election.Description}
+        </Text>
+        <Box className={cx(classes.boxGap)}></Box>
+        <Group position='center' spacing='xl' grow>
+          <Card.Section>
+            <Flex
+              className={cx(classes.flexGap)}
+              miw='50'
+              gap='sm'
+              justify='flex-start'
+              align='flex-start'
+              direction='column'
+              wrap='nowrap'
+            >
+              {races as any}
+            </Flex>
+          </Card.Section>
+        </Group>
+        <Button
+          variant='light'
+          color='blue'
+          fullWidth
+          mt='md'
+          radius='md'
+          onClick={(): void => submitBallot()}
+        >
+          Submit Ballot
+        </Button>
+      </Card>
+    </Container>
   );
 };

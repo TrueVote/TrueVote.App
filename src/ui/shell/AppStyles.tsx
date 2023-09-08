@@ -74,4 +74,74 @@ export const headerFooterStyles: any = createStyles((theme: any) => ({
       color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
     },
   },
+
+  headerLink: {
+    width: '45px',
+  },
+
+  headerImage: {
+    width: '45px',
+    height: '45px',
+    backgroundSize: '45px',
+    backgroundImage:
+      theme.colorScheme === 'dark' ? `url('/static/tv01@2x.png')` : `url('/static/tv03@2x.png')`,
+  },
 }));
+
+export const ballotViewStyles: any = createStyles((theme: any) => ({
+  boxGap: {
+    height: '15px',
+  },
+  titleSpaces: {
+    paddingTop: '1px',
+    paddingBottom: '7px',
+  },
+  checkboxLabel: {
+    label: {
+      color: 'lightgreen',
+    },
+  },
+  tdLeft: {
+    textAlign: 'right',
+  },
+  tdFixedWidth: {
+    [theme.fn.smallerThan(440)]: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      width: '160px',
+    },
+  },
+  flexGap: {
+    padding: '10px',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[0],
+  },
+  accordion: {
+    item: {
+      // styles added to expanded item
+      '&[data-active]': {
+        filter: `brightness(100%)`,
+      },
+    },
+
+    chevron: {
+      '&[data-rotate]': {
+        transform: 'rotate(90deg)',
+      },
+    },
+
+    control: {
+      padding: '2px',
+    },
+  },
+  radioBody: {
+    paddingBottom: '15px',
+  },
+  cardWide: {
+    width: '100%',
+  },
+}));
+
+export const linkStyle: any = {
+  textDecoration: 'none',
+};
