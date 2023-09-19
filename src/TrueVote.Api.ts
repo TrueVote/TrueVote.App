@@ -291,6 +291,15 @@ export interface CountBallotModel {
   DateCreatedEnd: string;
 }
 
+export interface CountBallotModelResponse {
+  /**
+   * Number of Ballots
+   * @format int64
+   * @min 0
+   */
+  BallotCount?: number | null;
+}
+
 export interface ElectionModel {
   /**
    * Election Id
@@ -509,7 +518,6 @@ export interface StatusModel {
    * Stopwatch time to run this method
    * @format int64
    * @min 0
-   * @max 2147483647
    */
   ExecutionTime?: number | null;
   /**
