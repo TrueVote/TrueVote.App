@@ -5,6 +5,7 @@ import {
   BallotHashModel,
   BallotModel,
   ElectionModel,
+  StatusModel,
   SubmitBallotModel,
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
@@ -207,6 +208,34 @@ export const DBSubmitBallot = async (
       .then((data: SubmitBallotModelResponse) => {
         console.info('Data: /ballot/submitballot', data);
         return Promise.resolve<SubmitBallotModelResponse>(data);
+      })
+      .catch((err: any) => {
+        return Promise.reject<any>(err);
+      }),
+  );
+};
+
+export const APIStatus = async (): Promise<StatusModel> => {
+  console.info('Body: /status');
+
+  return await Promise.resolve(
+    fetch(EnvConfig.apiRoot + '/api/status', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((res: Response) => {
+        console.info('Response: /status', res);
+        if (res.status !== 200) {
+          console.error(res.status, ' Error ', res.statusText);
+          return Promise.reject<any>(res);
+        }
+        return res.json();
+      })
+      .then((data: StatusModel) => {
+        console.info('Data: /status', data);
+        return Promise.resolve<StatusModel>(data);
       })
       .catch((err: any) => {
         return Promise.reject<any>(err);

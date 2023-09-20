@@ -7,6 +7,7 @@ import { Ballots } from './pages/Ballots';
 import { Elections } from './pages/Elections';
 import { Home } from './pages/Home';
 import { Profile } from './pages/Profile';
+import { Status } from './pages/Status';
 import { Thanks } from './pages/Thanks';
 
 export const ROUTES: ReactElement = (
@@ -19,6 +20,7 @@ export const ROUTES: ReactElement = (
       <Route path='/elections' element={<Elections />} />
       <Route path='/profile' element={<Profile />} />
       <Route path='/thanks' element={<Thanks />} />
+      <Route path='/status' element={<Status />} />
     </Route>
     <Route path='*' element={<Navigate to='/' replace />} />
   </Routes>
