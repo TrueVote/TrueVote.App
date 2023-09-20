@@ -2,7 +2,15 @@ import { StatusModel } from '@/TrueVote.Api';
 import { APIStatus } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
-import { Container, Group, ScrollArea, Stack, Text, useMantineTheme } from '@mantine/core';
+import {
+  Container,
+  Group,
+  MantineTheme,
+  ScrollArea,
+  Stack,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
 
