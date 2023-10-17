@@ -13,7 +13,7 @@ export const Thanks: FC = () => {
 
   return (
     <Container size='xs' px='xs'>
-      <Stack spacing={32}>
+      <Stack gap={32}>
         <Hero title='Thanks!' />
         <Text size='xl'>Thank you for submitting your ballot.</Text>
         <Text>{submitBallotModelResponse.Message}</Text>

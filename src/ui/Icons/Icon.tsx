@@ -1,10 +1,3 @@
-import {
-  createStyles,
-  DefaultProps,
-  getSize,
-  MantineColor,
-  MantineNumberSize,
-} from '@mantine/core';
 import { IconName } from './IconName';
 import { iconMapping } from './Icons';
 
@@ -16,37 +9,17 @@ const sizes: any = {
   xl: 36,
 };
 
-const useStyles: any = createStyles(
-  (theme: any, params: { color?: MantineColor; size: MantineNumberSize }) => {
-    const getFill: any = (color?: MantineColor) => {
-      return !color
-        ? 'currentcolor'
-        : color in theme.colors
-        ? theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7]
-        : color;
-    };
-    const iconSize: any = getSize({ size: params.size, sizes });
-    return {
-      root: {
-        fill: getFill(params.color),
-        verticalAlign: 'middle',
-        width: iconSize,
-        height: iconSize,
-      },
-    };
-  },
-);
-
-export interface IconProps extends DefaultProps {
+interface IconProps {
   icon: IconName;
-  color?: MantineColor;
-  size?: MantineNumberSize;
+  color?: string;
+  size?: keyof typeof sizes;
 }
 
-export const Icon: any = ({ icon, color, size = 'md' }: IconProps) => {
-  const { classes } = useStyles({ color, size });
+export const Icon: any = ({ icon, size = 'md' }: IconProps) => {
+  const iconSize: number = sizes[size] || sizes['md'];
+
   return (
-    <svg viewBox='0 0 24 24' preserveAspectRatio='xMidYMid meet' className={classes.root}>
+    <svg viewBox='0 0 24 24' preserveAspectRatio='xMidYMid meet' width={iconSize} height={iconSize}>
       {iconMapping[icon]}
     </svg>
   );

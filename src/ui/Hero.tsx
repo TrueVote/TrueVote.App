@@ -1,4 +1,5 @@
 import { Stack, Text, Title } from '@mantine/core';
+import '@mantine/core/styles.css';
 import { Helmet, HelmetData } from 'react-helmet-async';
 import classes from './Hero.module.css';
 
@@ -19,7 +20,7 @@ export const Hero: any = ({
       <Stack>
         <Title className={classes.title}>{title}</Title>
         {subTitle && (
-          <Text color='dimmed' mt='md'>
+          <Text c='dimmed' mt='md'>
             {subTitle}
           </Text>
         )}

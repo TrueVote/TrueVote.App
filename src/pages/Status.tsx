@@ -2,24 +2,18 @@ import { StatusModel } from '@/TrueVote.Api';
 import { APIStatus } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
-import {
-  Container,
-  Group,
-  MantineTheme,
-  ScrollArea,
-  Stack,
-  Text,
-  useMantineTheme,
-} from '@mantine/core';
+import { Container, Group, ScrollArea, Stack, Text } from '@mantine/core';
+import { useColorScheme } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
 
 export const Status: FC = () => {
-  const theme: MantineTheme = useMantineTheme();
+  const colorScheme: 'dark' | 'light' = useColorScheme();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [statusData, setStatusData] = useState<StatusModel | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
 
   useEffect(() => {
     // Call the APIStatus function
@@ -44,11 +38,11 @@ export const Status: FC = () => {
 
   return (
     <Container size='xs' px='xs'>
-      <Stack spacing={32}>
+      <Stack gap={32}>
         <Hero title='Status' />
         <Text size='xl'>API Status</Text>
       </Stack>
-      <Group position='apart' mt='md' mb='xs'>
+      <Group mt='md' mb='xs'>
         <ScrollArea>
           {!error ? (
             <Text size='xs'>
@@ -57,7 +51,7 @@ export const Status: FC = () => {
                   src={statusData ?? Object.create(null)}
                   name='StatusData'
                   collapsed={false}
-                  theme={theme.colorScheme === 'dark' ? 'monokai' : 'rjv-default'}
+                  theme={getColor()}
                 />
               </div>
             </Text>

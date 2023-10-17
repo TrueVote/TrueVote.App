@@ -5,7 +5,7 @@ import { FC } from 'react';
 export const Home: FC = () => {
   return (
     <Container size='xs' px='xs'>
-      <Stack spacing={32}>
+      <Stack gap={32}>
         <Hero title='Home' />
       </Stack>
     </Container>

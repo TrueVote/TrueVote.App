@@ -1,13 +1,14 @@
-import { DBAllBallots } from '@/services/DataClient';
 import { BallotModel } from '@/TrueVote.Api';
+import { DBAllBallots } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
-import { ballotViewStyles, linkStyle } from '@/ui/shell/AppStyles';
 import { Accordion, Button, Container, MantineTheme, Text, useMantineTheme } from '@mantine/core';
+import { useColorScheme } from '@mantine/hooks';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
+import classes from './BallotView.module.css';
 
 export const Ballots: FC = () => {
   const theme: MantineTheme = useMantineTheme();
@@ -21,7 +22,7 @@ export const Ballots: FC = () => {
 };
 
 export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
-  const { classes, cx } = ballotViewStyles(theme);
+  const colorScheme: 'dark' | 'light' = useColorScheme();
   const { loading, error, data } = DBAllBallots();
   if (loading) {
     return <TrueVoteLoader />;
@@ -32,8 +33,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
   }
   console.info(data);
 
-  const getColor: any = (color: string) =>
-    theme.colors[color][theme.colorScheme === 'dark' ? 5 : 7];
+  const getColor: any = (color: string) => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
 
   const items: any = data!.GetBallot.Ballots.map(
     (e: BallotModel, i: number): ReactElement => (
@@ -44,16 +44,9 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
           </Accordion.Control>
           <Accordion.Panel>
             <Text>{e.BallotId}</Text>
-            <Link to={`/ballotview/${e.BallotId}`} style={linkStyle}>
-              <Button
-                radius='md'
-                fullWidth
-                compact
-                color='green'
-                leftIcon={<IconZoomIn size={16} />}
-                variant='light'
-              >
-                Details
+            <Link to={`/ballotview/${e.BallotId}`} className={classes.linkStyle}>
+              <Button radius='md' fullWidth size='compact-md' color='green' variant='light'>
+                <IconZoomIn size={16}>Details</IconZoomIn>
               </Button>
             </Link>
           </Accordion.Panel>
@@ -68,7 +61,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
         chevronPosition='right'
         variant='contained'
         chevron={<IconChevronRight size={26} />}
-        className={cx(classes.accordion)}
+        className={classes.accordion}
       >
         {items}
       </Accordion>

@@ -1,0 +1,91 @@
+.root {
+  position: relative;
+  z-index: 1;
+  height: 125px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top-width: 0;
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    .dropdown {
+      display: none;
+    }
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+}
+
+.footer {
+  display: inline-flex;
+  justify-content: center;
+  color: red;
+  align-items: center;
+  height: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .links {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .burger {
+    display: none;
+  }
+}
+
+.link {
+  display: block;
+  line-height: 1;
+  padding: 8px 12px;
+  border-radius: var(--mantine-radius-sm);
+  text-decoration: none;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  font-size: var(--mantine-font-sizes-sm);
+  font-weight: 500;
+}
+
+.link:hover {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .link {
+    border-radius: 0;
+    padding: var(--mantine-spacing-md);
+  }
+}
+
+.linkActive,
+.linkActive:hover {
+  background-color: var(--mantine-color-primary-0);
+  color: light-dark(var(--mantine-color-primary-3), var(--mantine-color-primary-7));
+}
+
+.headerLink {
+  width: 45px;
+}
+
+.headerImage {
+  width: 45px;
+  height: 45px;
+  background-size: 45px;
+  background-image: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
+}

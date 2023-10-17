@@ -9,36 +9,35 @@ import { DBGetBallotById } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatCandidateName } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
-import { ballotViewStyles } from '@/ui/shell/AppStyles';
 import {
   Box,
   Card,
   Checkbox,
-  CheckboxIcon,
   Container,
   Flex,
   Group,
-  MantineTheme,
   ScrollArea,
   SimpleGrid,
   Table,
   Text,
   Title,
-  useMantineTheme,
 } from '@mantine/core';
+import { useColorScheme } from '@mantine/hooks';
+import { IconCheckbox } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC } from 'react';
 import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
+import classes from './BallotView.module.css';
 
 export const BallotView: FC = () => {
   return <Ballot />;
 };
 
 const Ballot: FC = () => {
-  const theme: MantineTheme = useMantineTheme();
+  const colorScheme: 'dark' | 'light' = useColorScheme();
   const params: Params<string> = useParams();
-  const { classes, cx } = ballotViewStyles(theme);
+  const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
 
   const { loading, error, data } = DBGetBallotById(params.ballotId);
   if (loading) {
@@ -79,12 +78,12 @@ const Ballot: FC = () => {
             <Checkbox
               key={c.CandidateId}
               size={'xs'}
-              icon={CheckboxIcon}
+              icon={IconCheckbox}
               color='green'
               radius={'xl'}
               labelPosition='left'
               label={formatCandidateName(c)}
-              className={cx(classes.checkboxLabel)}
+              className={classes.checkboxLabel}
               defaultChecked
             />
           ) : (
@@ -100,23 +99,23 @@ const Ballot: FC = () => {
   return (
     <Container size='xs' px='xs'>
       <Hero title='Ballot Explorer' />
-      <Title className={cx(classes.titleSpaces)} size='h4'>
+      <Title className={classes.titleSpaces} size='h4'>
         {ballot.Election?.Name}
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={cx(classes.titleSpaces)} size='h4'>
+        <Title className={classes.titleSpaces} size='h4'>
           Ballot Info
         </Title>
-        <Group position='center' spacing='xl' grow>
+        <Group grow>
           <Card.Section>
-            <Table verticalSpacing='xs' fontSize={'xs'} striped withBorder withColumnBorders>
+            <Table verticalSpacing='xs' striped withColumnBorders>
               <tbody>
                 <tr>
-                  <td className={cx(classes.tdLeft)}>Submitted:</td>
+                  <td className={classes.tdLeft}>Submitted:</td>
                   <td>{moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td className={cx(classes.tdLeft)}>Ballot Id:</td>
+                  <td className={classes.tdLeft}>Ballot Id:</td>
                   <td>{ballot.BallotId}</td>
                 </tr>
               </tbody>
@@ -124,15 +123,15 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={cx(classes.boxGap)}></Box>
+      <Box className={classes.boxGap}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={cx(classes.titleSpaces)} size='h4'>
+        <Title className={classes.titleSpaces} size='h4'>
           Ballot
         </Title>
-        <Group position='center' spacing='xl' grow>
+        <Group grow>
           <Card.Section>
             <Flex
-              className={cx(classes.flexGap)}
+              className={classes.flexGap}
               miw='50'
               gap='sm'
               justify='flex-start'
@@ -145,31 +144,31 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={cx(classes.boxGap)}></Box>
+      <Box className={classes.boxGap}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={cx(classes.titleSpaces)} size='h4'>
+        <Title className={classes.titleSpaces} size='h4'>
           Ballot Hash
         </Title>
-        <Group position='center' spacing='xl' grow>
+        <Group grow>
           <Card.Section>
-            <Table verticalSpacing='xs' fontSize={'xs'} striped withBorder withColumnBorders>
+            <Table verticalSpacing='xs' striped withColumnBorders>
               <tbody>
                 <tr>
-                  <td className={cx(classes.tdLeft)}>Created:</td>
+                  <td className={classes.tdLeft}>Created:</td>
                   <td>{moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td className={cx(classes.tdLeft)}>Updated:</td>
+                  <td className={classes.tdLeft}>Updated:</td>
                   <td>{moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td className={cx(classes.tdLeft)}>Hash:</td>
+                  <td className={classes.tdLeft}>Hash:</td>
                   <td>
-                    <Text className={cx(classes.tdFixedWidth)}>{ballotHash.ServerBallotHashS}</Text>
+                    <Text className={classes.tdFixedWidth}>{ballotHash.ServerBallotHashS}</Text>
                   </td>
                 </tr>
                 <tr>
-                  <td className={cx(classes.tdLeft)}>Timestamp Id:</td>
+                  <td className={classes.tdLeft}>Timestamp Id:</td>
                   <td>
                     {ballotHash.TimestampId ? (
                       ballotHash.TimestampId
@@ -183,35 +182,25 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={cx(classes.boxGap)}></Box>
+      <Box className={classes.boxGap}></Box>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={cx(classes.titleSpaces)} size='h6'>
+        <Title className={classes.titleSpaces} size='h6'>
           Raw Data
         </Title>
-        <Group position='apart' mt='md' mb='xs'>
+        <Group mt='md' mb='xs'>
           <ScrollArea>
             <Text size='xs'>
               <div>
-                <ReactJson
-                  src={ballot}
-                  name='Ballot'
-                  collapsed={true}
-                  theme={theme.colorScheme === 'dark' ? 'monokai' : 'rjv-default'}
-                />
+                <ReactJson src={ballot} name='Ballot' collapsed={true} theme={getColor()} />
               </div>
             </Text>
           </ScrollArea>
         </Group>
-        <Group position='apart' mt='md' mb='xs'>
+        <Group mt='md' mb='xs'>
           <ScrollArea>
             <Text size='xs'>
               <div>
-                <ReactJson
-                  src={ballotHash}
-                  name='BallotHash'
-                  collapsed={true}
-                  theme={theme.colorScheme === 'dark' ? 'monokai' : 'rjv-default'}
-                />
+                <ReactJson src={ballotHash} name='BallotHash' collapsed={true} theme={getColor()} />
               </div>
             </Text>
           </ScrollArea>

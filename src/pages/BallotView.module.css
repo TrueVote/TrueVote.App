@@ -1,0 +1,56 @@
+.boxGap {
+  height: 15px;
+}
+
+.titleSpaces {
+  padding-top: 1px;
+  padding-bottom: 7px;
+}
+
+.checkboxLabel label {
+  color: lightgreen;
+}
+
+.tdLeft {
+  text-align: right;
+}
+
+@media (max-width: 440px) {
+  .tdFixedWidth {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 160px;
+  }
+}
+
+.flexGap {
+  padding: 10px;
+  background-color: var(--mantine-color-gray-0);
+}
+
+@media (prefers-color-scheme: dark) {
+  .flexGap {
+    background-color: var(--mantine-color-dark-4);
+  }
+}
+
+.accordionItem[data-active] {
+  filter: brightness(100%);
+}
+
+.accordionChevron[data-rotate] {
+  transform: rotate(90deg);
+}
+
+.accordionControl {
+  padding: 2px;
+}
+
+.radioBody {
+  padding-bottom: 15px;
+}
+
+.cardWide {
+  width: 100%;
+}
