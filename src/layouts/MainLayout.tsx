@@ -10,7 +10,12 @@ export const FOOTER_HEIGHT: number = 60;
 
 export const MainLayout: FC = () => {
   return (
-    <AppShell padding='xs' header={{ height: HEADER_HEIGHT }} footer={{ height: FOOTER_HEIGHT }}>
+    <AppShell
+      className={classes.shell}
+      padding='xs'
+      header={{ height: HEADER_HEIGHT }}
+      footer={{ height: FOOTER_HEIGHT }}
+    >
       <AppHeader />
       <Group className={classes.root} grow>
         <Outlet />
