@@ -9,7 +9,6 @@ import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react
 import moment from 'moment';
 import { FC, Fragment, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-import ballotViewClasses from './BallotView.module.css';
 
 export const Ballots: FC = () => {
   const theme: MantineTheme = useMantineTheme();
@@ -45,7 +44,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
           </Accordion.Control>
           <Accordion.Panel>
             <Text>{e.BallotId}</Text>
-            <Link to={`/ballotview/${e.BallotId}`} className={ballotViewClasses.linkStyle}>
+            <Link to={`/ballotview/${e.BallotId}`} className={classes.linkStyle}>
               <Button radius='md' fullWidth size='compact-md' color='green' variant='light'>
                 <IconZoomIn size={16}>Details</IconZoomIn>
               </Button>
@@ -62,7 +61,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
         chevronPosition='right'
         variant='contained'
         chevron={<IconChevronRight size={26} />}
-        className={ballotViewClasses.accordion}
+        className={classes.accordion}
       >
         {items}
       </Accordion>

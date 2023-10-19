@@ -29,7 +29,6 @@ import moment from 'moment';
 import { FC } from 'react';
 import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
-import ballotViewClasses from './BallotView.module.css';
 
 export const BallotView: FC = () => {
   return <Ballot />;
@@ -71,7 +70,7 @@ const Ballot: FC = () => {
   const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
     return (
       <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
-        <Text key={r.RaceId} color='yellow'>
+        <Text key={r.RaceId} c='yellow'>
           {r.Name}
         </Text>
         {r.Candidates?.map((c: CandidateModel) =>
@@ -84,7 +83,7 @@ const Ballot: FC = () => {
               radius={'xl'}
               labelPosition='left'
               label={formatCandidateName(c)}
-              className={ballotViewClasses.checkboxLabel}
+              className={classes.checkboxLabel}
               defaultChecked
             />
           ) : (
@@ -100,11 +99,11 @@ const Ballot: FC = () => {
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Ballot Explorer' />
-      <Title className={ballotViewClasses.titleSpaces} size='h4'>
+      <Title className={classes.titleSpaces} size='h4'>
         {ballot.Election?.Name}
       </Title>
-      <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={ballotViewClasses.titleSpaces} size='h4'>
+      <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
+        <Title className={classes.titleSpaces} size='h4'>
           Ballot Info
         </Title>
         <Group grow>
@@ -112,11 +111,11 @@ const Ballot: FC = () => {
             <Table verticalSpacing='xs' striped withColumnBorders>
               <tbody>
                 <tr>
-                  <td className={ballotViewClasses.tdLeft}>Submitted:</td>
+                  <td className={classes.tdLeft}>Submitted:</td>
                   <td>{moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td className={ballotViewClasses.tdLeft}>Ballot Id:</td>
+                  <td className={classes.tdLeft}>Ballot Id:</td>
                   <td>{ballot.BallotId}</td>
                 </tr>
               </tbody>
@@ -124,15 +123,15 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={ballotViewClasses.boxGap}></Box>
-      <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={ballotViewClasses.titleSpaces} size='h4'>
+      <Box className={classes.boxGap}></Box>
+      <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
+        <Title className={classes.titleSpaces} size='h4'>
           Ballot
         </Title>
         <Group grow>
           <Card.Section>
             <Flex
-              className={ballotViewClasses.flexGap}
+              className={classes.flexGap}
               miw='50'
               gap='sm'
               justify='flex-start'
@@ -145,9 +144,9 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={ballotViewClasses.boxGap}></Box>
-      <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={ballotViewClasses.titleSpaces} size='h4'>
+      <Box className={classes.boxGap}></Box>
+      <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
+        <Title className={classes.titleSpaces} size='h4'>
           Ballot Hash
         </Title>
         <Group grow>
@@ -155,29 +154,23 @@ const Ballot: FC = () => {
             <Table verticalSpacing='xs' striped withColumnBorders>
               <tbody>
                 <tr>
-                  <td className={ballotViewClasses.tdLeft}>Created:</td>
+                  <td className={classes.tdLeft}>Created:</td>
                   <td>{moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td className={ballotViewClasses.tdLeft}>Updated:</td>
+                  <td className={classes.tdLeft}>Updated:</td>
                   <td>{moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
                 </tr>
                 <tr>
-                  <td className={ballotViewClasses.tdLeft}>Hash:</td>
+                  <td className={classes.tdLeft}>Hash:</td>
                   <td>
-                    <Text className={ballotViewClasses.tdFixedWidth}>
-                      {ballotHash.ServerBallotHashS}
-                    </Text>
+                    <Text className={classes.tdFixedWidth}>{ballotHash.ServerBallotHashS}</Text>
                   </td>
                 </tr>
                 <tr>
-                  <td className={ballotViewClasses.tdLeft}>Timestamp Id:</td>
+                  <td className={classes.tdLeft}>Timestamp Id:</td>
                   <td>
-                    {ballotHash.TimestampId ? (
-                      ballotHash.TimestampId
-                    ) : (
-                      <Text color='red'>UNSET</Text>
-                    )}
+                    {ballotHash.TimestampId ? ballotHash.TimestampId : <Text c='red'>UNSET</Text>}
                   </td>
                 </tr>
               </tbody>
@@ -185,9 +178,9 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={ballotViewClasses.boxGap}></Box>
-      <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Title className={ballotViewClasses.titleSpaces} size='h6'>
+      <Box className={classes.boxGap}></Box>
+      <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
+        <Title className={classes.titleSpaces} size='h4'>
           Raw Data
         </Title>
         <Group mt='md' mb='xs'>

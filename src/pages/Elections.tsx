@@ -3,12 +3,19 @@ import { DBAllElections } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Accordion, Button, Container, MantineTheme, Text, useMantineTheme } from '@mantine/core';
+import {
+  Accordion,
+  Button,
+  Container,
+  MantineTheme,
+  Text,
+  rem,
+  useMantineTheme,
+} from '@mantine/core';
 import { useColorScheme } from '@mantine/hooks';
 import { IconCheckbox, IconChecklist, IconChevronRight } from '@tabler/icons-react';
 import { FC, Fragment, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-import ballotViewClasses from './BallotView.module.css';
 
 export const Elections: FC = () => {
   const theme: MantineTheme = useMantineTheme();
@@ -44,9 +51,15 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
           </Accordion.Control>
           <Accordion.Panel>
             <Text>{e.Description}</Text>
-            <Link to={`/ballot/${e.ElectionId}`} className={ballotViewClasses.linkStyle}>
-              <Button radius='md' fullWidth color='green' variant='light'>
-                <IconCheckbox size={16}>Vote</IconCheckbox>
+            <Link to={`/ballot/${e.ElectionId}`} className={classes.buttonText}>
+              <Button
+                fullWidth
+                radius='md'
+                color='green'
+                variant='light'
+                rightSection={<IconCheckbox style={{ width: rem(16), height: rem(16) }} />}
+              >
+                <span className={classes.buttonText}>Vote</span>
               </Button>
             </Link>
           </Accordion.Panel>
@@ -61,7 +74,7 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
         chevronPosition='right'
         variant='contained'
         chevron={<IconChevronRight size={26} />}
-        className={ballotViewClasses.accordion}
+        className={classes.accordion}
       >
         {items}
       </Accordion>

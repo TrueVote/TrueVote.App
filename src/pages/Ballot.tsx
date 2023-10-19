@@ -27,7 +27,6 @@ import _ from 'lodash';
 import moment from 'moment';
 import { FC, useState } from 'react';
 import { NavigateFunction, Params, useNavigate, useParams } from 'react-router-dom';
-import ballotViewClasses from './BallotView.module.css';
 
 export const Ballot: FC = () => {
   return <Election />;
@@ -105,7 +104,7 @@ const Election: FC = () => {
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Ballot' />
-      <Title className={ballotViewClasses.titleSpaces} size='h4'>
+      <Title className={classes.titleSpaces} size='h4'>
         Complete your ballot below
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
@@ -126,13 +125,13 @@ const Election: FC = () => {
             Starts: {moment(election.StartDate).format('MMMM DD, YYYY')}
           </Badge>
         </Group>
-        <Text size='sm' color='dimmed'>
+        <Text size='sm' c='dimmed'>
           {election.Description}
         </Text>
-        <Box className={ballotViewClasses.boxGap}></Box>
+        <Box className={classes.boxGap}></Box>
         <Card.Section>
           <Flex
-            className={ballotViewClasses.flexGap}
+            className={classes.flexGap}
             miw='50'
             gap='sm'
             justify='flex-start'

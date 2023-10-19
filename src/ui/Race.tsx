@@ -1,8 +1,8 @@
 import { CandidateModel, ElectionModel, RaceModel } from '@/TrueVote.Api';
 import { RaceTypes } from '@/TrueVote.Api.ManualModels';
+import classes from '@/ui/shell/AppStyles.module.css';
 import { Card, Checkbox, Radio, Space, Title } from '@mantine/core';
 import { formatCandidateName } from './Helpers';
-import classes from '@/ui/shell/AppStyles.module.css';
 
 const RaceGroup: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
   const raceLabel: React.ReactNode = <Title order={4}>{race.Name}</Title>;
