@@ -24,6 +24,7 @@
 .headerLeft {
   position: left;
   width: 62px;
+  align-items: left;
 }
 
 .headerCenter {
@@ -119,7 +120,7 @@
 }
 
 .headerImage {
-  margin-left: 45px;
+  margin-left: -5px;
   height: 45px;
   background-size: 45px;
   background-image: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
@@ -127,11 +128,13 @@
 }
 
 .headerLink {
-  position: flex;
+  position: absolute;
+  width: 45px;
 }
 
 .profileLink {
   position: absolute;
+  margin-left: 55px;
 }
 
 .themeSwitcher {

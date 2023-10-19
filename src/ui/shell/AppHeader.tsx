@@ -33,12 +33,12 @@ export const AppHeader: FC = () => {
     <AppShell.Header>
       <Container fluid className={classes.header}>
         <Group gap={6} className={classes.headerLeft}>
-          <Anchor href='/profile' className={classes.profileLink}>
-            <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
-          </Anchor>
           <Anchor href='/' className={classes.headerLink}>
             <Image className={classes.headerImage} component={Link} to='/' />
           </Anchor>
+          <span className={classes.profileLink}>
+            <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+          </span>
         </Group>
 
         <Group gap={6} className={classes.links}>
