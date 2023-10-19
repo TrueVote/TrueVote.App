@@ -17,7 +17,23 @@
   align-items: center;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark));
   width: 100%;
-  margin-top: 5px;
+  height: 45px;
+  margin-top: 2px;
+}
+
+.headerLeft {
+  position: left;
+  width: 62px;
+}
+
+.headerCenter {
+  position: center;
+}
+
+.headerRight {
+  position: right;
+  width: 62px;
+  align-items: right;
 }
 
 .footer {
@@ -103,9 +119,7 @@
 }
 
 .headerImage {
-  position: relative;
-  margin-top: -3px;
-  width: 45px;
+  margin-left: 45px;
   height: 45px;
   background-size: 45px;
   background-image: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
@@ -113,5 +127,16 @@
 }
 
 .headerLink {
-  width: 45px;
+  position: flex;
+}
+
+.profileLink {
+  position: absolute;
+}
+
+.themeSwitcher {
+  position: flex;
+  @media (min-width: $mantine-breakpoint-sm) {
+    margin-left: 32px;
+  }
 }

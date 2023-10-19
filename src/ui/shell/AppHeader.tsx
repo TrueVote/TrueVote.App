@@ -23,7 +23,7 @@ export const AppHeader: FC = () => {
   const [opened, { toggle }] = useDisclosure();
 
   const items: any = links.map((link: any) => (
-    <Link key={link.id} to={link.link} className={classes.link} onClick={(): any => toggle(false)}>
+    <Link key={link.id} to={link.link} className={classes.link} onClick={(): any => toggle()}>
       {link.label}
     </Link>
   ));
@@ -31,18 +31,20 @@ export const AppHeader: FC = () => {
   return (
     <AppShell.Header>
       <Container fluid className={classes.header}>
-        <Group gap={6}>
-          <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+        <Group gap={6} className={classes.headerLeft}>
+          <Anchor href='/profile' className={classes.profileLink}>
+            <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+          </Anchor>
           <Anchor href='/' className={classes.headerLink}>
             <Image className={classes.headerImage} component={Link} to='/' />
           </Anchor>
         </Group>
 
-        <Group gap={5} className={classes.links}>
+        <Group gap={6} className={classes.links}>
           {items}
         </Group>
 
-        <Group gap={16}>
+        <Group gap={6} className={classes.headerRight}>
           <ThemeSwitcher />
           <Burger
             opened={opened}
