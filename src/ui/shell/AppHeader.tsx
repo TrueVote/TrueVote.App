@@ -10,7 +10,7 @@ import {
   Paper,
   Transition,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useToggle } from '@mantine/hooks';
 import { FC } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import { ThemeSwitcher } from '../ThemeSwitcher';
@@ -19,11 +19,12 @@ export const AppHeader: FC = () => {
   const links: any = [
     { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
     { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
+    { id: '2', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
   ];
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, toggle] = useToggle();
 
   const items: any = links.map((link: any) => (
-    <Link key={link.id} to={link.link} className={classes.link} onClick={(): any => toggle()}>
+    <Link key={link.id} to={link.link} className={classes.link} onClick={(): any => toggle(false)}>
       {link.label}
     </Link>
   ));
@@ -48,7 +49,7 @@ export const AppHeader: FC = () => {
           <ThemeSwitcher />
           <Burger
             opened={opened}
-            onClick={toggle}
+            onClick={(): any => toggle(true)}
             aria-label='Toggle navigation'
             size='sm'
             className={classes.burger}
