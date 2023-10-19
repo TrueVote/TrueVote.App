@@ -2,19 +2,20 @@ import { BallotModel } from '@/TrueVote.Api';
 import { DBAllBallots } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
+import classes from '@/ui/shell/AppStyles.module.css';
 import { Accordion, Button, Container, MantineTheme, Text, useMantineTheme } from '@mantine/core';
 import { useColorScheme } from '@mantine/hooks';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-import classes from './BallotView.module.css';
+import ballotViewClasses from './BallotView.module.css';
 
 export const Ballots: FC = () => {
   const theme: MantineTheme = useMantineTheme();
 
   return (
-    <Container size='xs' px='xs'>
+    <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Ballots' />
       <AllBallots theme={theme} />
     </Container>
@@ -44,7 +45,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
           </Accordion.Control>
           <Accordion.Panel>
             <Text>{e.BallotId}</Text>
-            <Link to={`/ballotview/${e.BallotId}`} className={classes.linkStyle}>
+            <Link to={`/ballotview/${e.BallotId}`} className={ballotViewClasses.linkStyle}>
               <Button radius='md' fullWidth size='compact-md' color='green' variant='light'>
                 <IconZoomIn size={16}>Details</IconZoomIn>
               </Button>
@@ -61,7 +62,7 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
         chevronPosition='right'
         variant='contained'
         chevron={<IconChevronRight size={26} />}
-        className={classes.accordion}
+        className={ballotViewClasses.accordion}
       >
         {items}
       </Accordion>

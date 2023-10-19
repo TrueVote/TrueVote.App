@@ -9,6 +9,7 @@ import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
+import classes from '@/ui/shell/AppStyles.module.css';
 import {
   Badge,
   Box,
@@ -26,7 +27,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { FC, useState } from 'react';
 import { NavigateFunction, Params, useNavigate, useParams } from 'react-router-dom';
-import classes from './BallotView.module.css';
+import ballotViewClasses from './BallotView.module.css';
 
 export const Ballot: FC = () => {
   return <Election />;
@@ -102,9 +103,9 @@ const Election: FC = () => {
   };
 
   return (
-    <Container size='xs' px='xs'>
+    <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Ballot' />
-      <Title className={classes.titleSpaces} size='h4'>
+      <Title className={ballotViewClasses.titleSpaces} size='h4'>
         Complete your ballot below
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
@@ -128,10 +129,10 @@ const Election: FC = () => {
         <Text size='sm' color='dimmed'>
           {election.Description}
         </Text>
-        <Box className={classes.boxGap}></Box>
+        <Box className={ballotViewClasses.boxGap}></Box>
         <Card.Section>
           <Flex
-            className={classes.flexGap}
+            className={ballotViewClasses.flexGap}
             miw='50'
             gap='sm'
             justify='flex-start'

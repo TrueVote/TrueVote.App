@@ -17,7 +17,7 @@ export const MainLayout: FC = () => {
       footer={{ height: FOOTER_HEIGHT }}
     >
       <AppHeader />
-      <Group className={classes.root} grow>
+      <Group className={classes.root}>
         <Outlet />
       </Group>
       <AppFooter />

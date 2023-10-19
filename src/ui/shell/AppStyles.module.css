@@ -1,14 +1,21 @@
 .root {
   position: relative;
   z-index: 1;
-  min-height: 125px;
 }
 
 .shell {
-  display: flex;
+  align-self: flex-start;
   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 45px;
+}
+
+.container {
+  margin-top: 10px;
+  align-self: flex-start;
+  min-width: 100%;
+  min-height: 100%;
+  margin-bottom: 70px;
 }
 
 .header {

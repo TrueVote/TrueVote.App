@@ -1,5 +1,6 @@
 import { SubmitBallotModelResponse } from '@/TrueVote.Api';
 import { Hero } from '@/ui/Hero';
+import classes from '@/ui/shell/AppStyles.module.css';
 import { Container, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -12,7 +13,7 @@ export const Thanks: FC = () => {
   console.info('Thanks Data', submitBallotModelResponse);
 
   return (
-    <Container size='xs' px='xs'>
+    <Container size='xs' px='xs' className={classes.container}>
       <Stack gap={32}>
         <Hero title='Thanks!' />
         <Text size='xl'>Thank you for submitting your ballot.</Text>
