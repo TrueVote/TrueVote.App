@@ -103,8 +103,8 @@
 }
 
 .headerImage {
-  position: absolute;
-  margin-left: 45px;
+  position: relative;
+  margin-top: -3px;
   width: 45px;
   height: 45px;
   background-size: 45px;
@@ -113,10 +113,5 @@
 }
 
 .headerLink {
-  position: absolute;
-  max-width: 45px;
-  margin-left: 45px;
   width: 45px;
-  height: 45px;
-  background-size: 45px;
 }
