@@ -1,5 +1,6 @@
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
+  Anchor,
   AppShell,
   Avatar,
   Burger,
@@ -9,30 +10,17 @@ import {
   Paper,
   Transition,
 } from '@mantine/core';
-import { useColorScheme, useLocalStorage, useToggle } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { FC } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
-  const defaultColorScheme: string = useColorScheme();
-
-  const [colorScheme, setColorScheme] = useLocalStorage({
-    key: 'color-scheme',
-    defaultValue: defaultColorScheme,
-    getInitialValueInEffect: true,
-  });
-
-  const toggleColorScheme: () => void = () => {
-    const val: string = colorScheme === 'dark' ? 'light' : 'dark';
-    setColorScheme(val);
-  };
-
   const links: any = [
     { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
     { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
   ];
-  const [opened, toggle] = useToggle();
+  const [opened, { toggle }] = useDisclosure();
 
   const items: any = links.map((link: any) => (
     <Link key={link.id} to={link.link} className={classes.link} onClick={(): any => toggle(false)}>
@@ -45,7 +33,9 @@ export const AppHeader: FC = () => {
       <Container fluid className={classes.header}>
         <Group gap={6}>
           <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
-          <Image className={classes.headerImage} component={Link} to='/' />
+          <Anchor href='/' className={classes.headerLink}>
+            <Image className={classes.headerImage} component={Link} to='/' />
+          </Anchor>
         </Group>
 
         <Group gap={5} className={classes.links}>
@@ -56,10 +46,10 @@ export const AppHeader: FC = () => {
           <ThemeSwitcher />
           <Burger
             opened={opened}
-            onClick={(): any => toggleColorScheme()}
-            className={classes.burger}
-            aria-label='links dropdown menu'
+            onClick={toggle}
+            aria-label='Toggle navigation'
             size='sm'
+            className={classes.burger}
           />
         </Group>
 
