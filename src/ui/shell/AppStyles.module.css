@@ -1,0 +1,229 @@
+.root {
+  position: relative;
+  z-index: 1;
+}
+
+.shell {
+  align-self: flex-start;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+  justify-content: center;
+  margin-top: 45px;
+}
+
+.container {
+  margin-top: 10px;
+  align-self: flex-start;
+  min-width: 100%;
+  min-height: 400px;
+  margin-bottom: 70px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark));
+  width: 100%;
+  height: 45px;
+  margin-top: 2px;
+}
+
+.headerLeft {
+  position: left;
+  width: 62px;
+  align-items: left;
+}
+
+.headerCenter {
+  position: center;
+}
+
+.headerRight {
+  position: right;
+  width: 62px;
+  align-items: right;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  .link {
+    display: block;
+    line-height: 1;
+    padding: 8px 12px;
+    border-radius: var(--mantine-radius-sm);
+    text-decoration: none;
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+    font-size: var(--mantine-font-sizes-sm);
+    font-weight: 500;
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top-width: 0;
+  overflow: hidden;
+  font-size: var(--mantine-h6-font-size);
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    .dropdown {
+      display: none;
+    }
+  }
+
+  .link {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .links {
+    visibility: hidden;
+  }
+}
+
+@media (min-width: $mantine-breakpoint-sm) {
+  .burger {
+    display: none;
+  }
+}
+
+.link {
+  display: block;
+  line-height: 1;
+  padding: 8px 12px;
+  border-radius: var(--mantine-radius-sm);
+  text-decoration: none;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  font-size: var(--mantine-font-sizes-sm);
+  font-weight: 500;
+}
+
+.link:hover {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  text-decoration: none;
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .link {
+    border-radius: 0;
+  }
+}
+
+.linkActive,
+.linkActive:hover {
+  background-color: var(--mantine-color-primary-0);
+  color: light-dark(var(--mantine-color-primary-3), var(--mantine-color-primary-7));
+}
+
+.headerImage {
+  margin-left: -5px;
+  height: 45px;
+  background-size: 45px;
+  background-image: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
+  background-repeat: no-repeat;
+}
+
+.headerLink {
+  position: absolute;
+  width: 45px;
+}
+
+.profileLink {
+  position: absolute;
+  margin-left: 55px;
+}
+
+.themeSwitcher {
+  position: flex;
+  @media (min-width: $mantine-breakpoint-sm) {
+    margin-left: 32px;
+  }
+}
+
+.buttonText {
+  text-decoration: none;
+  font-size: var(--mantine-h4-font-size);
+}
+
+.boxGap {
+  height: 15px;
+}
+
+.titleSpaces {
+  padding-top: 1px;
+  padding-bottom: 7px;
+}
+
+.tdLeft {
+  text-align: right;
+  font-size: var(--mantine-h7-font-size);
+}
+
+@media (max-width: 440px) {
+  .tdFixedWidth {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 160px;
+  }
+}
+
+.flexGap {
+  padding: 10px;
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
+}
+
+.accordionItem[data-active] {
+  filter: brightness(100%);
+}
+
+.accordionChevron[data-rotate] {
+  transform: rotate(90deg);
+}
+
+.accordionControl {
+  padding: 2px;
+}
+
+.radioBody {
+  padding-bottom: 15px;
+}
+
+.cardWide {
+  width: 100%;
+}
+
+.checkboxLabel {
+  color: light-dark(darkgreen, lightgreen);
+  font-size: var(--mantine-h7-font-size);
+}
+
+.raceNameTitle {
+  color: light-dark(var(--mantine-color-yellow-5), var(--mantine-color-yellow-1));
+  font-size: var(--mantine-h3-font-size);
+}
+
+.raceName {
+  color: light-dark(var(--mantine-color-green-5), var(--mantine-color-green-1));
+  font-size: var(--mantine-h6-font-size);
+}
+
+.raceNameUnselected {
+  color: light-dark(var(--mantine-color-red-5), var(--mantine-color-red-1));
+  font-size: var(--mantine-h6-font-size);
+}
+
+.textAlert {
+  color: red;
+}

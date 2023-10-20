@@ -1,12 +1,10 @@
 import { CandidateModel, ElectionModel, RaceModel } from '@/TrueVote.Api';
 import { RaceTypes } from '@/TrueVote.Api.ManualModels';
-import { Card, Checkbox, MantineTheme, Radio, Space, Title, useMantineTheme } from '@mantine/core';
+import classes from '@/ui/shell/AppStyles.module.css';
+import { Card, Checkbox, Radio, Space, Title } from '@mantine/core';
 import { formatCandidateName } from './Helpers';
-import { ballotViewStyles } from './shell/AppStyles';
 
 const RaceGroup: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
-  const theme: MantineTheme = useMantineTheme();
-  const { classes, cx } = ballotViewStyles(theme);
   const raceLabel: React.ReactNode = <Title order={4}>{race.Name}</Title>;
 
   const setVal: any = (cc: CandidateModel, val: string) => {
@@ -56,7 +54,7 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
             label={formatCandidateName(e)}
             key={e.CandidateId}
             size='sm'
-            className={cx(classes.radioBody)}
+            className={classes.radioBody}
             onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
           />
         ))}
@@ -76,7 +74,7 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
             label={formatCandidateName(e)}
             key={e.CandidateId}
             size='sm'
-            className={cx(classes.radioBody)}
+            className={classes.radioBody}
             onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
           />
         ))}
@@ -86,11 +84,8 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
 };
 
 export const Race: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
-  const theme: MantineTheme = useMantineTheme();
-  const { classes, cx } = ballotViewStyles(theme);
-
   return (
-    <Card className={cx(classes.cardWide)} shadow='sm' p='xs' radius='lg' withBorder>
+    <Card className={classes.cardWide} shadow='sm' p='xs' radius='lg' withBorder>
       <RaceGroup race={race} election={election} />
     </Card>
   );

@@ -17,8 +17,6 @@ if ('serviceWorker' in navigator) {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as Element).render(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore error TS2345
   <React.StrictMode>
     <App />
   </React.StrictMode>,

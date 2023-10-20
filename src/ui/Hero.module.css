@@ -1,0 +1,12 @@
+.title {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+  font-size: 44px;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+@media (max-width: var(--mantine-breakpoint-xs)) {
+  .title {
+    font-size: 28px;
+  }
+}

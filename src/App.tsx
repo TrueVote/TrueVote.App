@@ -1,38 +1,15 @@
-import { ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
-import {
-  ColorScheme,
-  ColorSchemeProvider,
-  MantineProvider,
-  MantineThemeOverride,
-} from '@mantine/core';
-import { useColorScheme, useLocalStorage } from '@mantine/hooks';
 import { FC } from 'react';
+import { ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { Loader, MantineProvider } from '@mantine/core';
 import { BrowserRouter } from 'react-router-dom';
 import { EnvConfig } from './EnvConfig';
 import { ROUTES } from './Routes';
+import { TrueVoteSpinnerLoader } from './ui/CustomLoader';
+import '@mantine/core/styles.css';
 
 export const App: FC = () => {
   const apiRoot: string | undefined = EnvConfig.apiRoot;
   console.info('ApiRoot', apiRoot);
-
-  const defaultColorScheme: ColorScheme = useColorScheme();
-
-  const [colorScheme, setColorScheme] = useLocalStorage({
-    key: 'color-scheme',
-    defaultValue: defaultColorScheme,
-    getInitialValueInEffect: true,
-  });
-
-  const toggleColorScheme: any = (value?: ColorScheme) => {
-    const val: ColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
-    setColorScheme(val);
-  };
-
-  const theme: MantineThemeOverride = {
-    colorScheme: colorScheme,
-    primaryColor: 'blue',
-    defaultRadius: 0,
-  };
 
   const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     uri: apiRoot + `/api/graphql/`,
@@ -42,11 +19,20 @@ export const App: FC = () => {
 
   return (
     <ApolloProvider client={client}>
-      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-        <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-          <BrowserRouter>{ROUTES}</BrowserRouter>
-        </MantineProvider>
-      </ColorSchemeProvider>
+      <MantineProvider
+        theme={{
+          components: {
+            Loader: Loader.extend({
+              defaultProps: {
+                loaders: { ...Loader.defaultLoaders, TrueVoteSpinnerLoader: TrueVoteSpinnerLoader },
+                type: 'TrueVoteSpinnerLoader',
+              },
+            }),
+          },
+        }}
+      >
+        <BrowserRouter>{ROUTES}</BrowserRouter>
+      </MantineProvider>
     </ApolloProvider>
   );
 };

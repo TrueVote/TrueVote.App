@@ -1,21 +1,9 @@
-import { createStyles, Stack, Text, Title } from '@mantine/core';
+import { Stack, Text, Title } from '@mantine/core';
+import '@mantine/core/styles.css';
 import { Helmet, HelmetData } from 'react-helmet-async';
+import classes from './Hero.module.css';
 
 const helmetData: any = new HelmetData({});
-
-const useStyles: any = createStyles((theme: any) => ({
-  title: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    fontSize: 44,
-    lineHeight: 1.2,
-    fontWeight: 900,
-
-    [theme.fn.smallerThan('xs')]: {
-      fontSize: 28,
-    },
-  },
-}));
 
 export const Hero: any = ({
   title,
@@ -24,7 +12,6 @@ export const Hero: any = ({
   title: React.ReactNode;
   subTitle?: React.ReactNode;
 }) => {
-  const { classes } = useStyles();
   return (
     <>
       <Helmet helmetData={helmetData}>
@@ -33,7 +20,7 @@ export const Hero: any = ({
       <Stack>
         <Title className={classes.title}>{title}</Title>
         {subTitle && (
-          <Text color='dimmed' mt='md'>
+          <Text c='dimmed' mt='md'>
             {subTitle}
           </Text>
         )}

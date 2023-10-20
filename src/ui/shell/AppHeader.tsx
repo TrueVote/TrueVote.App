@@ -1,10 +1,11 @@
+import classes from '@/ui/shell/AppStyles.module.css';
 import {
   Anchor,
+  AppShell,
   Avatar,
   Burger,
   Container,
   Group,
-  Header,
   Image,
   Paper,
   Transition,
@@ -13,60 +14,56 @@ import { useToggle } from '@mantine/hooks';
 import { FC } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import { ThemeSwitcher } from '../ThemeSwitcher';
-import { HEADER_HEIGHT, headerFooterStyles } from './AppStyles';
 
 export const AppHeader: FC = () => {
   const links: any = [
     { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
     { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
+    { id: '2', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
   ];
   const [opened, toggle] = useToggle();
-  const { classes, cx } = headerFooterStyles();
 
   const items: any = links.map((link: any) => (
-    <Link
-      key={link.id}
-      to={link.link}
-      className={cx(classes.link, { [cx(classes.linkActive)]: link.matched })}
-      onClick={(): any => toggle(false)}
-    >
+    <Link key={link.id} to={link.link} className={classes.link} onClick={(): any => toggle(false)}>
       {link.label}
     </Link>
   ));
 
   return (
-    <Header height={HEADER_HEIGHT} className={cx(classes.root)}>
-      <Container className={cx(classes.header)}>
-        <Group spacing={6}>
-          <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
-          <Anchor href='/' className={cx(classes.headerLink)}>
-            <Image className={cx(classes.headerImage)}></Image>
+    <AppShell.Header>
+      <Container fluid className={classes.header}>
+        <Group gap={6} className={classes.headerLeft}>
+          <Anchor href='/' className={classes.headerLink}>
+            <Image className={classes.headerImage} component={Link} to='/' />
           </Anchor>
+          <span className={classes.profileLink}>
+            <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+          </span>
         </Group>
 
-        <Group spacing={5} className={cx(classes.links)}>
+        <Group gap={6} className={classes.links}>
           {items}
         </Group>
 
-        <Group spacing={16}>
+        <Group gap={6} className={classes.headerRight}>
           <ThemeSwitcher />
           <Burger
             opened={opened}
-            onClick={(): any => toggle()}
-            className={cx(classes.burger)}
-            aria-label='links dropdown menu'
+            onClick={(): any => toggle(true)}
+            aria-label='Toggle navigation'
             size='sm'
+            className={classes.burger}
           />
         </Group>
 
         <Transition transition='pop-top-right' duration={200} mounted={opened}>
           {(styles: any): any => (
-            <Paper className={cx(classes.dropdown)} withBorder style={styles}>
+            <Paper className={classes.dropdown} withBorder style={styles}>
               {items}
             </Paper>
           )}
         </Transition>
       </Container>
-    </Header>
+    </AppShell.Header>
   );
 };
