@@ -11,9 +11,9 @@ export const ThemeSwitcher: FC = () => {
       onClick={(): void => toggleColorScheme()}
       aria-label='Switch Theme Button'
       variant='transparent'
-      color={colorScheme == 'dark' ? 'white' : 'gray'}
+      color={colorScheme === 'dark' ? 'white' : 'gray'}
     >
-      {colorScheme == 'dark' ? <IconSun /> : <IconMoon />}
+      {colorScheme === 'dark' ? <IconSun /> : <IconMoon />}
     </ActionIcon>
   );
 };

@@ -10,9 +10,9 @@ import {
   MantineTheme,
   Text,
   rem,
+  useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
 import { IconCheckbox, IconChecklist, IconChevronRight } from '@tabler/icons-react';
 import { FC, Fragment, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
@@ -29,7 +29,7 @@ export const Elections: FC = () => {
 };
 
 const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
-  const colorScheme: 'dark' | 'light' = useColorScheme();
+  const { colorScheme } = useMantineColorScheme();
   const { loading, error, data } = DBAllElections();
   if (loading) {
     return <TrueVoteLoader />;

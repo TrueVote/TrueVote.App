@@ -3,13 +3,12 @@ import { APIStatus } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Container, Group, ScrollArea, Stack, Text } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
+import { Container, Group, ScrollArea, Stack, Text, useMantineColorScheme } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
 
 export const Status: FC = () => {
-  const colorScheme: 'dark' | 'light' = useColorScheme();
+  const { colorScheme } = useMantineColorScheme();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [statusData, setStatusData] = useState<StatusModel | null>(null);

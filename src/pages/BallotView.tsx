@@ -22,8 +22,8 @@ import {
   Table,
   Text,
   Title,
+  useMantineColorScheme,
 } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
 import { IconCheck } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC } from 'react';
@@ -35,7 +35,7 @@ export const BallotView: FC = () => {
 };
 
 const Ballot: FC = () => {
-  const colorScheme: 'dark' | 'light' = useColorScheme();
+  const { colorScheme } = useMantineColorScheme();
   const params: Params<string> = useParams();
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
 
@@ -77,7 +77,7 @@ const Ballot: FC = () => {
           c.Selected === true ? (
             <Checkbox
               key={c.CandidateId}
-              size={'xs'}
+              size={'sm'}
               icon={IconCheck}
               color='green'
               radius={'xl'}
@@ -113,17 +113,19 @@ const Ballot: FC = () => {
         </Title>
         <Group grow>
           <Card.Section>
-            <Table verticalSpacing='xs' striped withColumnBorders>
-              <tbody>
-                <tr>
-                  <td className={classes.tdLeft}>Submitted:</td>
-                  <td>{moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
-                </tr>
-                <tr>
-                  <td className={classes.tdLeft}>Ballot Id:</td>
-                  <td>{ballot.BallotId}</td>
-                </tr>
-              </tbody>
+            <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td className={classes.tdLeft}>Submitted:</Table.Td>
+                  <Table.Td>
+                    {moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
+                  </Table.Td>
+                </Table.Tr>
+                <Table.Tr>
+                  <Table.Td className={classes.tdLeft}>Ballot Id:</Table.Td>
+                  <Table.Td>{ballot.BallotId}</Table.Td>
+                </Table.Tr>
+              </Table.Tbody>
             </Table>
           </Card.Section>
         </Group>
@@ -156,29 +158,35 @@ const Ballot: FC = () => {
         </Title>
         <Group grow>
           <Card.Section>
-            <Table verticalSpacing='xs' striped withColumnBorders>
-              <tbody>
-                <tr>
-                  <td className={classes.tdLeft}>Created:</td>
-                  <td>{moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
-                </tr>
-                <tr>
-                  <td className={classes.tdLeft}>Updated:</td>
-                  <td>{moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}</td>
-                </tr>
-                <tr>
-                  <td className={classes.tdLeft}>Hash:</td>
-                  <td>
-                    <Text className={classes.tdFixedWidth}>{ballotHash.ServerBallotHashS}</Text>
-                  </td>
-                </tr>
-                <tr>
-                  <td className={classes.tdLeft}>Timestamp Id:</td>
-                  <td>
-                    {ballotHash.TimestampId ? ballotHash.TimestampId : <Text c='red'>Pending</Text>}
-                  </td>
-                </tr>
-              </tbody>
+            <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td className={classes.tdLeft}>Created:</Table.Td>
+                  <Table.Td>
+                    {moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
+                  </Table.Td>
+                </Table.Tr>
+                <Table.Tr>
+                  <Table.Td className={classes.tdLeft}>Updated:</Table.Td>
+                  <Table.Td>
+                    {moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}
+                  </Table.Td>
+                </Table.Tr>
+                <Table.Tr>
+                  <Table.Td className={classes.tdLeft}>Hash:</Table.Td>
+                  <Table.Td>{ballotHash.ServerBallotHashS}</Table.Td>
+                </Table.Tr>
+                <Table.Tr>
+                  <Table.Td className={classes.tdLeft}>Timestamp Id:</Table.Td>
+                  <Table.Td>
+                    {ballotHash.TimestampId ? (
+                      ballotHash.TimestampId
+                    ) : (
+                      <span className={classes.textAlert}>Pending</span>
+                    )}
+                  </Table.Td>
+                </Table.Tr>
+              </Table.Tbody>
             </Table>
           </Card.Section>
         </Group>

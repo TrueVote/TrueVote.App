@@ -166,7 +166,8 @@
 }
 
 .tdLeft {
-  text-align: left;
+  text-align: right;
+  font-size: var(--mantine-h7-font-size);
 }
 
 @media (max-width: 440px) {
@@ -210,15 +211,19 @@
 
 .raceNameTitle {
   color: light-dark(var(--mantine-color-yellow-5), var(--mantine-color-yellow-1));
-  font-size: var(--mantine-h4-font-size);
+  font-size: var(--mantine-h3-font-size);
 }
 
 .raceName {
   color: light-dark(var(--mantine-color-green-5), var(--mantine-color-green-1));
-  font-size: var(--mantine-h7-font-size);
+  font-size: var(--mantine-h6-font-size);
 }
 
 .raceNameUnselected {
   color: light-dark(var(--mantine-color-red-5), var(--mantine-color-red-1));
-  font-size: var(--mantine-h7-font-size);
+  font-size: var(--mantine-h6-font-size);
+}
+
+.textAlert {
+  color: red;
 }

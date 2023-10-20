@@ -3,8 +3,16 @@ import { DBAllBallots } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Accordion, Button, Container, MantineTheme, Text, useMantineTheme } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
+import {
+  Accordion,
+  Button,
+  Container,
+  MantineTheme,
+  Text,
+  rem,
+  useMantineColorScheme,
+  useMantineTheme,
+} from '@mantine/core';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement } from 'react';
@@ -22,7 +30,7 @@ export const Ballots: FC = () => {
 };
 
 export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
-  const colorScheme: 'dark' | 'light' = useColorScheme();
+  const { colorScheme } = useMantineColorScheme();
   const { loading, error, data } = DBAllBallots();
   if (loading) {
     return <TrueVoteLoader />;
@@ -43,10 +51,16 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
             {moment(e.DateCreated).format('MMMM DD, YYYY')}
           </Accordion.Control>
           <Accordion.Panel>
-            <Text>{e.BallotId}</Text>
-            <Link to={`/ballotview/${e.BallotId}`} className={classes.linkStyle}>
-              <Button radius='md' fullWidth size='compact-md' color='green' variant='light'>
-                <IconZoomIn size={16}>Details</IconZoomIn>
+            <Text>Ballot Id: {e.BallotId}</Text>
+            <Link to={`/ballotview/${e.BallotId}`} className={classes.buttonText}>
+              <Button
+                fullWidth
+                radius='md'
+                color='green'
+                variant='light'
+                rightSection={<IconZoomIn style={{ width: rem(16), height: rem(16) }} />}
+              >
+                <span className={classes.buttonText}>Details</span>
               </Button>
             </Link>
           </Accordion.Panel>
