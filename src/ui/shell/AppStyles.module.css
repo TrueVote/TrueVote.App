@@ -165,10 +165,6 @@
   padding-bottom: 7px;
 }
 
-.checkboxLabel label {
-  color: lightgreen;
-}
-
 .tdLeft {
   text-align: left;
 }
@@ -184,13 +180,7 @@
 
 .flexGap {
   padding: 10px;
-  background-color: var(--mantine-color-gray-0);
-}
-
-@media (prefers-color-scheme: dark) {
-  .flexGap {
-    background-color: var(--mantine-color-dark-4);
-  }
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
 }
 
 .accordionItem[data-active] {
@@ -211,4 +201,24 @@
 
 .cardWide {
   width: 100%;
+}
+
+.checkboxLabel {
+  color: light-dark(darkgreen, lightgreen);
+  font-size: var(--mantine-h7-font-size);
+}
+
+.raceNameTitle {
+  color: light-dark(var(--mantine-color-yellow-5), var(--mantine-color-yellow-1));
+  font-size: var(--mantine-h4-font-size);
+}
+
+.raceName {
+  color: light-dark(var(--mantine-color-green-5), var(--mantine-color-green-1));
+  font-size: var(--mantine-h7-font-size);
+}
+
+.raceNameUnselected {
+  color: light-dark(var(--mantine-color-red-5), var(--mantine-color-red-1));
+  font-size: var(--mantine-h7-font-size);
 }

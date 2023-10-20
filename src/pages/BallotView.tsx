@@ -24,7 +24,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useColorScheme } from '@mantine/hooks';
-import { IconCheckbox } from '@tabler/icons-react';
+import { IconCheck } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC } from 'react';
 import ReactJson from 'react-json-view';
@@ -70,15 +70,15 @@ const Ballot: FC = () => {
   const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
     return (
       <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
-        <Text key={r.RaceId} c='yellow'>
-          {r.Name}
+        <Text key={r.RaceId} component='span' className={classes.raceNameTitle}>
+          <span className={classes.raceNameTitle}>{r.Name}</span>
         </Text>
         {r.Candidates?.map((c: CandidateModel) =>
           c.Selected === true ? (
             <Checkbox
               key={c.CandidateId}
               size={'xs'}
-              icon={IconCheckbox}
+              icon={IconCheck}
               color='green'
               radius={'xl'}
               labelPosition='left'
@@ -87,8 +87,13 @@ const Ballot: FC = () => {
               defaultChecked
             />
           ) : (
-            <Text size={'xs'} key={c.CandidateId}>
-              {formatCandidateName(c)}
+            <Text
+              size={'xs'}
+              key={c.CandidateId}
+              component='span'
+              className={classes.raceNameUnselected}
+            >
+              <span className={classes.raceNameUnselected}>{formatCandidateName(c)}</span>
             </Text>
           ),
         )}
@@ -170,7 +175,7 @@ const Ballot: FC = () => {
                 <tr>
                   <td className={classes.tdLeft}>Timestamp Id:</td>
                   <td>
-                    {ballotHash.TimestampId ? ballotHash.TimestampId : <Text c='red'>UNSET</Text>}
+                    {ballotHash.TimestampId ? ballotHash.TimestampId : <Text c='red'>Pending</Text>}
                   </td>
                 </tr>
               </tbody>
