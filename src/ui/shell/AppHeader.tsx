@@ -1,6 +1,5 @@
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
-  Anchor,
   AppShell,
   Avatar,
   Burger,
@@ -33,9 +32,9 @@ export const AppHeader: FC = () => {
     <AppShell.Header>
       <Container fluid className={classes.header}>
         <Group gap={6} className={classes.headerLeft}>
-          <Anchor href='/' className={classes.headerLink}>
+          <span className={classes.headerLink}>
             <Image className={classes.headerImage} component={Link} to='/' />
-          </Anchor>
+          </span>
           <span className={classes.profileLink}>
             <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
           </span>
