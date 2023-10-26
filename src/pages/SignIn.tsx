@@ -1,4 +1,4 @@
-import { nostrKeyKeyHandler } from '@/services/NostrHelper';
+import { nostrKeyKeyHandler, storeNostrPrivateKey } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Image, Space, Stack, Text, Textarea } from '@mantine/core';
@@ -23,6 +23,7 @@ export const SignIn: FC = () => {
 
   const signInClick: any = (): void => {
     console.info('Nostr Key:', nostrkey);
+    storeNostrPrivateKey(nostrkey);
   };
 
   return (

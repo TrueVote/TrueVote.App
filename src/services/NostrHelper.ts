@@ -1,4 +1,4 @@
-import { nip19 } from 'nostr-tools';
+import { getPublicKey, nip19 } from 'nostr-tools';
 import { DecodeResult } from 'nostr-tools/lib/types/nip19';
 import React from 'react';
 
@@ -9,6 +9,9 @@ const invalidHexDecodeError: string = 'Invalid hex key - could not decode nip19'
 const exceptionError: string = 'Invalid key - exception';
 const validKeyMessage: string = 'Valid key';
 const invalidPubKeyError: string = 'Invalid key - public key';
+
+const nostrPrivateKeyStorageKey: string = 'nostr_sk';
+const nostrPublicKeyStorageKey: string = 'nostr_pk';
 
 export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
   error: string;
@@ -44,7 +47,9 @@ export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
         }
       }
 
-      message = 'Valid';
+      valid = true;
+      message = validKeyMessage;
+
       return { error, message, valid };
     } else {
       // Attempt to decode to detect errors
@@ -70,4 +75,32 @@ export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
   message = validKeyMessage;
 
   return { error, message, valid };
+};
+
+export const normalizeKey: any = (val: string) => {
+  let hex: any;
+
+  if (val.substring(0, 4) === 'nsec' || val.substring(0, 4) === 'npub') {
+    const decoded: DecodeResult = nip19.decode(val);
+    hex = decoded.data;
+  }
+
+  return hex || val;
+};
+
+export const storeNostrPublicKey: any = (privateKey: any) => {
+  const normalized: string = normalizeKey(privateKey);
+  console.info('Normalized', normalized);
+
+  const pubkey: string = getPublicKey(normalized);
+
+  console.info('PubKey', pubkey);
+
+  localStorage.setItem(nostrPublicKeyStorageKey, pubkey);
+};
+
+export const storeNostrPrivateKey: any = (privateKey: any) => {
+  localStorage.setItem(nostrPrivateKeyStorageKey, privateKey);
+
+  storeNostrPublicKey(privateKey);
 };
