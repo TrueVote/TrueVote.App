@@ -9,13 +9,20 @@ export const SignIn: FC = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [valid, setValid] = useState(false);
+  const [nostrkey, setNostrkey] = useState('');
 
   const handleChange: any = (e: any): void => {
+    const inputValue: string = e.target.value;
     const { error, message, valid } = nostrKeyKeyHandler(e);
 
     setError(error);
     setMessage(message);
     setValid(valid);
+    setNostrkey(inputValue);
+  };
+
+  const signInClick: any = (): void => {
+    console.info('Nostr Key:', nostrkey);
   };
 
   return (
@@ -42,7 +49,7 @@ export const SignIn: FC = () => {
         <Text c='red'>{error}</Text>
         <Text c='green'>{message}</Text>
       </Space>
-      <Button radius='md' color='green' variant='light' disabled={!valid}>
+      <Button radius='md' color='green' variant='light' disabled={!valid} onClick={signInClick}>
         Sign In
       </Button>
       <Space h='md'></Space>
