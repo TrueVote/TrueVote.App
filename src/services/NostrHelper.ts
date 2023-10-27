@@ -12,6 +12,11 @@ const invalidPubKeyError: string = 'Invalid key - public key';
 
 const nostrPrivateKeyStorageKey: string = 'nostr_sk';
 const nostrPublicKeyStorageKey: string = 'nostr_pk';
+const nostrPublicRelays: string[] = [
+  'wss://relay.damus.io',
+  'wss://nostr.lnproxy.org',
+  'wss://relay.nostrss.re',
+];
 
 let nostrProfile: NostrProfile | null;
 
@@ -135,12 +140,7 @@ export const getUserProfileInfo: any = async (
     return nostrProfile;
   }
 
-  const relays: string[] = [
-    'wss://relay.damus.io',
-    'wss://nostr.lnproxy.org',
-    'wss://relay.nostrss.re',
-  ];
-  const nprofile: any = nip19.nprofileEncode({ pubkey: publicKey, relays });
+  const nprofile: any = nip19.nprofileEncode({ pubkey: publicKey, relays: nostrPublicRelays });
   const { type, data } = nip19.decode(nprofile);
   console.info('Data', data);
 
@@ -149,7 +149,7 @@ export const getUserProfileInfo: any = async (
   }
 
   const pool: SimplePool = new SimplePool();
-  const sub: any = pool.sub(relays, [{ kinds: [0], authors: [publicKey] }]);
+  const sub: any = pool.sub(nostrPublicRelays, [{ kinds: [0], authors: [publicKey] }]);
 
   try {
     const latestProfileEvent: any = await new Promise<any>((resolve: any) => {
