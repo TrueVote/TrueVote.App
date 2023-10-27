@@ -7,7 +7,7 @@ import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Image, Space, Stack, Text, Textarea } from '@mantine/core';
 import { FC, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const SignIn: FC = () => {
   const navigate: NavigateFunction = useNavigate();

@@ -1,4 +1,4 @@
-import { getNostrPublicKey, removeNostrPrivateKey } from '@/services/NostrHelper';
+import { getNostrPublicKey, nostrSignOut } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Space, Stack, Text } from '@mantine/core';
@@ -11,7 +11,7 @@ export const SignOut: FC = () => {
 
   const signOutClick: any = (): void => {
     console.info('Signing out...');
-    removeNostrPrivateKey();
+    nostrSignOut();
     navigate('/profile');
   };
 
