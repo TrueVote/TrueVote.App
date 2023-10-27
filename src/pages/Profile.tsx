@@ -14,6 +14,9 @@ export const Profile: FC = () => {
         <Link className={classes.pagelinkActive} to='/signin'>
           Sign In
         </Link>
+        <Link className={classes.pagelinkActive} to='/signout'>
+          Sign Out
+        </Link>
         <Link className={classes.pagelinkActive} to='/register'>
           Register
         </Link>

@@ -104,3 +104,12 @@ export const storeNostrPrivateKey: any = (privateKey: any) => {
 
   storeNostrPublicKey(privateKey);
 };
+
+export const removeNostrPrivateKey: any = () => {
+  localStorage.removeItem(nostrPrivateKeyStorageKey);
+  localStorage.removeItem(nostrPublicKeyStorageKey);
+};
+
+export const getNostrPublicKey: any = () => {
+  return localStorage.getItem(nostrPublicKeyStorageKey);
+};
