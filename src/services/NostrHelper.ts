@@ -127,14 +127,18 @@ export const nostrSignOut: any = () => {
 };
 
 export interface NostrProfile {
+  publicKey: string;
   name: string;
   avatar: string;
   bio: string;
 }
 
+export const emptyNostrProfile: NostrProfile = { name: '', avatar: '', bio: '', publicKey: '' };
+
 export const getUserProfileInfo: any = async (
   publicKey: string,
 ): Promise<NostrProfile | undefined> => {
+  // Optimization. If the nostrProfile is alerady set, why go out and fetch it from a relay.
   if (nostrProfile && nostrProfile.name && nostrProfile.name.length > 0) {
     console.info('Retrieving stored nostrProfile');
     return nostrProfile;
@@ -182,6 +186,7 @@ export const getUserProfileInfo: any = async (
       name: json.displayName,
       avatar: json.picture,
       bio: json.about,
+      publicKey: publicKey,
     };
 
     nostrProfile = userProfile;

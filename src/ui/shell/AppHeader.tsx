@@ -1,3 +1,5 @@
+import { useGlobalContext } from '@/Global';
+import { NostrProfile, getNostrPublicKey, getUserProfileInfo } from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   AppShell,
@@ -10,11 +12,36 @@ import {
   Transition,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
+  const nostrPublicKey: string | null = getNostrPublicKey();
+  const { nostrProfile, updateNostrProfile } = useGlobalContext();
+
+  useEffect(() => {
+    if (nostrPublicKey === null || String(nostrPublicKey).length <= 0) {
+      return;
+    }
+    // Define an async function to fetch the user profile
+    const fetchUserProfile: any = async () => {
+      try {
+        const userProfile: NostrProfile | undefined = await getUserProfileInfo(nostrPublicKey);
+        if (userProfile) {
+          updateNostrProfile(userProfile);
+        }
+        console.info('Returned Back', userProfile);
+      } catch (error) {
+        // Handle any errors, e.g., show an error message
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    // Call the async function
+    fetchUserProfile();
+  });
+
   const links: any = [
     { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
     { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
@@ -36,7 +63,13 @@ export const AppHeader: FC = () => {
             <Image className={classes.headerImage} component={Link} to='/' />
           </span>
           <span className={classes.profileLink}>
-            <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+            <Avatar
+              alt='Avatar'
+              radius='xl'
+              src={nostrProfile?.avatar}
+              component={Link}
+              to='/profile'
+            />
           </span>
         </Group>
 

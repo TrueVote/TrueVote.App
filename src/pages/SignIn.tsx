@@ -42,8 +42,8 @@ export const SignIn: FC = () => {
       {nostrPublicKey === null || String(nostrPublicKey).length === 0 ? (
         <>
           <Text>
-            To sign in, please provide your nostr secret key. If you would like to create a new
-            identity, go to the{' '}
+            To sign in, please provide your nostr secret (nsec1) key. If you would like to create a
+            new identity, go to the{' '}
             <Link to='/register' className={classes.linkActive}>
               {' '}
               sign up page

@@ -1,4 +1,5 @@
-import { getNostrPublicKey, nostrSignOut } from '@/services/NostrHelper';
+import { useGlobalContext } from '@/Global';
+import { emptyNostrProfile, getNostrPublicKey, nostrSignOut } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Space, Stack, Text } from '@mantine/core';
@@ -8,9 +9,11 @@ import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 export const SignOut: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const nostrPublicKey: any = getNostrPublicKey();
+  const { updateNostrProfile } = useGlobalContext();
 
   const signOutClick: any = (): void => {
     console.info('Signing out...');
+    updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
     navigate('/profile');
   };
