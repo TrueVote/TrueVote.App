@@ -192,7 +192,7 @@ export const getNostrProfileInfo: any = async (
     const json: any = JSON.parse(latestProfileEvent.content);
     console.info('Returned from relay', json);
 
-    const userProfile: NostrProfile = {
+    const nostrProfile: NostrProfile = {
       name: json.displayName,
       avatar: json.picture,
       bio: json.about,
@@ -201,8 +201,8 @@ export const getNostrProfileInfo: any = async (
       npub: nip19.npubEncode(publicKey),
     };
 
-    _nostrProfile = userProfile;
-    return userProfile;
+    _nostrProfile = nostrProfile;
+    return nostrProfile;
   } finally {
     sub.unsub();
   }
