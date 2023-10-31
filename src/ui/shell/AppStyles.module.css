@@ -188,7 +188,7 @@
   font-size: var(--mantine-h7-font-size);
 }
 
-@media (max-width: 640px) {
+@media (max-width: $mantine-breakpoint-sm) {
   .tdFixedWidth {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -268,7 +268,7 @@
 
 .textChopped {
   font-size: var(--mantine-h6-font-size);
-  @media (max-width: 640px) {
+  @media (max-width: $mantine-breakpoint-sm) {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

@@ -36,7 +36,7 @@ export const Profile: FC = () => {
                 <Table.Td className={classes.profileName}>{nostrProfile.name}</Table.Td>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>Signed In Public Key:</Table.Td>
+                <Table.Td className={classes.tdLeft}>Public Key:</Table.Td>
                 <Table.Td className={classes.textChopped}>{nostrProfile.npub}</Table.Td>
               </Table.Tr>
               <Table.Tr>
