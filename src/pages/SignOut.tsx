@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { emptyNostrProfile, getNostrPublicKey, nostrSignOut } from '@/services/NostrHelper';
+import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Space, Stack, Text } from '@mantine/core';
@@ -8,8 +8,7 @@ import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const SignOut: FC = () => {
   const navigate: NavigateFunction = useNavigate();
-  const nostrPublicKey: any = getNostrPublicKey();
-  const { updateNostrProfile } = useGlobalContext();
+  const { nostrProfile, updateNostrProfile } = useGlobalContext();
 
   const signOutClick: any = (): void => {
     console.info('Signing out...');
@@ -23,10 +22,12 @@ export const SignOut: FC = () => {
       <Stack gap={32}>
         <Hero title='Sign Out' />
       </Stack>
-      {nostrPublicKey !== null && String(nostrPublicKey).length > 0 ? (
+      {nostrProfile !== null && String(nostrProfile?.publicKey).length > 0 ? (
         <>
           <Space h='md'></Space>
-          <Text>Signed In Key: {nostrPublicKey}</Text>
+          <Text className={classes.profileText}>
+            <b>Signed In Public Key:</b> {nostrProfile?.npub}
+          </Text>
           <Space h='md'></Space>
           <Text>Click below to sign out.</Text>
           <Space h='md'></Space>

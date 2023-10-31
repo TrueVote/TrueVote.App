@@ -1,8 +1,5 @@
-import {
-  getNostrPublicKey,
-  nostrKeyKeyHandler,
-  storeNostrPrivateKey,
-} from '@/services/NostrHelper';
+import { useGlobalContext } from '@/Global';
+import { nostrKeyKeyHandler, storeNostrPrivateKey } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Image, Space, Stack, Text, Textarea } from '@mantine/core';
@@ -11,7 +8,7 @@ import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const SignIn: FC = () => {
   const navigate: NavigateFunction = useNavigate();
-  const nostrPublicKey: any = getNostrPublicKey();
+  const { nostrProfile } = useGlobalContext();
 
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -39,7 +36,7 @@ export const SignIn: FC = () => {
       <Stack gap={32}>
         <Hero title='Sign In' />
       </Stack>
-      {nostrPublicKey === null || String(nostrPublicKey).length === 0 ? (
+      {nostrProfile === null || String(nostrProfile?.publicKey).length === 0 ? (
         <>
           <Text>
             To sign in, please provide your nostr secret (nsec1) key. If you would like to create a
@@ -76,9 +73,11 @@ export const SignIn: FC = () => {
       ) : (
         <>
           <Space h='md'></Space>
-          <Text>Already Signed In</Text>
+          <Text className={classes.textAlert}>Already Signed In</Text>
           <Space h='md'></Space>
-          <Text>Signed In Key: {nostrPublicKey}</Text>
+          <Text className={classes.profileText}>
+            <b>Signed In Public Key:</b> {nostrProfile?.npub}
+          </Text>
           <Space h='md'></Space>
           <Text>Click below for sign out page.</Text>
           <Space h='md'></Space>

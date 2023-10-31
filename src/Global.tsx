@@ -33,8 +33,8 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
 export const useGlobalContext: () => GlobalContextType = () => {
   const context: GlobalContextType | undefined = useContext(GlobalContext);
   if (context === undefined) {
-    console.error('useGlobauseGlobalContextlInteger must be used within a GlobalProvider');
-    throw new Error('useGlobauseGlobalContextlInteger must be used within a GlobalProvider');
+    console.error('useGlobalContext must be used within a GlobalProvider');
+    throw new Error('useGlobalContext must be used within a GlobalProvider');
   }
   return context;
 };

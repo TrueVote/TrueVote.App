@@ -18,7 +18,25 @@ const nostrPublicRelays: string[] = [
   'wss://relay.nostrss.re',
 ];
 
-let nostrProfile: NostrProfile | null;
+let _nostrProfile: NostrProfile | null;
+
+export interface NostrProfile {
+  publicKey: string;
+  npub: string;
+  name: string;
+  avatar: string;
+  bio: string;
+  nip05: string;
+}
+
+export const emptyNostrProfile: NostrProfile = {
+  name: '',
+  avatar: '',
+  bio: '',
+  nip05: '',
+  publicKey: '',
+  npub: '',
+};
 
 export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
   error: string;
@@ -100,8 +118,8 @@ export const storeNostrPublicKey: any = (privateKey: any) => {
   console.info('Normalized', normalized);
 
   const pubkey: string = getPublicKey(normalized);
-
-  console.info('PubKey', pubkey);
+  const npub: string = nip19.npubEncode(pubkey);
+  console.info('PubKey', pubkey, 'Npub', npub);
 
   localStorage.setItem(nostrPublicKeyStorageKey, pubkey);
 };
@@ -123,25 +141,16 @@ export const getNostrPublicKey: any = () => {
 
 export const nostrSignOut: any = () => {
   removeNostrPrivateKey();
-  nostrProfile = null;
+  _nostrProfile = null;
 };
 
-export interface NostrProfile {
-  publicKey: string;
-  name: string;
-  avatar: string;
-  bio: string;
-}
-
-export const emptyNostrProfile: NostrProfile = { name: '', avatar: '', bio: '', publicKey: '' };
-
-export const getUserProfileInfo: any = async (
+export const getNostrProfileInfo: any = async (
   publicKey: string,
 ): Promise<NostrProfile | undefined> => {
   // Optimization. If the nostrProfile is alerady set, why go out and fetch it from a relay.
-  if (nostrProfile && nostrProfile.name && nostrProfile.name.length > 0) {
+  if (_nostrProfile && _nostrProfile.name && _nostrProfile.name.length > 0) {
     console.info('Retrieving stored nostrProfile');
-    return nostrProfile;
+    return _nostrProfile;
   }
 
   const nprofile: any = nip19.nprofileEncode({ pubkey: publicKey, relays: nostrPublicRelays });
@@ -181,15 +190,18 @@ export const getUserProfileInfo: any = async (
     }
 
     const json: any = JSON.parse(latestProfileEvent.content);
+    console.info('Returned from relay', json);
 
     const userProfile: NostrProfile = {
       name: json.displayName,
       avatar: json.picture,
       bio: json.about,
       publicKey: publicKey,
+      nip05: json.nip05,
+      npub: nip19.npubEncode(publicKey),
     };
 
-    nostrProfile = userProfile;
+    _nostrProfile = userProfile;
     return userProfile;
   } finally {
     sub.unsub();

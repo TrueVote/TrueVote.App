@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { NostrProfile, getNostrPublicKey, getUserProfileInfo } from '@/services/NostrHelper';
+import { NostrProfile, getNostrProfileInfo, getNostrPublicKey } from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   AppShell,
@@ -26,13 +26,13 @@ export const AppHeader: FC = () => {
       return;
     }
     // Define an async function to fetch the user profile
-    const fetchUserProfile: any = async () => {
+    const fetchNostrProfile: any = async () => {
       try {
-        const userProfile: NostrProfile | undefined = await getUserProfileInfo(nostrPublicKey);
-        if (userProfile) {
-          updateNostrProfile(userProfile);
+        const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
+        if (nostrProfile) {
+          updateNostrProfile(nostrProfile);
         }
-        console.info('Returned Back', userProfile);
+        console.info('Returned Back', nostrProfile);
       } catch (error) {
         // Handle any errors, e.g., show an error message
         console.error('Error fetching user profile:', error);
@@ -40,7 +40,7 @@ export const AppHeader: FC = () => {
     };
 
     // Call the async function
-    fetchUserProfile();
+    fetchNostrProfile();
   }, [nostrPublicKey, updateNostrProfile]);
 
   interface LinkType {
