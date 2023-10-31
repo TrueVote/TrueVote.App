@@ -245,3 +245,7 @@
 .textAlert {
   color: red;
 }
+
+.rawJson {
+  font-size: var(--mantine-h6-font-size);
+}
