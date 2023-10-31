@@ -4,7 +4,7 @@ import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Space, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
-import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const SignOut: FC = () => {
   const navigate: NavigateFunction = useNavigate();
@@ -42,7 +42,12 @@ export const SignOut: FC = () => {
           <Space h='md'></Space>
           <Text>Click below to for sign in page.</Text>
           <Space h='md'></Space>
-          <Button radius='md' color='green' variant='light' component={Link} to='/signin'>
+          <Button
+            radius='md'
+            color='green'
+            variant='light'
+            onClick={(): void => navigate('/signin')}
+          >
             Sign In
           </Button>
         </>

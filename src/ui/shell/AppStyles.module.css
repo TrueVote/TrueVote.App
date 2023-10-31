@@ -162,6 +162,10 @@
   margin-left: 55px;
 }
 
+.avatarImage {
+  border: 1px solid light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+}
+
 .themeSwitcher {
   position: flex;
   @media (min-width: $mantine-breakpoint-sm) {
@@ -285,4 +289,8 @@
 
 .table {
   width: 100%;
+}
+
+.profileButtons {
+  width: 100px;
 }

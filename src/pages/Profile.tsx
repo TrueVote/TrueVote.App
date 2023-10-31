@@ -1,11 +1,12 @@
 import { useGlobalContext } from '@/Global';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Container, Image, Space, Stack, Table } from '@mantine/core';
+import { Button, Container, Image, Space, Stack, Table } from '@mantine/core';
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const Profile: FC = () => {
+  const navigate: NavigateFunction = useNavigate();
   const { nostrProfile } = useGlobalContext();
 
   return (
@@ -50,19 +51,34 @@ export const Profile: FC = () => {
             </Table.Tbody>
           </Table>
           <Space h='md'></Space>
-          <Link className={classes.pagelinkActive} to='/signout'>
+          <Button
+            radius='md'
+            color='blue'
+            variant='light'
+            onClick={(): void => navigate('/signout')}
+          >
             Sign Out
-          </Link>
+          </Button>
         </>
       ) : (
         <>
-          <Stack>
-            <Link className={classes.pagelinkActive} to='/signin'>
+          <Stack className={classes.profileButtons}>
+            <Button
+              radius='md'
+              color='blue'
+              variant='light'
+              onClick={(): void => navigate('/signin')}
+            >
               Sign In
-            </Link>
-            <Link className={classes.pagelinkActive} to='/register'>
+            </Button>
+            <Button
+              radius='md'
+              color='blue'
+              variant='light'
+              onClick={(): void => navigate('/register')}
+            >
               Register
-            </Link>
+            </Button>
           </Stack>
         </>
       )}

@@ -3,10 +3,11 @@ import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Space, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const Register: FC = () => {
   const nostrPublicKey: any = getNostrPublicKey();
+  const navigate: NavigateFunction = useNavigate();
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
@@ -36,7 +37,12 @@ export const Register: FC = () => {
           <Space h='md'></Space>
           <Text>Click below for sign out page.</Text>
           <Space h='md'></Space>
-          <Button radius='md' color='green' variant='light' component={Link} to='/signout'>
+          <Button
+            radius='md'
+            color='green'
+            variant='light'
+            onClick={(): void => navigate('/signout')}
+          >
             Sign Out
           </Button>
         </>

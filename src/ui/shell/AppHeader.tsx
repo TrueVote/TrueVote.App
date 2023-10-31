@@ -80,6 +80,7 @@ export const AppHeader: FC = () => {
               alt='Avatar'
               radius='xl'
               src={nostrProfile?.avatar}
+              className={classes.avatarImage}
               component={Link}
               to='/profile'
             />

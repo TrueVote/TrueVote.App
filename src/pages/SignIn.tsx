@@ -81,7 +81,12 @@ export const SignIn: FC = () => {
           <Space h='md'></Space>
           <Text>Click below for sign out page.</Text>
           <Space h='md'></Space>
-          <Button radius='md' color='green' variant='light' component={Link} to='/signout'>
+          <Button
+            radius='md'
+            color='green'
+            variant='light'
+            onClick={(): void => navigate('/signout')}
+          >
             Sign Out
           </Button>
         </>
