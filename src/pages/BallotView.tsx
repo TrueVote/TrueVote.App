@@ -174,7 +174,9 @@ const Ballot: FC = () => {
                 </Table.Tr>
                 <Table.Tr>
                   <Table.Td className={classes.tdLeft}>Hash:</Table.Td>
-                  <Table.Td>{ballotHash.ServerBallotHashS}</Table.Td>
+                  <Table.Td className={classes.textChopped}>
+                    {ballotHash.ServerBallotHashS}
+                  </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
                   <Table.Td className={classes.tdLeft}>Timestamp Id:</Table.Td>

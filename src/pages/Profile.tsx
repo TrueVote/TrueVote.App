@@ -1,7 +1,7 @@
 import { useGlobalContext } from '@/Global';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Container, Image, Space, Stack, Text } from '@mantine/core';
+import { Container, Image, Space, Stack, Table } from '@mantine/core';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -15,25 +15,34 @@ export const Profile: FC = () => {
       </Stack>
       {nostrProfile !== undefined && String(nostrProfile.name).length > 0 ? (
         <>
-          <Image
-            alt='Avatar'
-            radius='xl'
-            src={nostrProfile?.avatar}
-            className={classes.profileImage}
-          />
-          <Text className={classes.profileName}>{nostrProfile.name}</Text>
-          <Text className={classes.profileText}>
-            <b>Signed In Public Key:</b> {nostrProfile.npub}
-          </Text>
-          <Space h='md'></Space>
-          <Text className={classes.profileText}>
-            <b>Bio:</b> {nostrProfile.bio}
-          </Text>
-          <Space h='md'></Space>
-          <Text className={classes.profileText}>
-            <b>Nip05:</b> {nostrProfile.nip05}
-          </Text>
-          <Space h='md'></Space>
+          <div className={classes.profileImageDiv}>
+            <Image
+              alt='Avatar'
+              radius='xl'
+              src={nostrProfile?.avatar}
+              className={classes.profileImage}
+            />
+          </div>
+          <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td className={classes.tdLeft}>Name:</Table.Td>
+                <Table.Td className={classes.profileName}>{nostrProfile.name}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td className={classes.tdLeft}>Signed In Public Key:</Table.Td>
+                <Table.Td className={classes.textChopped}>{nostrProfile.npub}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td className={classes.tdLeft}>About:</Table.Td>
+                <Table.Td className={classes.profileText}>{nostrProfile.about}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td className={classes.tdLeft}>Nip05:</Table.Td>
+                <Table.Td className={classes.profileText}>{nostrProfile.nip05}</Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
           <Space h='md'></Space>
           <Link className={classes.pagelinkActive} to='/signout'>
             Sign Out

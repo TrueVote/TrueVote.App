@@ -188,12 +188,11 @@
   font-size: var(--mantine-h7-font-size);
 }
 
-@media (max-width: 440px) {
+@media (max-width: 640px) {
   .tdFixedWidth {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    width: 160px;
   }
 }
 
@@ -255,7 +254,7 @@
   height: 200px;
   width: 200px;
   border-radius: 100px;
-  margin-bottom: 3px;
+  margin-bottom: 10px;
   border: 1px solid light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
 }
 
@@ -265,4 +264,21 @@
 
 .profileText {
   font-size: var(--mantine-h6-font-size);
+}
+
+.textChopped {
+  font-size: var(--mantine-h6-font-size);
+  @media (max-width: 640px) {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 300px;
+    display: block;
+  }
+}
+
+.profileImageDiv {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }

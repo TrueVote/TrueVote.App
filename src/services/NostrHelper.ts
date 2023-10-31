@@ -25,14 +25,14 @@ export interface NostrProfile {
   npub: string;
   name: string;
   avatar: string;
-  bio: string;
+  about: string;
   nip05: string;
 }
 
 export const emptyNostrProfile: NostrProfile = {
   name: '',
   avatar: '',
-  bio: '',
+  about: '',
   nip05: '',
   publicKey: '',
   npub: '',
@@ -195,7 +195,7 @@ export const getNostrProfileInfo: any = async (
     const nostrProfile: NostrProfile = {
       name: json.displayName,
       avatar: json.picture,
-      bio: json.about,
+      about: json.about,
       publicKey: publicKey,
       nip05: json.nip05,
       npub: nip19.npubEncode(publicKey),
