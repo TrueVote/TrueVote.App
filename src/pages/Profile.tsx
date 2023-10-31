@@ -23,7 +23,13 @@ export const Profile: FC = () => {
               className={classes.profileImage}
             />
           </div>
-          <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
+          <Table
+            verticalSpacing='xs'
+            striped
+            withTableBorder
+            withColumnBorders
+            className={classes.table}
+          >
             <Table.Tbody>
               <Table.Tr>
                 <Table.Td className={classes.tdLeft}>Name:</Table.Td>
