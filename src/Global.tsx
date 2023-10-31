@@ -2,8 +2,6 @@ import React, { Context, ReactNode, createContext, useContext, useState } from '
 import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
 
 interface GlobalContextType {
-  globalInteger: number;
-  incrementGlobalInteger: () => void;
   nostrProfile: NostrProfile | undefined;
   updateNostrProfile: (np: NostrProfile) => void;
 }
@@ -19,21 +17,14 @@ interface GlobalProviderProps {
 export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   children,
 }: GlobalProviderProps) => {
-  const [globalInteger, setGlobalInteger] = useState<number>(0);
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
-
-  const incrementGlobalInteger: () => void = () => {
-    setGlobalInteger((prevValue: number) => prevValue + 1);
-  };
 
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
   };
 
   return (
-    <GlobalContext.Provider
-      value={{ globalInteger, incrementGlobalInteger, nostrProfile, updateNostrProfile }}
-    >
+    <GlobalContext.Provider value={{ nostrProfile, updateNostrProfile }}>
       {children}
     </GlobalContext.Provider>
   );
