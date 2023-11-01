@@ -26,7 +26,8 @@ export const SignOut: FC = () => {
         <>
           <Space h='md'></Space>
           <Text className={classes.profileText}>
-            <b>Signed In Public Key:</b> {nostrProfile?.npub}
+            <b>Signed In Public Key:</b>{' '}
+            <span className={classes.textChopped}>{nostrProfile?.npub}</span>
           </Text>
           <Space h='md'></Space>
           <Text>Click below to sign out.</Text>

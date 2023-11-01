@@ -76,7 +76,8 @@ export const SignIn: FC = () => {
           <Text className={classes.textAlert}>Already Signed In</Text>
           <Space h='md'></Space>
           <Text className={classes.profileText}>
-            <b>Signed In Public Key:</b> {nostrProfile?.npub}
+            <b>Signed In Public Key:</b>{' '}
+            <span className={classes.textChopped}>{nostrProfile?.npub}</span>
           </Text>
           <Space h='md'></Space>
           <Text>Click below for sign out page.</Text>
