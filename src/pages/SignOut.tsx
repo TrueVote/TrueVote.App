@@ -51,6 +51,12 @@ export const SignOut: FC = () => {
           >
             Sign In
           </Button>
+          <Space h='md'></Space>
+          <Text>Click below to force sign out.</Text>
+          <Space h='md'></Space>
+          <Button radius='md' color='green' variant='light' onClick={signOutClick}>
+            Sign Out
+          </Button>
         </>
       )}
     </Container>

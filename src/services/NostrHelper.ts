@@ -1,4 +1,14 @@
-import { getPublicKey, nip19, SimplePool } from 'nostr-tools';
+import {
+  Event,
+  SimplePool,
+  generatePrivateKey,
+  getEventHash,
+  getPublicKey,
+  getSignature,
+  nip19,
+  validateEvent,
+  verifySignature,
+} from 'nostr-tools';
 import { DecodeResult } from 'nostr-tools/lib/types/nip19';
 import React from 'react';
 
@@ -22,6 +32,7 @@ let _nostrProfile: NostrProfile | null;
 
 export interface NostrProfile {
   publicKey: string;
+  privateKey: string;
   npub: string;
   name: string;
   avatar: string;
@@ -35,6 +46,7 @@ export const emptyNostrProfile: NostrProfile = {
   about: '',
   nip05: '',
   publicKey: '',
+  privateKey: '',
   npub: '',
 };
 
@@ -205,5 +217,80 @@ export const getNostrProfileInfo: any = async (
     return nostrProfile;
   } finally {
     sub.unsub();
+  }
+};
+
+export const generateKeyPair: () => {
+  privateKey: string;
+  publicKey: string;
+} = () => {
+  const privateKey: string = generatePrivateKey();
+  const publicKey: string = getPublicKey(privateKey);
+
+  return { privateKey, publicKey };
+};
+
+export const generateProfile: any = async (): Promise<NostrProfile> => {
+  // Generate private key
+  const privateKey: string = generatePrivateKey();
+
+  // Get public key from private key
+  const publicKey: string = getPublicKey(privateKey);
+
+  console.info(privateKey, publicKey);
+
+  // Create profile
+  const profile: NostrProfile = {
+    publicKey: publicKey,
+    privateKey: privateKey,
+    npub: '',
+    name: '',
+    avatar: '',
+    about: '',
+    nip05: '',
+  };
+
+  // Sign profile
+  const signedProfile: any = signProfile(publicKey, privateKey);
+
+  // Publish the event
+  await publishEvent(signedProfile);
+
+  return Promise.resolve(profile);
+};
+
+export const signProfile: any = (publicKey: string, privateKey: string): string => {
+  const event: any = {
+    kind: 0,
+    pubkey: publicKey,
+    created_at: Math.floor(Date.now() / 1000),
+    tags: [],
+  };
+
+  event.id = getEventHash(event);
+
+  console.info(event);
+
+  event.sig = getSignature(event, privateKey);
+
+  console.info(event);
+
+  validateEvent(event);
+  verifySignature(event);
+
+  return event;
+};
+
+export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
+  const pool: SimplePool = new SimplePool();
+
+  try {
+    await pool.publish(nostrPublicRelays, signedEvent);
+
+    console.info('publishEvent()->Event published successfully');
+  } catch (error) {
+    console.error('publishEvent()->Error publishing event:', error);
+  } finally {
+    console.info('publishEvent()->Finally');
   }
 };
