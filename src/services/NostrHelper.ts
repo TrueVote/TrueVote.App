@@ -223,11 +223,15 @@ export const getNostrProfileInfo: any = async (
 export const generateKeyPair: () => {
   privateKey: string;
   publicKey: string;
+  npub: string;
+  nsec: string;
 } = () => {
   const privateKey: string = generatePrivateKey();
   const publicKey: string = getPublicKey(privateKey);
+  const npub: string = nip19.npubEncode(publicKey);
+  const nsec: string = nip19.nsecEncode(privateKey);
 
-  return { privateKey, publicKey };
+  return { privateKey, publicKey, npub, nsec };
 };
 
 export const generateProfile: any = async (): Promise<NostrProfile> => {

@@ -11,16 +11,20 @@ export const Register: FC = () => {
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const [nostrPublicKey, updatePublicKey] = useState<string | null>(null);
   const [nostrPrivateKey, updatePrivateKey] = useState<string | null>(null);
+  const [nostrNpub, updateNpub] = useState<string | null>(null);
+  const [nostrNsec, updateNsec] = useState<string | null>(null);
 
   const createProfile: any = () => {
     generateProfile();
   };
 
   const getKeyPair: any = () => {
-    const { privateKey, publicKey } = generateKeyPair();
+    const { privateKey, publicKey, npub, nsec } = generateKeyPair();
 
     updatePublicKey(publicKey);
     updatePrivateKey(privateKey);
+    updateNpub(npub);
+    updateNsec(nsec);
   };
 
   const signInElements: React.ReactNode = (
@@ -68,7 +72,13 @@ export const Register: FC = () => {
             <b>Public Key:</b> {nostrPublicKey}
           </Text>
           <Text className={classes.profileText}>
+            <b>Npub Key:</b> {nostrNpub}
+          </Text>
+          <Text className={classes.profileText}>
             <b>Private Key:</b> {nostrPrivateKey}
+          </Text>
+          <Text className={classes.profileText}>
+            <b>Nsec Key:</b> {nostrNsec}
           </Text>
           <Space h='md'></Space>
           <Text>Copy this key. |WRITE LANGUAGE TO CHECK A BOX AND CONFIRM COPY|</Text>
