@@ -3,7 +3,7 @@ import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Image, Space, Stack, Table } from '@mantine/core';
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const Profile: FC = () => {
   const navigate: NavigateFunction = useNavigate();

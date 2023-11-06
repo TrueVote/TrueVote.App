@@ -211,6 +211,7 @@ export const getNostrProfileInfo: any = async (
       publicKey: publicKey,
       nip05: json.nip05,
       npub: nip19.npubEncode(publicKey),
+      privateKey: '',
     };
 
     _nostrProfile = nostrProfile;
