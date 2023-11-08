@@ -22,11 +22,15 @@ const invalidPubKeyError: string = 'Invalid key - public key';
 
 const nostrPrivateKeyStorageKey: string = 'nostr_sk';
 const nostrPublicKeyStorageKey: string = 'nostr_pk';
-const nostrPublicRelays: string[] = [
-  'wss://relay.damus.io',
-  'wss://nostr.lnproxy.org',
-  'wss://relay.nostrss.re',
-];
+// const nostrPublicRelays: string[] = [
+//   'wss://nostr.relayable.org',
+//   'wss://nostr.pjv.me',
+//   'wss://nostr.lnproxy.org',
+//   'wss://relay.nostrss.re',
+//   'wss://relay.damus.io',
+// ];
+// const nostrPublicRelays: string[] = ['wss://umbrel.machine:4848'];
+const nostrPublicRelays: string[] = ['ws://nostr01.truevote:4848'];
 
 let _nostrProfile: NostrProfile | null;
 
@@ -40,6 +44,7 @@ export interface NostrProfile {
   nip05: string;
 }
 
+// TODO Need to deprecate this and use something from nostr-tools or match the names
 export const emptyNostrProfile: NostrProfile = {
   name: '',
   avatar: '',
@@ -235,28 +240,23 @@ export const generateKeyPair: () => {
   return { privateKey, publicKey, npub, nsec };
 };
 
-export const generateProfile: any = async (): Promise<NostrProfile> => {
-  // Generate private key
-  const privateKey: string = generatePrivateKey();
-
-  // Get public key from private key
-  const publicKey: string = getPublicKey(privateKey);
-
-  console.info(privateKey, publicKey);
+export const generateProfile: any = async (
+  privateKey: string,
+  publicKey: string,
+): Promise<NostrProfile> => {
+  console.info('generateProfile()', privateKey, publicKey);
 
   // Create profile
-  const profile: NostrProfile = {
-    publicKey: publicKey,
-    privateKey: privateKey,
-    npub: '',
-    name: '',
-    avatar: '',
-    about: '',
-    nip05: '',
+  const profile: any = {
+    name: 'TrueVote User',
+    description: 'TrueVote user profile.',
   };
 
+  const npub: string = nip19.npubEncode(publicKey);
+  const nsec: string = nip19.nsecEncode(privateKey);
+
   // Sign profile
-  const signedProfile: any = signProfile(publicKey, privateKey);
+  const signedProfile: any = signProfile(privateKey, publicKey, profile);
 
   // Publish the event
   await publishEvent(signedProfile);
@@ -264,24 +264,34 @@ export const generateProfile: any = async (): Promise<NostrProfile> => {
   return Promise.resolve(profile);
 };
 
-export const signProfile: any = (publicKey: string, privateKey: string): string => {
+export const signProfile: any = (privateKey: string, publicKey: string, profile: any): string => {
   const event: any = {
-    kind: 0,
+    kind: 1,
     pubkey: publicKey,
     created_at: Math.floor(Date.now() / 1000),
-    tags: [],
+    content: JSON.stringify(profile),
+    tags: [], //{ items: ['nostr', 'profile'] },
   };
+  console.info('Event', event);
 
-  event.id = getEventHash(event);
+  const valid: any = validateEvent(event);
+  console.info('Valid', valid);
+
+  const hash: any = getEventHash(event);
+  console.info('Hash', hash);
+  event.id = hash;
+
+  const signature: any = getSignature(event, privateKey);
+  console.info('Signature', signature);
+  event.sig = signature;
 
   console.info(event);
 
-  event.sig = getSignature(event, privateKey);
+  const valid2: any = validateEvent(event);
+  console.info('Valid2', valid2);
 
-  console.info(event);
-
-  validateEvent(event);
-  verifySignature(event);
+  const validsig: any = verifySignature(event);
+  console.info('Valid Sig', validsig);
 
   return event;
 };
@@ -291,11 +301,12 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
 
   try {
     await pool.publish(nostrPublicRelays, signedEvent);
-
-    console.info('publishEvent()->Event published successfully');
   } catch (error) {
     console.error('publishEvent()->Error publishing event:', error);
+
+    Promise.reject(error);
   } finally {
     console.info('publishEvent()->Finally');
+    Promise.resolve(signedEvent);
   }
 };

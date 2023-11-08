@@ -2,7 +2,9 @@ import { useGlobalContext } from '@/Global';
 import { generateKeyPair, generateProfile } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Button, Container, Space, Stack, Text } from '@mantine/core';
+import { ActionIcon, Button, Checkbox, Container, Space, Stack, Text } from '@mantine/core';
+import { useClipboard } from '@mantine/hooks';
+import { IconCheck, IconClipboardCheck, IconClipboardCopy } from '@tabler/icons-react';
 import { FC, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
@@ -13,9 +15,11 @@ export const Register: FC = () => {
   const [nostrPrivateKey, updatePrivateKey] = useState<string | null>(null);
   const [nostrNpub, updateNpub] = useState<string | null>(null);
   const [nostrNsec, updateNsec] = useState<string | null>(null);
+  const [nsecCheckbox, updateNsecCheckbox] = useState<boolean>(false);
+  const clipboard: any = useClipboard({ timeout: 500 });
 
   const createProfile: any = () => {
-    generateProfile();
+    generateProfile(nostrPrivateKey, nostrPublicKey);
   };
 
   const getKeyPair: any = () => {
@@ -66,24 +70,42 @@ export const Register: FC = () => {
             Sign Out
           </Button>
         </>
-      ) : nostrPublicKey !== null ? (
+      ) : nostrPublicKey !== null && nostrPrivateKey !== null ? (
         <>
+          <Space h='md'></Space>
           <Text className={classes.profileText}>
-            <b>Public Key:</b> {nostrPublicKey}
+            <b>Npub (Public) Key:</b> {nostrNpub}
           </Text>
           <Text className={classes.profileText}>
-            <b>Npub Key:</b> {nostrNpub}
-          </Text>
-          <Text className={classes.profileText}>
-            <b>Private Key:</b> {nostrPrivateKey}
-          </Text>
-          <Text className={classes.profileText}>
-            <b>Nsec Key:</b> {nostrNsec}
+            <b>Nsec (Private) Key:</b> {nostrNsec}{' '}
+            <ActionIcon
+              onClick={(): void => clipboard.copy(nostrNsec)}
+              aria-label='Copy'
+              variant='transparent'
+            >
+              {clipboard.copied ? (
+                <IconClipboardCheck size={24} />
+              ) : nsecCheckbox ? (
+                <IconCheck size={24} color='green' />
+              ) : (
+                <IconClipboardCopy size={24} />
+              )}
+            </ActionIcon>
           </Text>
           <Space h='md'></Space>
-          <Text>Copy this key. |WRITE LANGUAGE TO CHECK A BOX AND CONFIRM COPY|</Text>
+          <Checkbox
+            checked={nsecCheckbox}
+            onChange={(event: any): void => updateNsecCheckbox(event.currentTarget.checked)}
+            label='I have copied my private Nsec key and stored it somewhere safe. I understand that if I lose this key I will lose access to my user account.'
+          ></Checkbox>
           <Space h='md'></Space>
-          <Button radius='md' color='green' variant='light' onClick={createProfile}>
+          <Button
+            radius='md'
+            color='green'
+            variant='light'
+            disabled={!nsecCheckbox}
+            onClick={createProfile}
+          >
             Generate Profile
           </Button>
           {signInElements}
