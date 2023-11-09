@@ -29,8 +29,7 @@ const nostrPublicKeyStorageKey: string = 'nostr_pk';
 //   'wss://relay.nostrss.re',
 //   'wss://relay.damus.io',
 // ];
-// const nostrPublicRelays: string[] = ['wss://umbrel.machine:4848'];
-const nostrPublicRelays: string[] = ['ws://nostr01.truevote:4848'];
+const nostrPublicRelays: string[] = ['wss://nostr-relay.truevote.org'];
 
 let _nostrProfile: NostrProfile | null;
 
@@ -38,21 +37,21 @@ export interface NostrProfile {
   publicKey: string;
   privateKey: string;
   npub: string;
-  name: string;
-  avatar: string;
+  displayName: string;
+  picture: string;
   about: string;
   nip05: string;
 }
 
 // TODO Need to deprecate this and use something from nostr-tools or match the names
 export const emptyNostrProfile: NostrProfile = {
-  name: '',
-  avatar: '',
-  about: '',
-  nip05: '',
   publicKey: '',
   privateKey: '',
   npub: '',
+  displayName: '',
+  picture: '',
+  about: '',
+  nip05: '',
 };
 
 export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,7 +164,7 @@ export const getNostrProfileInfo: any = async (
   publicKey: string,
 ): Promise<NostrProfile | undefined> => {
   // Optimization. If the nostrProfile is alerady set, why go out and fetch it from a relay.
-  if (_nostrProfile && _nostrProfile.name && _nostrProfile.name.length > 0) {
+  if (_nostrProfile && _nostrProfile.displayName && _nostrProfile.displayName.length > 0) {
     console.info('Retrieving stored nostrProfile');
     return _nostrProfile;
   }
@@ -210,13 +209,13 @@ export const getNostrProfileInfo: any = async (
     console.info('Returned from relay', json);
 
     const nostrProfile: NostrProfile = {
-      name: json.displayName,
-      avatar: json.picture,
-      about: json.about,
       publicKey: publicKey,
-      nip05: json.nip05,
-      npub: nip19.npubEncode(publicKey),
       privateKey: '',
+      npub: nip19.npubEncode(publicKey),
+      displayName: json.displayName,
+      picture: json.picture,
+      about: json.about,
+      nip05: json.nip05,
     };
 
     _nostrProfile = nostrProfile;
@@ -244,19 +243,27 @@ export const generateProfile: any = async (
   privateKey: string,
   publicKey: string,
 ): Promise<NostrProfile> => {
-  console.info('generateProfile()', privateKey, publicKey);
+  const nsec: string = nip19.nsecEncode(privateKey);
+  const npub: string = nip19.npubEncode(publicKey);
+
+  console.info('generateProfile()', privateKey, publicKey, nsec, npub);
 
   // Create profile
-  const profile: any = {
-    name: 'TrueVote User',
-    description: 'TrueVote user profile.',
+  const profile: NostrProfile = {
+    displayName: 'TrueVote User',
+    about: 'A TrueVote voter ready to vote!',
+    publicKey: publicKey,
+    privateKey: '',
+    npub: npub,
+    picture: '',
+    nip05: '',
   };
-
-  const npub: string = nip19.npubEncode(publicKey);
-  const nsec: string = nip19.nsecEncode(privateKey);
 
   // Sign profile
   const signedProfile: any = signProfile(privateKey, publicKey, profile);
+  if (signedProfile === '') {
+    throw 'Could not sign create profile event';
+  }
 
   // Publish the event
   await publishEvent(signedProfile);
@@ -264,34 +271,59 @@ export const generateProfile: any = async (
   return Promise.resolve(profile);
 };
 
-export const signProfile: any = (privateKey: string, publicKey: string, profile: any): string => {
+export const signProfile: any = (
+  privateKey: string,
+  publicKey: string,
+  profile: NostrProfile,
+): string => {
+  // Create a Kind 0 event to create the profile
   const event: any = {
-    kind: 1,
+    kind: 0,
     pubkey: publicKey,
     created_at: Math.floor(Date.now() / 1000),
     content: JSON.stringify(profile),
-    tags: [], //{ items: ['nostr', 'profile'] },
+    tags: [],
   };
-  console.info('Event', event);
+  console.info('Kind 0 Event - Initial', event);
 
+  // Ensure the event is valid for this kind and has all the right properties so far
   const valid: any = validateEvent(event);
   console.info('Valid', valid);
+  if (valid === false) {
+    return '';
+  }
 
-  const hash: any = getEventHash(event);
-  console.info('Hash', hash);
-  event.id = hash;
+  try {
+    const hash: any = getEventHash(event);
+    console.info('Hash', hash);
+    event.id = hash;
+  } catch {
+    return '';
+  }
 
-  const signature: any = getSignature(event, privateKey);
-  console.info('Signature', signature);
-  event.sig = signature;
+  try {
+    const signature: any = getSignature(event, privateKey);
+    console.info('Signature', signature);
+    event.sig = signature;
+  } catch {
+    return '';
+  }
 
-  console.info(event);
+  console.info('Kind 0 Event - Filled', event);
 
+  // Ensure the event is valid for this kind is still valid after adding additional properties
   const valid2: any = validateEvent(event);
   console.info('Valid2', valid2);
+  if (valid2 === false) {
+    return '';
+  }
 
-  const validsig: any = verifySignature(event);
-  console.info('Valid Sig', validsig);
+  try {
+    const validsig: any = verifySignature(event);
+    console.info('Valid Sig', validsig);
+  } catch {
+    return '';
+  }
 
   return event;
 };
@@ -300,10 +332,12 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
   const pool: SimplePool = new SimplePool();
 
   try {
-    await pool.publish(nostrPublicRelays, signedEvent);
+    // TODO Testing failed publish() handling
+    signedEvent = { content: '', created_at: 0, id: '0', kind: 3, pubkey: '', sig: '', tags: [] };
+    console.info('SignedEvent Empty', signedEvent);
+    pool.publish(nostrPublicRelays, signedEvent);
   } catch (error) {
     console.error('publishEvent()->Error publishing event:', error);
-
     Promise.reject(error);
   } finally {
     console.info('publishEvent()->Finally');

@@ -14,16 +14,22 @@ export const Profile: FC = () => {
       <Stack gap={32}>
         <Hero title='Profile' />
       </Stack>
-      {nostrProfile !== undefined && String(nostrProfile.name).length > 0 ? (
+      {nostrProfile !== undefined && String(nostrProfile.displayName).length > 0 ? (
         <>
-          <div className={classes.profileImageDiv}>
-            <Image
-              alt='Avatar'
-              radius='xl'
-              src={nostrProfile?.avatar}
-              className={classes.profileImage}
-            />
-          </div>
+          {nostrProfile?.picture !== undefined && String(nostrProfile.picture).length > 0 ? (
+            <>
+              <div className={classes.profileImageDiv}>
+                <Image
+                  alt='Avatar'
+                  radius='xl'
+                  src={nostrProfile?.picture}
+                  className={classes.profileImage}
+                />
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
           <Table
             verticalSpacing='xs'
             striped
@@ -34,7 +40,7 @@ export const Profile: FC = () => {
             <Table.Tbody>
               <Table.Tr>
                 <Table.Td className={classes.tdLeft}>Name:</Table.Td>
-                <Table.Td className={classes.profileName}>{nostrProfile.name}</Table.Td>
+                <Table.Td className={classes.profileName}>{nostrProfile.displayName}</Table.Td>
               </Table.Tr>
               <Table.Tr>
                 <Table.Td className={classes.tdLeft}>Public Key:</Table.Td>

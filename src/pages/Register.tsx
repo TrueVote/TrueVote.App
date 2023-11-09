@@ -1,8 +1,14 @@
 import { useGlobalContext } from '@/Global';
-import { generateKeyPair, generateProfile } from '@/services/NostrHelper';
+import {
+  NostrProfile,
+  generateKeyPair,
+  generateProfile,
+  storeNostrPrivateKey,
+} from '@/services/NostrHelper';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { ActionIcon, Button, Checkbox, Container, Space, Stack, Text } from '@mantine/core';
+import { ActionIcon, Button, Checkbox, Container, Modal, Space, Stack, Text } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { IconCheck, IconClipboardCheck, IconClipboardCopy } from '@tabler/icons-react';
 import { FC, useState } from 'react';
@@ -16,10 +22,32 @@ export const Register: FC = () => {
   const [nostrNpub, updateNpub] = useState<string | null>(null);
   const [nostrNsec, updateNsec] = useState<string | null>(null);
   const [nsecCheckbox, updateNsecCheckbox] = useState<boolean>(false);
+  const [visible, setVisible] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const clipboard: any = useClipboard({ timeout: 500 });
 
+  const errorModal: any = (e: any) => {
+    setErrorMessage(e);
+    setOpened((v: any) => !v);
+  };
+
   const createProfile: any = () => {
-    generateProfile(nostrPrivateKey, nostrPublicKey);
+    setVisible((v: any) => !v);
+
+    generateProfile(nostrPrivateKey, nostrPublicKey)
+      .then((newProfile: NostrProfile) => {
+        console.info('New Profile Returned back to Register', newProfile);
+        setVisible((v: any) => !v);
+        updateNostrProfile(newProfile);
+        storeNostrPrivateKey(nostrPrivateKey);
+        navigate('/profile');
+      })
+      .catch((error: any) => {
+        console.error('Error - ', error);
+        setVisible((v: any) => !v);
+        errorModal(error);
+      });
   };
 
   const getKeyPair: any = () => {
@@ -49,6 +77,16 @@ export const Register: FC = () => {
       <Stack gap={32}>
         <Hero title='Register' />
       </Stack>
+      <TrueVoteLoader visible={visible} />
+      <Modal
+        centered
+        withCloseButton={true}
+        title='Register Error'
+        onClose={(): void => setOpened(false)}
+        opened={opened}
+      >
+        <Text>Error: {errorMessage}</Text>
+      </Modal>
       {nostrProfile !== null && String(nostrProfile?.publicKey).length > 0 ? (
         <>
           <Space h='md'></Space>

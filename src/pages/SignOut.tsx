@@ -11,9 +11,9 @@ export const SignOut: FC = () => {
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
 
   const signOutClick: any = (): void => {
-    console.info('Signing out...');
     updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
+    console.info('Signed out');
     navigate('/profile');
   };
 

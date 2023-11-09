@@ -12,9 +12,9 @@ export const Home: FC = () => {
       <Stack gap={32}>
         <Hero title='Home' />
       </Stack>
-      {nostrProfile !== undefined && String(nostrProfile.name).length > 0 ? (
+      {nostrProfile !== undefined && String(nostrProfile.displayName).length > 0 ? (
         <>
-          <Text>Welcome, {nostrProfile.name}</Text>
+          <Text>Welcome, {nostrProfile.displayName}</Text>
         </>
       ) : (
         <></>
