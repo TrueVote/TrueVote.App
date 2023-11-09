@@ -1,8 +1,10 @@
 import { useGlobalContext } from '@/Global';
 import {
   NostrProfile,
+  emptyNostrProfile,
   generateKeyPair,
   generateProfile,
+  nostrSignOut,
   storeNostrPrivateKey,
 } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
@@ -44,7 +46,9 @@ export const Register: FC = () => {
         navigate('/profile');
       })
       .catch((error: any) => {
-        console.error('Error - ', error);
+        console.error('Caught Error - ', error);
+        updateNostrProfile(emptyNostrProfile);
+        nostrSignOut();
         setVisible((v: any) => !v);
         errorModal(error);
       });

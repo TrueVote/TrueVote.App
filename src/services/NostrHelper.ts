@@ -266,9 +266,14 @@ export const generateProfile: any = async (
   }
 
   // Publish the event
-  await publishEvent(signedProfile);
-
-  return Promise.resolve(profile);
+  await publishEvent(signedProfile)
+    .then(() => {
+      return Promise.resolve(profile);
+    })
+    .catch((error: any) => {
+      console.error('generateProfile->publishEvent Error', error);
+      throw 'Could not publish profile';
+    });
 };
 
 export const signProfile: any = (
@@ -332,15 +337,19 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
   const pool: SimplePool = new SimplePool();
 
   try {
-    // TODO Testing failed publish() handling
-    signedEvent = { content: '', created_at: 0, id: '0', kind: 3, pubkey: '', sig: '', tags: [] };
-    console.info('SignedEvent Empty', signedEvent);
-    pool.publish(nostrPublicRelays, signedEvent);
+    const promises: any = await pool.publish(nostrPublicRelays, signedEvent);
+    const results: any = await Promise.allSettled(promises);
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        // Handle the error
+        console.error('publishEvent()->Error Rejected Promise', result.reason);
+        throw result;
+      }
+    }
+    // Promise.resolve(signedEvent);
   } catch (error) {
-    console.error('publishEvent()->Error publishing event:', error);
-    Promise.reject(error);
-  } finally {
-    console.info('publishEvent()->Finally');
-    Promise.resolve(signedEvent);
+    console.error('publishEvent()->Error catch:', error);
+    throw error;
   }
+  console.info('publishEvent()->End()');
 };
