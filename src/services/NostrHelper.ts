@@ -242,7 +242,7 @@ export const generateKeyPair: () => {
 export const generateProfile: any = async (
   privateKey: string,
   publicKey: string,
-): Promise<NostrProfile> => {
+): Promise<NostrProfile | undefined> => {
   const nsec: string = nip19.nsecEncode(privateKey);
   const npub: string = nip19.npubEncode(publicKey);
 
@@ -266,7 +266,7 @@ export const generateProfile: any = async (
   }
 
   // Publish the event
-  await publishEvent(signedProfile)
+  return await publishEvent(signedProfile)
     .then(() => {
       return Promise.resolve(profile);
     })
@@ -346,7 +346,7 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
         throw result;
       }
     }
-    // Promise.resolve(signedEvent);
+    Promise.resolve();
   } catch (error) {
     console.error('publishEvent()->Error catch:', error);
     throw error;

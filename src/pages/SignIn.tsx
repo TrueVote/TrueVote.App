@@ -1,19 +1,28 @@
 import { useGlobalContext } from '@/Global';
-import { nostrKeyKeyHandler, storeNostrPrivateKey } from '@/services/NostrHelper';
+import {
+  NostrProfile,
+  emptyNostrProfile,
+  getNostrProfileInfo,
+  nostrKeyKeyHandler,
+  nostrSignOut,
+} from '@/services/NostrHelper';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Button, Container, Image, Space, Stack, Text, Textarea } from '@mantine/core';
+import { Button, Container, Image, Modal, Space, Stack, Text, Textarea } from '@mantine/core';
 import { FC, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const SignIn: FC = () => {
   const navigate: NavigateFunction = useNavigate();
-  const { nostrProfile } = useGlobalContext();
-
+  const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [valid, setValid] = useState(false);
   const [nostrkey, setNostrkey] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange: any = (e: any): void => {
     const inputValue: string = e.target.value;
@@ -25,10 +34,34 @@ export const SignIn: FC = () => {
     setNostrkey(inputValue);
   };
 
-  const signInClick: any = (): void => {
+  const errorModal: any = (e: any) => {
+    setErrorMessage(e);
+    setOpened((v: any) => !v);
+  };
+
+  const signInClick: any = () => {
+    setVisible((v: any) => !v);
+
     console.info('Nostr Key:', nostrkey);
-    storeNostrPrivateKey(nostrkey);
-    navigate('/profile');
+    getNostrProfileInfo(nostrkey)
+      .then((retreivedProfile: NostrProfile) => {
+        console.info('Returned Back', retreivedProfile);
+        setVisible((v: any) => !v);
+        if (retreivedProfile) {
+          updateNostrProfile(p);
+        } else {
+          updateNostrProfile(emptyNostrProfile);
+          nostrSignOut();
+        }
+      })
+      .catch((error: any) => {
+        // Handle any errors, e.g., show an error message
+        console.error('Error fetching nostr profile:', error);
+        updateNostrProfile(emptyNostrProfile);
+        nostrSignOut();
+        setVisible((v: any) => !v);
+        // errorModal(error);
+      });
   };
 
   return (
@@ -36,6 +69,16 @@ export const SignIn: FC = () => {
       <Stack gap={32}>
         <Hero title='Sign In' />
       </Stack>
+      <TrueVoteLoader visible={visible} />
+      <Modal
+        centered
+        withCloseButton={true}
+        title='Sign In Error'
+        onClose={(): void => setOpened(false)}
+        opened={opened}
+      >
+        <Text>Error: {errorMessage}</Text>
+      </Modal>
       {nostrProfile === null || String(nostrProfile?.publicKey).length === 0 ? (
         <>
           <Text>

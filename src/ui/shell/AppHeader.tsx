@@ -1,5 +1,11 @@
 import { useGlobalContext } from '@/Global';
-import { NostrProfile, getNostrProfileInfo, getNostrPublicKey } from '@/services/NostrHelper';
+import {
+  NostrProfile,
+  emptyNostrProfile,
+  getNostrProfileInfo,
+  getNostrPublicKey,
+  nostrSignOut,
+} from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   AppShell,
@@ -29,13 +35,18 @@ export const AppHeader: FC = () => {
     const fetchNostrProfile: any = async () => {
       try {
         const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
+        console.info('Returned Back', nostrProfile);
         if (nostrProfile) {
           updateNostrProfile(nostrProfile);
+        } else {
+          updateNostrProfile(emptyNostrProfile);
+          nostrSignOut();
         }
-        console.info('Returned Back', nostrProfile);
       } catch (error) {
         // Handle any errors, e.g., show an error message
         console.error('Error fetching user profile:', error);
+        updateNostrProfile(emptyNostrProfile);
+        nostrSignOut();
       }
     };
 
