@@ -19,7 +19,7 @@ import {
   Transition,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
@@ -67,7 +67,16 @@ export const AppHeader: FC = () => {
     { id: '2', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
     { id: '3', link: '/about', label: 'About', matched: useMatch('/about') },
   ];
-  const [opened, toggle] = useToggle();
+  const [, toggle] = useToggle();
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle: any = (): any => {
+    setMenuOpen(!isMenuOpen);
+  };
+
+  const handleCloseMenu: any = (): any => {
+    setMenuOpen(false);
+  };
 
   const items: JSX.Element[] = links.map((link: LinkType) => (
     <NavLink
@@ -106,17 +115,17 @@ export const AppHeader: FC = () => {
         <Group gap={6} className={classes.headerRight}>
           <ThemeSwitcher />
           <Burger
-            opened={opened}
-            onClick={(): void => toggle(true)}
+            opened={isMenuOpen}
+            onClick={handleMenuToggle}
             aria-label='Toggle navigation'
             size='sm'
             className={classes.burger}
           />
         </Group>
 
-        <Transition transition='pop-top-right' duration={200} mounted={opened}>
+        <Transition transition='pop-top-right' duration={200} mounted={isMenuOpen}>
           {(styles: MantineStyleProp): JSX.Element => (
-            <Paper className={classes.dropdown} withBorder style={styles}>
+            <Paper className={classes.dropdown} withBorder style={styles} onClick={handleCloseMenu}>
               {items}
             </Paper>
           )}
