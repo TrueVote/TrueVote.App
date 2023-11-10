@@ -1,3 +1,11 @@
+import { useGlobalContext } from '@/Global';
+import {
+  NostrProfile,
+  emptyNostrProfile,
+  getNostrProfileInfo,
+  getNostrPublicKey,
+  nostrSignOut,
+} from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   AppShell,
@@ -6,26 +14,69 @@ import {
   Container,
   Group,
   Image,
+  MantineStyleProp,
   Paper,
   Transition,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { FC } from 'react';
-import { Link, useMatch } from 'react-router-dom';
+import { FC, useEffect } from 'react';
+import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
-  const links: any = [
+  const nostrPublicKey: string | null = getNostrPublicKey();
+  const { nostrProfile, updateNostrProfile } = useGlobalContext();
+
+  useEffect(() => {
+    if (nostrPublicKey === null || String(nostrPublicKey).length <= 0) {
+      return;
+    }
+    // Define an async function to fetch the user profile
+    const fetchNostrProfile: any = async () => {
+      try {
+        const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
+        console.info('Returned Back', nostrProfile);
+        if (nostrProfile && nostrProfile !== undefined) {
+          updateNostrProfile(nostrProfile);
+        } else {
+          updateNostrProfile(emptyNostrProfile);
+          nostrSignOut();
+        }
+      } catch (error) {
+        // Handle any errors, e.g., show an error message
+        console.error('Error fetching user profile:', error);
+        updateNostrProfile(emptyNostrProfile);
+        nostrSignOut();
+      }
+    };
+
+    // Call the async function
+    fetchNostrProfile();
+  }, [nostrPublicKey, updateNostrProfile]);
+
+  interface LinkType {
+    id: string;
+    link: string;
+    label: string;
+    matched: PathMatch<string> | null;
+  }
+
+  const links: LinkType[] = [
     { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
     { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
     { id: '2', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
   ];
   const [opened, toggle] = useToggle();
 
-  const items: any = links.map((link: any) => (
-    <Link key={link.id} to={link.link} className={classes.link} onClick={(): any => toggle(false)}>
+  const items: JSX.Element[] = links.map((link: LinkType) => (
+    <NavLink
+      key={link.id}
+      to={link.link}
+      className={classes.link}
+      onClick={(): void => toggle(false)}
+    >
       {link.label}
-    </Link>
+    </NavLink>
   ));
 
   return (
@@ -36,7 +87,14 @@ export const AppHeader: FC = () => {
             <Image className={classes.headerImage} component={Link} to='/' />
           </span>
           <span className={classes.profileLink}>
-            <Avatar alt='Avatar' radius='xl' component={Link} to='/profile' />
+            <Avatar
+              alt='Avatar'
+              radius='xl'
+              src={nostrProfile?.picture}
+              className={classes.avatarImage}
+              component={Link}
+              to='/profile'
+            />
           </span>
         </Group>
 
@@ -48,7 +106,7 @@ export const AppHeader: FC = () => {
           <ThemeSwitcher />
           <Burger
             opened={opened}
-            onClick={(): any => toggle(true)}
+            onClick={(): void => toggle(true)}
             aria-label='Toggle navigation'
             size='sm'
             className={classes.burger}
@@ -56,7 +114,7 @@ export const AppHeader: FC = () => {
         </Group>
 
         <Transition transition='pop-top-right' duration={200} mounted={opened}>
-          {(styles: any): any => (
+          {(styles: MantineStyleProp): JSX.Element => (
             <Paper className={classes.dropdown} withBorder style={styles}>
               {items}
             </Paper>

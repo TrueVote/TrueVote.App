@@ -10,8 +10,8 @@ if ('serviceWorker' in navigator) {
       .then((registration: any): any => {
         console.info('Service Worker registered with scope:', registration.scope);
       })
-      .catch((error: any): any => {
-        console.warn('Service Worker registration failed:', error);
+      .catch((e: any): any => {
+        console.warn('Service Worker registration failed:', e);
       });
   });
 }

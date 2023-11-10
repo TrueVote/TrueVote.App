@@ -58,7 +58,7 @@
     border-radius: var(--mantine-radius-sm);
     text-decoration: none;
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-    font-size: var(--mantine-font-sizes-sm);
+    font-size: var(--mantine-h6-font-size);
     font-weight: 500;
   }
 }
@@ -105,8 +105,9 @@
   border-radius: var(--mantine-radius-sm);
   text-decoration: none;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-  font-size: var(--mantine-font-sizes-sm);
+  font-size: var(--mantine-h4-font-size);
   font-weight: 500;
+  text-decoration: none;
 }
 
 .link:hover {
@@ -126,12 +127,29 @@
   color: light-dark(var(--mantine-color-primary-3), var(--mantine-color-primary-7));
 }
 
+.pagelinkActive {
+  color: light-dark(var(--mantine-color-primary-3), var(--mantine-color-primary-7));
+  font-size: var(--mantine-h4-font-size);
+  text-decoration: none;
+}
+
+.pagelinkActive:hover {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
 .headerImage {
   margin-left: -5px;
   height: 45px;
   background-size: 45px;
   background-image: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
   background-repeat: no-repeat;
+}
+
+.albyImage {
+  background-image: url('/static/Alby-logo-figure-400.svg');
+  background-repeat: no-repeat;
+  height: 55px;
+  background-size: 45px;
 }
 
 .headerLink {
@@ -142,6 +160,10 @@
 .profileLink {
   position: absolute;
   margin-left: 55px;
+}
+
+.avatarImage {
+  border: 1px solid light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
 }
 
 .themeSwitcher {
@@ -170,12 +192,11 @@
   font-size: var(--mantine-h7-font-size);
 }
 
-@media (max-width: 440px) {
+@media (max-width: $mantine-breakpoint-sm) {
   .tdFixedWidth {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    width: 160px;
   }
 }
 
@@ -226,4 +247,50 @@
 
 .textAlert {
   color: red;
+}
+
+.rawJson {
+  font-size: var(--mantine-h6-font-size);
+}
+
+.profileImage {
+  padding: 2px;
+  height: 200px;
+  width: 200px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+  border: 1px solid light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+}
+
+.profileName {
+  font-size: var(--mantine-h3-font-size);
+}
+
+.profileText {
+  font-size: var(--mantine-h6-font-size);
+}
+
+.textChopped {
+  font-size: var(--mantine-h6-font-size);
+  @media (max-width: $mantine-breakpoint-sm) {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 300px;
+    display: block;
+  }
+}
+
+.profileImageDiv {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.table {
+  width: 100%;
+}
+
+.profileButtons {
+  width: 100px;
 }
