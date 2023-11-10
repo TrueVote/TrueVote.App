@@ -30,7 +30,7 @@ export const Register: FC = () => {
   const clipboard: any = useClipboard({ timeout: 500 });
 
   const errorModal: any = (e: any) => {
-    setErrorMessage(e);
+    setErrorMessage(String(e));
     setOpened((v: any) => !v);
   };
 
@@ -45,12 +45,12 @@ export const Register: FC = () => {
         storeNostrPrivateKey(nostrPrivateKey);
         navigate('/profile');
       })
-      .catch((error: any) => {
-        console.error('Caught Error - ', error);
+      .catch((e: any) => {
+        console.error('Caught Error generating nostr profile:', e);
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
         setVisible((v: any) => !v);
-        errorModal(error);
+        errorModal(e);
       });
   };
 

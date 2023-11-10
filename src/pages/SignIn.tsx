@@ -24,6 +24,11 @@ export const SignIn: FC = () => {
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const errorModal: any = (e: any) => {
+    setErrorMessage(String(e));
+    setOpened((v: any) => !v);
+  };
+
   const handleChange: any = (e: any): void => {
     const inputValue: string = e.target.value;
     const { error, message, valid } = nostrKeyKeyHandler(e);
@@ -32,11 +37,6 @@ export const SignIn: FC = () => {
     setMessage(message);
     setValid(valid);
     setNostrkey(inputValue);
-  };
-
-  const errorModal: any = (e: any) => {
-    setErrorMessage(e);
-    setOpened((v: any) => !v);
   };
 
   const signInClick: any = () => {
@@ -48,19 +48,19 @@ export const SignIn: FC = () => {
         console.info('Returned Back', retreivedProfile);
         setVisible((v: any) => !v);
         if (retreivedProfile) {
-          updateNostrProfile(p);
+          updateNostrProfile(retreivedProfile);
         } else {
           updateNostrProfile(emptyNostrProfile);
           nostrSignOut();
         }
       })
-      .catch((error: any) => {
+      .catch((e: any) => {
         // Handle any errors, e.g., show an error message
-        console.error('Error fetching nostr profile:', error);
+        console.error('Caught error fetching nostr profile:', e);
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
         setVisible((v: any) => !v);
-        // errorModal(error);
+        errorModal(e);
       });
   };
 

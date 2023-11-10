@@ -40,7 +40,7 @@ const Election: FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const errorModal: any = (e: any) => {
-    setErrorMessage(e);
+    setErrorMessage(String(e));
     setOpened((v: any) => !v);
   };
 

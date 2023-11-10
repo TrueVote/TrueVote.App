@@ -270,8 +270,8 @@ export const generateProfile: any = async (
     .then(() => {
       return Promise.resolve(profile);
     })
-    .catch((error: any) => {
-      console.error('generateProfile->publishEvent Error', error);
+    .catch((e: any) => {
+      console.error('generateProfile->publishEvent Error', e);
       throw 'Could not publish profile';
     });
 };

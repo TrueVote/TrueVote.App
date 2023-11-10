@@ -83,7 +83,7 @@ MerkleTree.calculateMerkleRootString(data)
       console.warn('Merkle root is null.');
     }
   })
-  .catch((error: Error) => {
-    console.error('Error calculating Merkle root:', error);
+  .catch((e: Error) => {
+    console.error('Error calculating Merkle root:', e);
   });
 */
