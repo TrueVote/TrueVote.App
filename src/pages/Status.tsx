@@ -21,9 +21,9 @@ export const Status: FC = () => {
       .then((data: StatusModel) => {
         setStatusData(data);
       })
-      .catch((error: any) => {
-        setError('An error occurred: ' + error.status + ' : ' + error.statusText);
-        console.error('Error:', error);
+      .catch((e: any) => {
+        setError('An error occurred: ' + e.status + ' : ' + e.statusText);
+        console.error('Error:', e);
       })
       .finally(() => {
         setLoading(false);

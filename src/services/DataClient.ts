@@ -209,8 +209,8 @@ export const DBSubmitBallot = async (
         console.info('Data: /ballot/submitballot', data);
         return Promise.resolve<SubmitBallotModelResponse>(data);
       })
-      .catch((err: any) => {
-        return Promise.reject<any>(err);
+      .catch((e: any) => {
+        return Promise.reject<any>(e);
       }),
   );
 };
@@ -237,8 +237,8 @@ export const APIStatus = async (): Promise<StatusModel> => {
         console.info('Data: /status', data);
         return Promise.resolve<StatusModel>(data);
       })
-      .catch((err: any) => {
-        return Promise.reject<any>(err);
+      .catch((e: any) => {
+        return Promise.reject<any>(e);
       }),
   );
 };
