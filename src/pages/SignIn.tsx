@@ -3,6 +3,7 @@ import {
   NostrProfile,
   emptyNostrProfile,
   getNostrProfileInfo,
+  getNostrPublicKeyFromPrivate,
   nostrKeyKeyHandler,
   nostrSignOut,
 } from '@/services/NostrHelper';
@@ -19,7 +20,7 @@ export const SignIn: FC = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [valid, setValid] = useState(false);
-  const [nostrkey, setNostrkey] = useState('');
+  const [privateKey, setPrivateKey] = useState('');
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -36,20 +37,23 @@ export const SignIn: FC = () => {
     setError(error);
     setMessage(message);
     setValid(valid);
-    setNostrkey(inputValue);
+    setPrivateKey(inputValue);
   };
 
   const signInClick: any = () => {
     setVisible((v: any) => !v);
 
-    console.info('Nostr Key:', nostrkey);
-    getNostrProfileInfo(nostrkey)
+    console.info('Nostr Key:', privateKey);
+    const publicKey: any = getNostrPublicKeyFromPrivate(privateKey);
+    getNostrProfileInfo(publicKey)
       .then((retreivedProfile: NostrProfile) => {
         console.info('Returned Back', retreivedProfile);
         setVisible((v: any) => !v);
-        if (retreivedProfile) {
+        if (retreivedProfile && retreivedProfile !== undefined) {
           updateNostrProfile(retreivedProfile);
+          navigate('/profile');
         } else {
+          errorModal('Could not retreive nostr profile');
           updateNostrProfile(emptyNostrProfile);
           nostrSignOut();
         }
@@ -57,10 +61,10 @@ export const SignIn: FC = () => {
       .catch((e: any) => {
         // Handle any errors, e.g., show an error message
         console.error('Caught error fetching nostr profile:', e);
+        errorModal(e);
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
         setVisible((v: any) => !v);
-        errorModal(e);
       });
   };
 

@@ -22,14 +22,15 @@ const invalidPubKeyError: string = 'Invalid key - public key';
 
 const nostrPrivateKeyStorageKey: string = 'nostr_sk';
 const nostrPublicKeyStorageKey: string = 'nostr_pk';
-// const nostrPublicRelays: string[] = [
-//   'wss://nostr.relayable.org',
-//   'wss://nostr.pjv.me',
-//   'wss://nostr.lnproxy.org',
-//   'wss://relay.nostrss.re',
-//   'wss://relay.damus.io',
-// ];
-const nostrPublicRelays: string[] = ['wss://nostr-relay.truevote.org'];
+const nostrPublicRelays: string[] = [
+  'wss://nostr-relay.truevote.org',
+  'wss://nostr.relayable.org',
+  'wss://nostr.pjv.me',
+  'wss://nostr.lnproxy.org',
+  'wss://relay.nostrss.re',
+  'wss://relay.damus.io',
+];
+const nostrPrivateRelays: string[] = ['wss://nostr-relay.truevote.org'];
 
 let _nostrProfile: NostrProfile | null;
 
@@ -129,6 +130,15 @@ export const normalizeKey: any = (val: string) => {
   return hex || val;
 };
 
+export const getNostrPublicKeyFromPrivate: any = (privateKey: any) => {
+  const normalized: string = normalizeKey(privateKey);
+  console.info('Normalized', normalized);
+
+  const pubkey: string = getPublicKey(normalized);
+
+  return pubkey;
+};
+
 export const storeNostrPublicKey: any = (privateKey: any) => {
   const normalized: string = normalizeKey(privateKey);
   console.info('Normalized', normalized);
@@ -168,6 +178,7 @@ export const getNostrProfileInfo: any = async (
     console.info('Retrieving stored nostrProfile');
     return _nostrProfile;
   }
+  console.info('getNostrProfileInfo()', publicKey);
 
   const nprofile: any = nip19.nprofileEncode({ pubkey: publicKey, relays: nostrPublicRelays });
   const { type, data } = nip19.decode(nprofile);
@@ -337,7 +348,7 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
   const pool: SimplePool = new SimplePool();
 
   try {
-    const promises: any = await pool.publish(nostrPublicRelays, signedEvent);
+    const promises: any = await pool.publish(nostrPrivateRelays, signedEvent);
     const results: any = await Promise.allSettled(promises);
     for (const result of results) {
       if (result.status === 'rejected') {

@@ -36,7 +36,7 @@ export const AppHeader: FC = () => {
       try {
         const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
         console.info('Returned Back', nostrProfile);
-        if (nostrProfile) {
+        if (nostrProfile && nostrProfile !== undefined) {
           updateNostrProfile(nostrProfile);
         } else {
           updateNostrProfile(emptyNostrProfile);
