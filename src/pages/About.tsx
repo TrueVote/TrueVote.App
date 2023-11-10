@@ -11,17 +11,17 @@ export const About: FC = () => {
       </Stack>
       <Text>
         The TrueVote platform is brought to you with love from TrueVote, LLC. We strive to
-        revolutionize the democratic process by providing a secure, transparent, and user-friendly
-        voting experience. Committed to fostering trust and inclusivity, we empower individuals
-        worldwide to actively participate in shaping their communities.
+        revolutionize the voting process by providing a secure, transparent, and user-friendly
+        experience. Committed to fostering trust and inclusivity, we empower individuals worldwide
+        to actively participate in shaping their communities.
       </Text>
       <Space h='md'></Space>
       <Text>
-        TrueVote is not just an app; it's a commitment to the principles of democracy, innovation,
+        TrueVote is not just an app; it's a commitment to the principles of fairness, innovation,
         and a brighter future for all. With support for multiple languages, we ensure accessibility
-        on a global scale, transcending borders and making democratic participation a universal
-        right. Join us on this journey as we pave the way for a more accessible and accountable
-        electoral landscape for the entire world.
+        on a global scale, transcending borders and making participation a universal right. Join us
+        on this journey as we pave the way for a more accessible and accountable electoral landscape
+        for the entire world.
       </Text>
       <Space h='md'></Space>
       <Space h='md'></Space>
