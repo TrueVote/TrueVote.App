@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { MainLayout } from './layouts/MainLayout';
+import { About } from './pages/About';
 import { Ballot } from './pages/Ballot';
 import { BallotView } from './pages/BallotView';
 import { Ballots } from './pages/Ballots';
@@ -17,6 +18,7 @@ export const ROUTES: ReactElement = (
   <Routes>
     <Route path='/' element={<MainLayout />}>
       <Route path='' element={<Home />} />
+      <Route path='/about' element={<About />} />
       <Route path='/ballots' element={<Ballots />} />
       <Route path='/ballot/:electionId' element={<Ballot />} />
       <Route path='/ballotview/:ballotId' element={<BallotView />} />

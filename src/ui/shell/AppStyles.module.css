@@ -98,10 +98,10 @@
   }
 }
 
-.link {
+.link,
+.linkNoPadding {
   display: block;
   line-height: 1;
-  padding: 8px 12px;
   border-radius: var(--mantine-radius-sm);
   text-decoration: none;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
@@ -110,7 +110,12 @@
   text-decoration: none;
 }
 
-.link:hover {
+.link {
+  padding: 8px 12px;
+}
+
+.link:hover,
+.linkNoPadding:hover {
   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   text-decoration: none;
 }
