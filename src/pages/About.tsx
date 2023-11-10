@@ -1,6 +1,6 @@
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Anchor, Container, Group, Space, Stack, Text } from '@mantine/core';
+import { Anchor, Button, Container, Group, Space, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
 
 export const About: FC = () => {
@@ -29,6 +29,11 @@ export const About: FC = () => {
         <Anchor href='//truevote.org' className={classes.linkNoPadding} target='_blank'>
           <Text size={'md'}>Visit us at TrueVote.org to learn more about our mission.</Text>
         </Anchor>
+      </Group>
+      <Group>
+        <Button variant='light' color='blue' mt='md' radius='md'>
+          Submit Feedback
+        </Button>
       </Group>
     </Container>
   );
