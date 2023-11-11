@@ -1,5 +1,6 @@
 import { useGlobalContext } from '@/Global';
 import { Hero } from '@/ui/Hero';
+import { Settings } from '@/ui/Settings';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Image, Space, Stack, Table } from '@mantine/core';
 import { FC } from 'react';
@@ -56,6 +57,8 @@ export const Profile: FC = () => {
               </Table.Tr>
             </Table.Tbody>
           </Table>
+          <Space h='md'></Space>
+          <Settings />
           <Space h='md'></Space>
           <Button
             radius='md'
