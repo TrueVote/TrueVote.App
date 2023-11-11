@@ -30,7 +30,7 @@
 
 .headerLeft {
   position: left;
-  width: 62px;
+  min-width: 62px;
   align-items: left;
 }
 
@@ -40,7 +40,7 @@
 
 .headerRight {
   position: right;
-  width: 88px;
+  min-width: 62px;
   align-items: right;
 }
 
