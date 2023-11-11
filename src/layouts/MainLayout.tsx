@@ -6,7 +6,7 @@ import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 
 export const HEADER_HEIGHT: number = 50;
-export const FOOTER_HEIGHT: number = 60;
+export const FOOTER_HEIGHT: number = 50;
 
 export const MainLayout: FC = () => {
   return (

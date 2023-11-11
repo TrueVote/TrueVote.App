@@ -64,8 +64,9 @@ export const AppHeader: FC = () => {
   const links: LinkType[] = [
     { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
     { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
-    { id: '2', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
-    { id: '3', link: '/about', label: 'About', matched: useMatch('/about') },
+    { id: '2', link: '/polls', label: 'Polls', matched: useMatch('/polls') },
+    { id: '3', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
+    { id: '4', link: '/about', label: 'About', matched: useMatch('/about') },
   ];
   const [, toggle] = useToggle();
   const [isMenuOpen, setMenuOpen] = useState(false);
