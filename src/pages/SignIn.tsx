@@ -6,6 +6,7 @@ import {
   getNostrPublicKeyFromPrivate,
   nostrKeyKeyHandler,
   nostrSignOut,
+  storeNostrPrivateKey,
 } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
@@ -51,6 +52,7 @@ export const SignIn: FC = () => {
         setVisible((v: any) => !v);
         if (retreivedProfile && retreivedProfile !== undefined) {
           updateNostrProfile(retreivedProfile);
+          storeNostrPrivateKey(privateKey);
           navigate('/profile');
         } else {
           errorModal('Could not retreive nostr profile');

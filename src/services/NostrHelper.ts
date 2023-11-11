@@ -139,7 +139,7 @@ export const getNostrPublicKeyFromPrivate: any = (privateKey: any) => {
   return pubkey;
 };
 
-export const storeNostrPublicKey: any = (privateKey: any) => {
+const storeNostrPublicKey: any = (privateKey: any) => {
   const normalized: string = normalizeKey(privateKey);
   console.info('Normalized', normalized);
 
@@ -156,7 +156,7 @@ export const storeNostrPrivateKey: any = (privateKey: any) => {
   storeNostrPublicKey(privateKey);
 };
 
-export const removeNostrPrivateKey: any = () => {
+const removeNostrPrivateKey: any = () => {
   localStorage.removeItem(nostrPrivateKeyStorageKey);
   localStorage.removeItem(nostrPublicKeyStorageKey);
 };
@@ -287,11 +287,7 @@ export const generateProfile: any = async (
     });
 };
 
-export const signProfile: any = (
-  privateKey: string,
-  publicKey: string,
-  profile: NostrProfile,
-): string => {
+const signProfile: any = (privateKey: string, publicKey: string, profile: NostrProfile): string => {
   // Create a Kind 0 event to create the profile
   const event: any = {
     kind: 0,
