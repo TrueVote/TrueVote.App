@@ -53,11 +53,11 @@ export const Profile: FC = () => {
           >
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>Name:</Table.Td>
+                <Table.Td className={classes.tdRight}>Name:</Table.Td>
                 <Table.Td className={classes.profileName}>{nostrProfile.displayName}</Table.Td>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>Public Key:</Table.Td>
+                <Table.Td className={classes.tdRight}>Public Key:</Table.Td>
                 <Table withRowBorders={false} verticalSpacing='xs'>
                   <Table.Tr>
                     <Table.Td className={classes.tdLeft}>
@@ -87,11 +87,11 @@ export const Profile: FC = () => {
                 </Table>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>About:</Table.Td>
+                <Table.Td className={classes.tdRight}>About:</Table.Td>
                 <Table.Td className={classes.profileText}>{nostrProfile.about}</Table.Td>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>Nip05:</Table.Td>
+                <Table.Td className={classes.tdRight}>Nip05:</Table.Td>
                 <Table.Td className={classes.profileText}>{nostrProfile.nip05}</Table.Td>
               </Table.Tr>
             </Table.Tbody>

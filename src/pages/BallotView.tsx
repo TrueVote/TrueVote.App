@@ -117,13 +117,13 @@ const Ballot: FC = () => {
             <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
               <Table.Tbody>
                 <Table.Tr>
-                  <Table.Td className={classes.tdLeft}>Submitted:</Table.Td>
+                  <Table.Td className={classes.tdRight}>Submitted:</Table.Td>
                   <Table.Td>
                     {moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
-                  <Table.Td className={classes.tdLeft}>Ballot Id:</Table.Td>
+                  <Table.Td className={classes.tdRight}>Ballot Id:</Table.Td>
                   <Table.Td>{ballot.BallotId}</Table.Td>
                 </Table.Tr>
               </Table.Tbody>
@@ -162,19 +162,19 @@ const Ballot: FC = () => {
             <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
               <Table.Tbody>
                 <Table.Tr>
-                  <Table.Td className={classes.tdLeft}>Created:</Table.Td>
+                  <Table.Td className={classes.tdRight}>Created:</Table.Td>
                   <Table.Td>
                     {moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
-                  <Table.Td className={classes.tdLeft}>Updated:</Table.Td>
+                  <Table.Td className={classes.tdRight}>Updated:</Table.Td>
                   <Table.Td>
                     {moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
-                  <Table.Td className={classes.tdLeft}>Hash:</Table.Td>
+                  <Table.Td className={classes.tdRight}>Hash:</Table.Td>
                   <Table.Td className={classes.tdLeft}>
                     <HoverCard shadow='md'>
                       <HoverCard.Target>
@@ -187,7 +187,7 @@ const Ballot: FC = () => {
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
-                  <Table.Td className={classes.tdLeft}>Timestamp Id:</Table.Td>
+                  <Table.Td className={classes.tdRight}>Timestamp Id:</Table.Td>
                   <Table.Td>
                     {ballotHash.TimestampId ? (
                       ballotHash.TimestampId

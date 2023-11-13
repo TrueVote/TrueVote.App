@@ -193,6 +193,12 @@
 }
 
 .tdLeft {
+  text-align: left;
+  font-size: var(--mantine-h7-font-size);
+  min-width: 100px;
+}
+
+.tdRight {
   text-align: right;
   font-size: var(--mantine-h7-font-size);
   min-width: 100px;
