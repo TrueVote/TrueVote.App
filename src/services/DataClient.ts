@@ -83,6 +83,7 @@ export const DBAllBallots = (): QueryResult<{
           DateCreated
           Election {
             ElectionId
+            Name
             Races {
               Name
               RaceId

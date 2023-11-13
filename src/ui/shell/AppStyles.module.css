@@ -310,3 +310,7 @@
 .electionHeaderImage {
   float: left;
 }
+
+.smallText {
+  font-size: var(--mantine-h6-font-size);
+}
