@@ -127,10 +127,13 @@ const Election: FC = () => {
           <Text>Error: {errorMessage}</Text>
         </Modal>
         <HeaderImage election={election} />
+        <Text size='xl'>{election.Name}</Text>
         <Group mt='md' mb='xs'>
-          <Text size='xl'>{election.Name}</Text>
-          <Badge color='pink' variant='light'>
+          <Badge color='green' variant='light'>
             Starts: {moment(election.StartDate).format('MMMM DD, YYYY')}
+          </Badge>
+          <Badge color='pink' variant='light'>
+            Ends: {moment(election.EndDate).format('MMMM DD, YYYY')}
           </Badge>
         </Group>
         <Text size='sm' c='dimmed'>
