@@ -2,7 +2,7 @@ import { useGlobalContext } from '@/Global';
 import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Button, Container, Space, Stack, Text } from '@mantine/core';
+import { Button, Container, HoverCard, Space, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
@@ -27,7 +27,14 @@ export const SignOut: FC = () => {
           <Space h='md'></Space>
           <Text className={classes.profileText}>
             <b>Signed In Public Key:</b>{' '}
-            <span className={classes.textChopped}>{nostrProfile?.npub}</span>
+            <HoverCard shadow='md'>
+              <HoverCard.Target>
+                <Text className={classes.textChopped}>{nostrProfile?.npub}</Text>
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                <Text size='sm'>{nostrProfile?.npub}</Text>
+              </HoverCard.Dropdown>
+            </HoverCard>
           </Text>
           <Space h='md'></Space>
           <Text>Click below to sign out.</Text>

@@ -165,6 +165,17 @@ export const getNostrPublicKey: any = () => {
   return localStorage.getItem(nostrPublicKeyStorageKey);
 };
 
+export const getNostrPublicKeyNpub: any = () => {
+  const nostrPublicKey: string = getNostrPublicKey();
+  const npub: string = nip19.npubEncode(nostrPublicKey);
+
+  return npub;
+};
+
+export const getNostrPrivateKey: any = () => {
+  return localStorage.getItem(nostrPrivateKeyStorageKey);
+};
+
 export const nostrSignOut: any = () => {
   removeNostrPrivateKey();
   _nostrProfile = null;

@@ -11,7 +11,17 @@ import {
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Button, Container, Image, Modal, Space, Stack, Text, Textarea } from '@mantine/core';
+import {
+  Button,
+  Container,
+  HoverCard,
+  Image,
+  Modal,
+  Space,
+  Stack,
+  Text,
+  Textarea,
+} from '@mantine/core';
 import { FC, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
@@ -125,8 +135,15 @@ export const SignIn: FC = () => {
           <Text className={classes.textAlert}>Already Signed In</Text>
           <Space h='md'></Space>
           <Text className={classes.profileText}>
-            <b>Signed In Public Key:</b>{' '}
-            <span className={classes.textChopped}>{nostrProfile?.npub}</span>
+            <b>Signed In Public Key:</b>
+            <HoverCard shadow='md'>
+              <HoverCard.Target>
+                <Text className={classes.textChopped}>{nostrProfile?.npub}</Text>
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                <Text size='sm'>{nostrProfile?.npub}</Text>
+              </HoverCard.Dropdown>
+            </HoverCard>
           </Text>
           <Space h='md'></Space>
           <Text>Click below for sign out page.</Text>

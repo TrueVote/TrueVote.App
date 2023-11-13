@@ -195,6 +195,7 @@
 .tdLeft {
   text-align: right;
   font-size: var(--mantine-h7-font-size);
+  min-width: 100px;
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
@@ -298,4 +299,8 @@
 
 .profileButtons {
   width: 100px;
+}
+
+.electionHeaderImage {
+  float: left;
 }

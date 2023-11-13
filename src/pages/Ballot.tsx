@@ -70,7 +70,15 @@ const Election: FC = () => {
     ) {
       return (
         <Card.Section>
-          <Image src={election.HeaderImageUrl} alt={election.Name} />
+          <div className={classes.electionHeaderImage}>
+            <Image
+              h={150}
+              radius='lg'
+              fit='contain'
+              src={election.HeaderImageUrl}
+              alt={election.Name}
+            />
+          </div>
         </Card.Section>
       );
     } else {

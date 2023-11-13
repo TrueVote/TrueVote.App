@@ -17,6 +17,7 @@ import {
   Container,
   Flex,
   Group,
+  HoverCard,
   ScrollArea,
   SimpleGrid,
   Table,
@@ -174,8 +175,15 @@ const Ballot: FC = () => {
                 </Table.Tr>
                 <Table.Tr>
                   <Table.Td className={classes.tdLeft}>Hash:</Table.Td>
-                  <Table.Td className={classes.textChopped}>
-                    {ballotHash.ServerBallotHashS}
+                  <Table.Td className={classes.tdLeft}>
+                    <HoverCard shadow='md'>
+                      <HoverCard.Target>
+                        <Text className={classes.textChopped}>{ballotHash.ServerBallotHashS}</Text>
+                      </HoverCard.Target>
+                      <HoverCard.Dropdown>
+                        <Text size='sm'>{ballotHash.ServerBallotHashS}</Text>
+                      </HoverCard.Dropdown>
+                    </HoverCard>
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>

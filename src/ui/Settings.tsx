@@ -1,8 +1,12 @@
+import { getNostrPrivateKey, getNostrPublicKeyNpub } from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Accordion, Stack, Text } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
 
 export const Settings: FC = () => {
+  const nostrPublicKey: string | null = getNostrPublicKeyNpub();
+  const nostrPrivateKey: string | null = getNostrPrivateKey();
+
   return (
     <Accordion
       chevronPosition='right'
@@ -15,7 +19,8 @@ export const Settings: FC = () => {
         <Accordion.Panel>
           User preferences
           <Stack>
-            <Text>hi</Text>
+            <Text>{nostrPublicKey}</Text>
+            <Text>{nostrPrivateKey}</Text>
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>
