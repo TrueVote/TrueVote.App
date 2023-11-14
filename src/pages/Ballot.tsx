@@ -70,7 +70,15 @@ const Election: FC = () => {
     ) {
       return (
         <Card.Section>
-          <Image src={election.HeaderImageUrl} alt={election.Name} />
+          <div className={classes.electionHeaderImage}>
+            <Image
+              h={150}
+              radius='lg'
+              fit='contain'
+              src={election.HeaderImageUrl}
+              alt={election.Name}
+            />
+          </div>
         </Card.Section>
       );
     } else {
@@ -119,10 +127,13 @@ const Election: FC = () => {
           <Text>Error: {errorMessage}</Text>
         </Modal>
         <HeaderImage election={election} />
+        <Text size='xl'>{election.Name}</Text>
         <Group mt='md' mb='xs'>
-          <Text size='xl'>{election.Name}</Text>
-          <Badge color='pink' variant='light'>
+          <Badge color='green' variant='light'>
             Starts: {moment(election.StartDate).format('MMMM DD, YYYY')}
+          </Badge>
+          <Badge color='pink' variant='light'>
+            Ends: {moment(election.EndDate).format('MMMM DD, YYYY')}
           </Badge>
         </Group>
         <Text size='sm' c='dimmed'>

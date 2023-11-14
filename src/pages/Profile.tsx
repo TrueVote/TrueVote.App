@@ -1,5 +1,6 @@
 import { useGlobalContext } from '@/Global';
 import { Hero } from '@/ui/Hero';
+import { Preferences } from '@/ui/Preferences';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Image, Space, Stack, Table } from '@mantine/core';
 import { FC } from 'react';
@@ -39,23 +40,21 @@ export const Profile: FC = () => {
           >
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>Name:</Table.Td>
+                <Table.Td className={classes.tdRight}>Name:</Table.Td>
                 <Table.Td className={classes.profileName}>{nostrProfile.displayName}</Table.Td>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>Public Key:</Table.Td>
-                <Table.Td className={classes.textChopped}>{nostrProfile.npub}</Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td className={classes.tdLeft}>About:</Table.Td>
+                <Table.Td className={classes.tdRight}>About:</Table.Td>
                 <Table.Td className={classes.profileText}>{nostrProfile.about}</Table.Td>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td className={classes.tdLeft}>Nip05:</Table.Td>
+                <Table.Td className={classes.tdRight}>Nip05:</Table.Td>
                 <Table.Td className={classes.profileText}>{nostrProfile.nip05}</Table.Td>
               </Table.Tr>
             </Table.Tbody>
           </Table>
+          <Space h='md'></Space>
+          <Preferences nostrProfile={nostrProfile} />
           <Space h='md'></Space>
           <Button
             radius='md'

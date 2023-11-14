@@ -8,6 +8,7 @@ import {
   Button,
   Container,
   MantineTheme,
+  Table,
   Text,
   rem,
   useMantineColorScheme,
@@ -48,21 +49,35 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
           <Accordion.Control key={i} icon={<IconChecklist size={26} color={getColor('orange')} />}>
-            {moment(e.DateCreated).format('MMMM DD, YYYY')}
+            {moment(e.DateCreated).format('MMMM DD, YYYY')} - {e.Election?.Name}
           </Accordion.Control>
           <Accordion.Panel>
-            <Text>Ballot Id: {e.BallotId}</Text>
-            <Link to={`/ballotview/${e.BallotId}`} className={classes.buttonText}>
-              <Button
-                fullWidth
-                radius='md'
-                color='green'
-                variant='light'
-                rightSection={<IconZoomIn style={{ width: rem(16), height: rem(16) }} />}
-              >
-                <span className={classes.buttonText}>Details</span>
-              </Button>
-            </Link>
+            <Table withRowBorders={false} withColumnBorders={false} withTableBorder={false}>
+              <Table.Tr>
+                <Table.Td className={(classes.smallText, classes.tdRight)} c={getColor('orange')}>
+                  Ballot Id:
+                </Table.Td>
+                <Table.Td className={(classes.smallText, classes.tdLeft)}>
+                  <Text>{e.BallotId}</Text>
+                </Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td colSpan={2}>
+                  {' '}
+                  <Link to={`/ballotview/${e.BallotId}`} className={classes.buttonText}>
+                    <Button
+                      fullWidth
+                      radius='md'
+                      color='green'
+                      variant='light'
+                      rightSection={<IconZoomIn style={{ width: rem(16), height: rem(16) }} />}
+                    >
+                      <span className={classes.buttonText}>Details</span>
+                    </Button>
+                  </Link>
+                </Table.Td>
+              </Table.Tr>
+            </Table>
           </Accordion.Panel>
         </Accordion.Item>
       </Fragment>
