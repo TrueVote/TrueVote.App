@@ -267,8 +267,8 @@
 
 .profileImage {
   padding: 2px;
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
   border-radius: 100px;
   margin-bottom: 10px;
   border: 1px solid light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
