@@ -21,6 +21,7 @@ import {
 import { useToggle } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
 import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
@@ -114,6 +115,7 @@ export const AppHeader: FC = () => {
         </Group>
 
         <Group gap={6} className={classes.headerRight}>
+          <LanguageSwitcher />
           <ThemeSwitcher />
           <Burger
             opened={isMenuOpen}
