@@ -22,7 +22,7 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
-export const Settings: any = ({ nostrProfile }: { nostrProfile: NostrProfile }) => {
+export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile }) => {
   const nostrPublicKey: string | null = getNostrPublicKeyNpub();
   const clipboard: any = useClipboard({ timeout: 500 });
   const emailIcon: any = <IconMail style={{ width: rem(16), height: rem(16) }} />;
