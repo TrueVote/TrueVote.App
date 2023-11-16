@@ -1,4 +1,4 @@
-import translationsData from './translations.json';
+import translationsData from '@/translations.json';
 
 const languageKey: string = 'language';
 
@@ -17,12 +17,12 @@ interface LanguageDictionary {
   };
 }
 
-export class LanguageLocalization {
+export class Localization {
   private dictionaries: LanguageDictionary = {};
   private selectedLanguage: string = getLanguage();
 
   constructor() {
-    console.info('~LanguageLocalization()', translationsData);
+    console.info('~Localization()', translationsData);
 
     const translationDictionaries: any = Array.from(Object.entries(translationsData));
 

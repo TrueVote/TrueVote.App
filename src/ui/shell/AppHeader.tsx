@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { LanguageLocalization } from '@/services/Language.localization';
+import { Localization } from '@/services/Localization';
 import {
   NostrProfile,
   emptyNostrProfile,
@@ -32,7 +32,7 @@ export const AppHeader: FC = () => {
 
   useEffect(() => {
     if (localization === undefined) {
-      updateLocalization(new LanguageLocalization());
+      updateLocalization(new Localization());
     }
 
     if (nostrPublicKey === null || String(nostrPublicKey).length <= 0) {

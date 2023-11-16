@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { LanguageLocalization, storeLanguage } from '@/services/Language.localization';
+import { Localization, storeLanguage } from '@/services/Localization';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { ActionIcon, Menu } from '@mantine/core';
 import { IconLanguage } from '@tabler/icons-react';
@@ -11,7 +11,7 @@ export const LanguageSwitcher: FC = () => {
   const handleMenuItemClick: any = (value: string) => {
     console.info(`Language: ${value}`);
     storeLanguage(value);
-    updateLocalization(new LanguageLocalization());
+    updateLocalization(new Localization());
   };
 
   const languages: any = [

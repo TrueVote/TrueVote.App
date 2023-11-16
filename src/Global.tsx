@@ -1,12 +1,12 @@
 import React, { Context, ReactNode, createContext, useContext, useState } from 'react';
-import { LanguageLocalization } from './services/Language.localization';
+import { Localization } from './services/Localization';
 import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
 
 interface GlobalContextType {
   nostrProfile: NostrProfile | undefined;
-  localization: LanguageLocalization | undefined;
+  localization: Localization | undefined;
   updateNostrProfile: (np: NostrProfile) => void;
-  updateLocalization: (loc: LanguageLocalization) => void;
+  updateLocalization: (loc: Localization) => void;
 }
 
 const GlobalContext: Context<GlobalContextType | undefined> = createContext<
@@ -21,13 +21,13 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   children,
 }: GlobalProviderProps) => {
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
-  const [localization, setLocalization] = useState<LanguageLocalization>();
+  const [localization, setLocalization] = useState<Localization>();
 
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
   };
 
-  const updateLocalization: (loc: LanguageLocalization) => void = (loc: LanguageLocalization) => {
+  const updateLocalization: (loc: Localization) => void = (loc: Localization) => {
     setLocalization(loc);
   };
 
