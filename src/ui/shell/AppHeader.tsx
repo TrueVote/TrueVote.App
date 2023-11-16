@@ -1,4 +1,5 @@
 import { useGlobalContext } from '@/Global';
+import { LanguageLocalization } from '@/services/Language.localization';
 import {
   NostrProfile,
   emptyNostrProfile,
@@ -27,8 +28,14 @@ import { ThemeSwitcher } from '../ThemeSwitcher';
 export const AppHeader: FC = () => {
   const nostrPublicKey: string | null = getNostrPublicKey();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
+  const { localization, updateLocalization } = useGlobalContext();
 
   useEffect(() => {
+    console.info('localization', localization);
+    if (localization === undefined) {
+      updateLocalization(new LanguageLocalization());
+    }
+
     if (nostrPublicKey === null || String(nostrPublicKey).length <= 0) {
       return;
     }
@@ -53,7 +60,7 @@ export const AppHeader: FC = () => {
 
     // Call the async function
     fetchNostrProfile();
-  }, [nostrPublicKey, updateNostrProfile]);
+  }, [localization, nostrPublicKey, updateLocalization, updateNostrProfile]);
 
   interface LinkType {
     id: string;
