@@ -279,7 +279,8 @@
   font-size: var(--mantine-h6-font-size);
 }
 
-.textChopped {
+.textChopped,
+.textChoppedSmall {
   font-size: var(--mantine-h6-font-size);
   @media (max-width: $mantine-breakpoint-sm) {
     text-overflow: ellipsis;
@@ -288,6 +289,10 @@
     width: 300px;
     display: block;
   }
+}
+
+.textChoppedSmall {
+  width: 180px;
 }
 
 .profileImageDiv {
