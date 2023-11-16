@@ -22,6 +22,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
 }: GlobalProviderProps) => {
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
   const [localization, setLocalization] = useState<LanguageLocalization>();
+
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
   };

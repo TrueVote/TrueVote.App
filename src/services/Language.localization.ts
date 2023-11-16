@@ -1,3 +1,5 @@
+import translationsData from './translations.json';
+
 const languageKey: string = 'language';
 
 export const storeLanguage: any = (language: string): void => {
@@ -20,37 +22,12 @@ export class LanguageLocalization {
   private selectedLanguage: string = getLanguage();
 
   constructor() {
-    console.info('~LanguageLocalization()');
+    console.info('~LanguageLocalization()', translationsData);
 
-    // Add dictionaries for different languages
-    this.addDictionary('en', {
-      HOMEPAGE: 'Home',
-      WELCOME: 'Welcome',
-    });
+    const translationDictionaries: any = Array.from(Object.entries(translationsData));
 
-    this.addDictionary('es', {
-      HOMEPAGE: 'Hogar',
-      WELCOME: 'Bienvenido',
-    });
-
-    this.addDictionary('fr', {
-      HOMEPAGE: 'Maison',
-      WELCOME: 'Bienvenu',
-    });
-
-    this.addDictionary('ru', {
-      HOMEPAGE: 'Дом',
-      WELCOME: 'Добро пожаловать',
-    });
-
-    this.addDictionary('zh', {
-      HOMEPAGE: '家',
-      WELCOME: '欢迎',
-    });
-
-    this.addDictionary('ar', {
-      HOMEPAGE: 'الصفحة الرئيسية',
-      WELCOME: 'مرحباً',
+    translationDictionaries.map((item: any) => {
+      this.addDictionary(item[0], item[1]);
     });
   }
 

@@ -1,0 +1,26 @@
+{
+  "en": {
+    "HOMEPAGE": "Home",
+    "WELCOME": "Welcome"
+  },
+  "es": {
+    "HOMEPAGE": "Hogar",
+    "WELCOME": "Bienvenido"
+  },
+  "fr": {
+    "HOMEPAGE": "Maison",
+    "WELCOME": "Bienvenu"
+  },
+  "ru": {
+    "HOMEPAGE": "Дом",
+    "WELCOME": "Добро пожаловать"
+  },
+  "zh": {
+    "HOMEPAGE": "家",
+    "WELCOME": "欢迎"
+  },
+  "ar": {
+    "HOMEPAGE": "الصفحة الرئيسية",
+    "WELCOME": "مرحباً"
+  }
+}

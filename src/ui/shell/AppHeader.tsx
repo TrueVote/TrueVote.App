@@ -31,7 +31,6 @@ export const AppHeader: FC = () => {
   const { localization, updateLocalization } = useGlobalContext();
 
   useEffect(() => {
-    console.info('localization', localization);
     if (localization === undefined) {
       updateLocalization(new LanguageLocalization());
     }
@@ -39,7 +38,8 @@ export const AppHeader: FC = () => {
     if (nostrPublicKey === null || String(nostrPublicKey).length <= 0) {
       return;
     }
-    // Define an async function to fetch the user profile
+
+    // Async function to fetch the user profile
     const fetchNostrProfile: any = async () => {
       try {
         const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
