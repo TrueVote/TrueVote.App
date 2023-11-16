@@ -60,33 +60,37 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
               </Table.Tr>
               <Table.Tr>
                 <Table.Td className={classes.tdRight}>Public Key:</Table.Td>
-                <Table withRowBorders={false} verticalSpacing='xs'>
-                  <Table.Tr>
-                    <Table.Td className={classes.tdLeft}>
-                      <HoverCard shadow='md'>
-                        <HoverCard.Target>
-                          <Text className={classes.textChopped}>{nostrPublicKey}</Text>
-                        </HoverCard.Target>
-                        <HoverCard.Dropdown>
-                          <Text size='sm'>{nostrPublicKey}</Text>
-                        </HoverCard.Dropdown>
-                      </HoverCard>
-                    </Table.Td>
-                    <Table.Td>
-                      <ActionIcon
-                        onClick={(): void => clipboard.copy(nostrPublicKey)}
-                        aria-label='Copy'
-                        variant='transparent'
-                      >
-                        {clipboard.copied ? (
-                          <IconClipboardCheck size={24} />
-                        ) : (
-                          <IconClipboardCopy size={24} />
-                        )}
-                      </ActionIcon>
-                    </Table.Td>
-                  </Table.Tr>
-                </Table>
+                <Table.Td className={classes.tdRight}>
+                  <Table withRowBorders={false} verticalSpacing='xs'>
+                    <Table.Tbody>
+                      <Table.Tr>
+                        <Table.Td className={classes.tdLeft}>
+                          <HoverCard shadow='md'>
+                            <HoverCard.Target>
+                              <Text className={classes.textChoppedSmall}>{nostrPublicKey}</Text>
+                            </HoverCard.Target>
+                            <HoverCard.Dropdown>
+                              <Text size='sm'>{nostrPublicKey}</Text>
+                            </HoverCard.Dropdown>
+                          </HoverCard>
+                        </Table.Td>
+                        <Table.Td>
+                          <ActionIcon
+                            onClick={(): void => clipboard.copy(nostrPublicKey)}
+                            aria-label='Copy'
+                            variant='transparent'
+                          >
+                            {clipboard.copied ? (
+                              <IconClipboardCheck size={24} />
+                            ) : (
+                              <IconClipboardCopy size={24} />
+                            )}
+                          </ActionIcon>
+                        </Table.Td>
+                      </Table.Tr>
+                    </Table.Tbody>
+                  </Table>
+                </Table.Td>
               </Table.Tr>
               <Table.Tr>
                 <Table.Td colSpan={2}>

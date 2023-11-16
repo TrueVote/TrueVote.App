@@ -1,4 +1,5 @@
 import { useGlobalContext } from '@/Global';
+import { LanguageLocalization } from '@/services/Language.localization';
 import {
   NostrProfile,
   emptyNostrProfile,
@@ -21,17 +22,24 @@ import {
 import { useToggle } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
 import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
   const nostrPublicKey: string | null = getNostrPublicKey();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
+  const { localization, updateLocalization } = useGlobalContext();
 
   useEffect(() => {
+    if (localization === undefined) {
+      updateLocalization(new LanguageLocalization());
+    }
+
     if (nostrPublicKey === null || String(nostrPublicKey).length <= 0) {
       return;
     }
-    // Define an async function to fetch the user profile
+
+    // Async function to fetch the user profile
     const fetchNostrProfile: any = async () => {
       try {
         const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
@@ -52,7 +60,7 @@ export const AppHeader: FC = () => {
 
     // Call the async function
     fetchNostrProfile();
-  }, [nostrPublicKey, updateNostrProfile]);
+  }, [localization, nostrPublicKey, updateLocalization, updateNostrProfile]);
 
   interface LinkType {
     id: string;
@@ -114,6 +122,7 @@ export const AppHeader: FC = () => {
         </Group>
 
         <Group gap={6} className={classes.headerRight}>
+          <LanguageSwitcher />
           <ThemeSwitcher />
           <Burger
             opened={isMenuOpen}

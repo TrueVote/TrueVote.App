@@ -40,7 +40,7 @@
 
 .headerRight {
   position: right;
-  min-width: 62px;
+  min-width: 96px;
   align-items: right;
 }
 
@@ -173,9 +173,6 @@
 
 .themeSwitcher {
   position: flex;
-  @media (min-width: $mantine-breakpoint-sm) {
-    margin-left: 32px;
-  }
 }
 
 .buttonText {
@@ -282,7 +279,8 @@
   font-size: var(--mantine-h6-font-size);
 }
 
-.textChopped {
+.textChopped,
+.textChoppedSmall {
   font-size: var(--mantine-h6-font-size);
   @media (max-width: $mantine-breakpoint-sm) {
     text-overflow: ellipsis;
@@ -291,6 +289,10 @@
     width: 300px;
     display: block;
   }
+}
+
+.textChoppedSmall {
+  width: 180px;
 }
 
 .profileImageDiv {
@@ -313,4 +315,11 @@
 
 .smallText {
   font-size: var(--mantine-h6-font-size);
+}
+
+.languageMenu {
+  position: flex;
+  @media (min-width: $mantine-breakpoint-sm) {
+    margin-left: 32px;
+  }
 }

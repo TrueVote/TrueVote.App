@@ -1,0 +1,38 @@
+{
+  "en": {
+    "HOMEPAGE": "Home",
+    "WELCOME": "Welcome",
+    "COPYRIGHT": "Copyright",
+    "VERSION": "Version"
+  },
+  "es": {
+    "HOMEPAGE": "Hogar",
+    "WELCOME": "Bienvenido",
+    "COPYRIGHT": "Derechos de autor",
+    "VERSION": "Versión"
+  },
+  "fr": {
+    "HOMEPAGE": "Maison",
+    "WELCOME": "Bienvenu",
+    "COPYRIGHT": "droits d'auteur",
+    "VERSION": "Version"
+  },
+  "ru": {
+    "HOMEPAGE": "Дом",
+    "WELCOME": "Добро пожаловать",
+    "COPYRIGHT": "Авторские права",
+    "VERSION": "Версия"
+  },
+  "zh": {
+    "HOMEPAGE": "家",
+    "WELCOME": "欢迎",
+    "COPYRIGHT": "版权",
+    "VERSION": "版本"
+  },
+  "ar": {
+    "HOMEPAGE": "الصفحة الرئيسية",
+    "WELCOME": "مرحباً",
+    "COPYRIGHT": "حقوق النشر",
+    "VERSION": "إصدار"
+  }
+}
