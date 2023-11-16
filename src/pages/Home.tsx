@@ -2,6 +2,7 @@ import { useGlobalContext } from '@/Global';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Container, Image, Stack, Table, Text } from '@mantine/core';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Home: FC = () => {
   // const theme: MantineTheme = useMantineTheme();
@@ -36,7 +37,9 @@ export const Home: FC = () => {
           <Table.Tr>
             <Table.Td className={classes.tdCenter}>
               <div className={classes.voterImageDiv}>
-                <Image radius='md' className={classes.voterImage}></Image>
+                <Link to='/elections'>
+                  <Image radius='md' className={classes.voterImage}></Image>
+                </Link>
               </div>
               <Text className={(classes.smallText, classes.tight)}>
                 {localization?.getLocalizedString('VOTEONPHONEORCOMPUTER')}
@@ -46,7 +49,9 @@ export const Home: FC = () => {
           <Table.Tr>
             <Table.Td className={classes.tdCenter}>
               <div className={classes.voterImageDiv}>
-                <Image radius='md' className={classes.chartsImage}></Image>
+                <Link to='/results'>
+                  <Image radius='md' className={classes.chartsImage}></Image>
+                </Link>
               </div>
               <Text className={(classes.smallText, classes.tight)}>
                 {localization?.getLocalizedString('REVIEWRESULTS')}

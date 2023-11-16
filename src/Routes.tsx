@@ -10,6 +10,7 @@ import { Home } from './pages/Home';
 import { Polls } from './pages/Polls';
 import { Profile } from './pages/Profile';
 import { Register } from './pages/Register';
+import { Results } from './pages/Results';
 import { SignIn } from './pages/SignIn';
 import { SignOut } from './pages/SignOut';
 import { Status } from './pages/Status';
@@ -27,6 +28,7 @@ export const ROUTES: ReactElement = (
       <Route path='/polls' element={<Polls />} />
       <Route path='/profile' element={<Profile />} />
       <Route path='/thanks' element={<Thanks />} />
+      <Route path='/results' element={<Results />} />
       <Route path='/status' element={<Status />} />
       <Route path='/signin' element={<SignIn />} />
       <Route path='/signout' element={<SignOut />} />
