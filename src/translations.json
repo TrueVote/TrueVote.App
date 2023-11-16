@@ -1,36 +1,54 @@
 {
   "en": {
-    "HOMEPAGE": "Home",
+    "HOME": "Home",
+    "SLOGAN": "It's time we vote on our phones!",
+    "VOTEONPHONEORCOMPUTER": "Vote on your phone or desktop computer",
+    "REVIEWRESULTS": "Review the results in real-time or when the election window closes",
     "WELCOME": "Welcome",
     "COPYRIGHT": "Copyright",
     "VERSION": "Version"
   },
   "es": {
-    "HOMEPAGE": "Hogar",
+    "HOME": "Hogar",
+    "SLOGAN": "¡Es hora de que votemos en nuestros teléfonos!",
+    "VOTEONPHONEORCOMPUTER": "Vota desde tu teléfono o computadora de escritorio",
+    "REVIEWRESULTS": "Revise los resultados en tiempo real o cuando se cierre la ventana electoral",
     "WELCOME": "Bienvenido",
     "COPYRIGHT": "Derechos de autor",
     "VERSION": "Versión"
   },
   "fr": {
-    "HOMEPAGE": "Maison",
+    "HOME": "Maison",
+    "SLOGAN": "Il est temps de voter sur nos téléphones !",
+    "VOTEONPHONEORCOMPUTER": "Votez sur votre téléphone ou votre ordinateur de bureau",
+    "REVIEWRESULTS": "Consultez les résultats en temps réel ou à la fermeture de la fenêtre électorale",
     "WELCOME": "Bienvenu",
     "COPYRIGHT": "droits d'auteur",
     "VERSION": "Version"
   },
   "ru": {
-    "HOMEPAGE": "Дом",
+    "HOME": "Дом",
+    "SLOGAN": "Пришло время голосовать на наших телефонах!",
+    "VOTEONPHONEORCOMPUTER": "Голосуйте на своем телефоне или настольном компьютере",
+    "REVIEWRESULTS": "Просматривайте результаты в режиме реального времени или когда окно выборов закроется",
     "WELCOME": "Добро пожаловать",
     "COPYRIGHT": "Авторские права",
     "VERSION": "Версия"
   },
   "zh": {
-    "HOMEPAGE": "家",
+    "HOME": "家",
+    "SLOGAN": "是时候我们用手机投票了！",
+    "VOTEONPHONEORCOMPUTER": "在手机或台式电脑上投票",
+    "REVIEWRESULTS": "实时或在选举窗口关闭时查看结果",
     "WELCOME": "欢迎",
     "COPYRIGHT": "版权",
     "VERSION": "版本"
   },
   "ar": {
-    "HOMEPAGE": "الصفحة الرئيسية",
+    "HOME": "الصفحة الرئيسية",
+    "SLOGAN": "حان الوقت للتصويت على هواتفنا!",
+    "VOTEONPHONEORCOMPUTER": "التصويت على هاتفك أو جهاز الكمبيوتر المكتبي",
+    "REVIEWRESULTS": "قم بمراجعة النتائج في الوقت الفعلي أو عند إغلاق نافذة الانتخابات",
     "WELCOME": "مرحباً",
     "COPYRIGHT": "حقوق النشر",
     "VERSION": "إصدار"
