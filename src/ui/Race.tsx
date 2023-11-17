@@ -1,10 +1,19 @@
 import { CandidateModel, ElectionModel, RaceModel } from '@/TrueVote.Api';
 import { RaceTypes } from '@/TrueVote.Api.ManualModels';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Card, Checkbox, Radio, Space, Title } from '@mantine/core';
+import { Avatar, Card, Checkbox, Radio, Space, Table, Text, Title } from '@mantine/core';
+import _ from 'lodash';
 import { formatCandidateName } from './Helpers';
 
-const RaceGroup: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
+const RaceGroup: any = ({
+  race,
+  election,
+  avatarCount,
+}: {
+  race: RaceModel;
+  election: ElectionModel;
+  avatarCount: number;
+}) => {
   const raceLabel: React.ReactNode = <Title order={4}>{race.Name}</Title>;
 
   const setVal: any = (cc: CandidateModel, val: string) => {
@@ -49,14 +58,30 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
       >
         <Space h='md'></Space>
         {race.Candidates?.map((e: CandidateModel) => (
-          <Radio
-            value={e.Name}
-            label={formatCandidateName(e)}
-            key={e.CandidateId}
-            size='sm'
-            className={classes.radioBody}
-            onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
-          />
+          <>
+            <Table verticalSpacing='xs' className={classes.tableCandidate}>
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td className={classes.tdCandidate} width={'30px'}>
+                    <Radio
+                      value={e.Name}
+                      key={e.CandidateId}
+                      size='sm'
+                      onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
+                    />
+                  </Table.Td>
+                  {avatarCount > 0 && (
+                    <Table.Td className={classes.tdCandidate} width={'30px'}>
+                      <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
+                    </Table.Td>
+                  )}
+                  <Table.Td>
+                    <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
+                  </Table.Td>
+                </Table.Tr>
+              </Table.Tbody>
+            </Table>
+          </>
         ))}
       </Radio.Group>
     );
@@ -69,14 +94,30 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
       >
         <Space h='md'></Space>
         {race.Candidates?.map((e: CandidateModel) => (
-          <Checkbox
-            value={e.Name}
-            label={formatCandidateName(e)}
-            key={e.CandidateId}
-            size='sm'
-            className={classes.radioBody}
-            onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
-          />
+          <>
+            <Table verticalSpacing='xs' className={classes.tableCandidate}>
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td className={classes.tdCandidate} width={'30px'}>
+                    <Checkbox
+                      value={e.Name}
+                      key={e.CandidateId}
+                      size='sm'
+                      onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
+                    />
+                  </Table.Td>
+                  {avatarCount > 0 && (
+                    <Table.Td className={classes.tdCandidate} width={'30px'}>
+                      <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
+                    </Table.Td>
+                  )}
+                  <Table.Td>
+                    <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
+                  </Table.Td>
+                </Table.Tr>
+              </Table.Tbody>
+            </Table>
+          </>
         ))}
       </Checkbox.Group>
     );
@@ -84,9 +125,16 @@ const RaceGroup: any = ({ race, election }: { race: RaceModel; election: Electio
 };
 
 export const Race: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
+  const candidatesWithImages: any = _.countBy(
+    race.Candidates,
+    (e: CandidateModel) => e.CandidateImageUrl !== '',
+  );
+
+  const avatarCount: number = candidatesWithImages.true | 0;
+
   return (
     <Card className={classes.cardWide} shadow='sm' p='xs' radius='lg' withBorder>
-      <RaceGroup race={race} election={election} />
+      <RaceGroup race={race} election={election} avatarCount={avatarCount} />
     </Card>
   );
 };
