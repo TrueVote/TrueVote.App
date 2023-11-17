@@ -19,8 +19,8 @@ const bdiff = (a: any, b: any): any =>
         (_.isPlainObject(val) || _.isArray(val)) && b
           ? bdiff(val, b[key]).map((x: string) => key + '.' + x)
           : !b || val != b[key]
-          ? [key]
-          : [],
+            ? [key]
+            : [],
       ),
     [],
   );

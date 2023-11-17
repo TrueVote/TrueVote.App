@@ -34,6 +34,7 @@ export const DBGetElectionById = (
             DateCreated
             Name
             PartyAffiliation
+            CandidateImageUrl
             Selected
           }
         }
@@ -93,6 +94,7 @@ export const DBAllBallots = (): QueryResult<{
                 DateCreated
                 Name
                 PartyAffiliation
+                CandidateImageUrl
                 Selected
               }
             }
@@ -154,6 +156,7 @@ export const DBGetBallotById = (
                 DateCreated
                 Name
                 PartyAffiliation
+                CandidateImageUrl
                 Selected
               }
             }

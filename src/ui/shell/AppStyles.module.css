@@ -369,3 +369,16 @@
   font-size: var(--mantine-h2-font-size);
   font-weight: bold;
 }
+
+.mediumText {
+  font-size: var(--mantine-h5-font-size);
+}
+
+.tdCandidate {
+  text-align: left;
+}
+
+.tableCandidate {
+  padding-top: 20px;
+  width: 100%;
+}
