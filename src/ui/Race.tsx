@@ -48,6 +48,7 @@ const RaceGroup: any = ({
     }
   };
 
+  // TODO DRY this out
   if (race.RaceType.toString() === RaceTypes.ChooseOne) {
     return (
       <Radio.Group
