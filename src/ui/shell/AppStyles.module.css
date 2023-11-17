@@ -10,12 +10,17 @@
   margin-top: 45px;
 }
 
-.container {
+.container,
+.centerContainer {
   margin-top: 10px;
   align-self: flex-start;
   min-width: 100%;
   min-height: 400px;
   margin-bottom: 70px;
+}
+
+.centerContainer {
+  text-align: center;
 }
 
 .header {
@@ -201,6 +206,12 @@
   min-width: 100px;
 }
 
+.tdCenter {
+  text-align: center;
+  font-size: var(--mantine-h7-font-size);
+  min-width: 100px;
+}
+
 @media (max-width: $mantine-breakpoint-sm) {
   .tdFixedWidth {
     text-overflow: ellipsis;
@@ -295,7 +306,9 @@
   width: 180px;
 }
 
-.profileImageDiv {
+.profileImageDiv,
+.voterImageDiv,
+.homeLogoDiv {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -317,9 +330,42 @@
   font-size: var(--mantine-h6-font-size);
 }
 
+.tight {
+  margin-top: -10px;
+}
+
 .languageMenu {
   position: flex;
   @media (min-width: $mantine-breakpoint-sm) {
     margin-left: 32px;
   }
+}
+
+.voterImage,
+.chartsImage,
+.homeLogoImage {
+  padding: 2px;
+  margin-bottom: 10px;
+  border: 1px solid light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+}
+
+.voterImage {
+  content: url('/static/iStock-1421023235.png');
+  width: 350px;
+}
+
+.chartsImage {
+  content: url('/static/iStock-1495369122.png');
+  width: 350px;
+}
+
+.homeLogoImage {
+  content: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
+  width: 120px;
+}
+
+.title,
+.homeText {
+  font-size: var(--mantine-h2-font-size);
+  font-weight: bold;
 }

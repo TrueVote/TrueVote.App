@@ -74,7 +74,8 @@ export const AppHeader: FC = () => {
     { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
     { id: '2', link: '/polls', label: 'Polls', matched: useMatch('/polls') },
     { id: '3', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
-    { id: '4', link: '/about', label: 'About', matched: useMatch('/about') },
+    { id: '4', link: '/results', label: 'Results', matched: useMatch('/results') },
+    { id: '5', link: '/about', label: 'About', matched: useMatch('/about') },
   ];
   const [, toggle] = useToggle();
   const [isMenuOpen, setMenuOpen] = useState(false);

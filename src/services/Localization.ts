@@ -31,19 +31,20 @@ export class Localization {
     });
   }
 
-  addDictionary(language: string, dictionary: Record<string, string>): void {
+  addDictionary = (language: string, dictionary: Record<string, string>): void => {
     this.dictionaries[language] = dictionary;
-  }
+  };
 
-  getLocalizedString<T extends keyof LanguageDictionary[string]>(key: T): string {
-    const dictionary: LanguageDictionary[string] = this.dictionaries[this.selectedLanguage];
+  getLocalizedString = <T extends keyof LanguageDictionary[string]>(key: T): string => {
+    const dictionary: LanguageDictionary[string] | undefined =
+      this.dictionaries[this.selectedLanguage];
 
-    if (dictionary && dictionary[key]) {
+    if (dictionary && key in dictionary) {
       return dictionary[key];
     }
 
     // Fallback to English if the key is not found in the specified language
-    const fallbackDictionary: LanguageDictionary[string] = this.dictionaries['en'];
+    const fallbackDictionary: LanguageDictionary[string] | undefined = this.dictionaries['en'];
     return fallbackDictionary[key] || key.toString();
-  }
+  };
 }
