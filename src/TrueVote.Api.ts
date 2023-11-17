@@ -19,7 +19,6 @@ export interface AddCandidatesModel {
   RaceId: string;
   /**
    * Candidate Ids
-   * @format string
    * @pattern ^[A-Za-z0-9]
    */
   CandidateIds: string[];
@@ -35,7 +34,6 @@ export interface AddRacesModel {
   ElectionId?: string | null;
   /**
    * Race Ids
-   * @format string
    * @pattern ^[A-Za-z0-9]
    */
   RaceIds: string[];
@@ -153,7 +151,7 @@ export interface BaseElectionModel {
   /**
    * HeaderImageUrl
    * @format string
-   * @maxLength 32768
+   * @maxLength 1024
    */
   HeaderImageUrl?: string | null;
   /**
@@ -256,15 +254,18 @@ export interface CandidateModel {
    */
   PartyAffiliation?: string | null;
   /**
+   * CandidateImageUrl
+   * @format string
+   * @maxLength 1024
+   */
+  CandidateImageUrl?: string | null;
+  /**
    * DateCreated
    * @format date
    * @maxLength 2048
    */
   DateCreated?: string | null;
-  /**
-   * Selected
-   * @format string
-   */
+  /** Selected */
   Selected?: boolean | null;
 }
 
