@@ -14,7 +14,11 @@ const RaceGroup: any = ({
   election: ElectionModel;
   avatarCount: number;
 }) => {
-  const raceLabel: React.ReactNode = <Title order={4}>{race.Name}</Title>;
+  const raceLabel: React.ReactNode = (
+    <Title key={race.RaceId} order={4}>
+      {race.Name}
+    </Title>
+  );
 
   const setVal: any = (cc: CandidateModel, val: string) => {
     console.info('setVal()', cc, val);
@@ -52,6 +56,7 @@ const RaceGroup: any = ({
   if (race.RaceType.toString() === RaceTypes.ChooseOne) {
     return (
       <Radio.Group
+        key={race.RaceId}
         name={race.Name}
         label={raceLabel}
         size='sm'
@@ -59,66 +64,67 @@ const RaceGroup: any = ({
       >
         <Space h='md'></Space>
         {race.Candidates?.map((e: CandidateModel) => (
-          <>
-            <Table verticalSpacing='xs' className={classes.tableCandidate}>
-              <Table.Tbody>
-                <Table.Tr>
+          <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td className={classes.tdCandidate} width={'30px'}>
+                  <Radio
+                    value={e.Name}
+                    key={e.CandidateId}
+                    size='sm'
+                    onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
+                  />
+                </Table.Td>
+                {avatarCount > 0 && (
                   <Table.Td className={classes.tdCandidate} width={'30px'}>
-                    <Radio
-                      value={e.Name}
-                      key={e.CandidateId}
-                      size='sm'
-                      onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
-                    />
+                    <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
                   </Table.Td>
-                  {avatarCount > 0 && (
-                    <Table.Td className={classes.tdCandidate} width={'30px'}>
-                      <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
-                    </Table.Td>
-                  )}
-                  <Table.Td>
-                    <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
-                  </Table.Td>
-                </Table.Tr>
-              </Table.Tbody>
-            </Table>
-          </>
+                )}
+                <Table.Td>
+                  <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
         ))}
       </Radio.Group>
     );
   } else {
     return (
       <Checkbox.Group
+        key={race.RaceId}
         label={raceLabel}
         size='sm'
-        description={'Choose Multiple'} // TODO Localize English
+        description={
+          race.RaceTypeMetadata !== null && race.RaceTypeMetadata !== ''
+            ? 'Choose up to ' + race.RaceTypeMetadata
+            : 'Choose Multiple'
+        } // TODO Localize English
       >
         <Space h='md'></Space>
         {race.Candidates?.map((e: CandidateModel) => (
-          <>
-            <Table verticalSpacing='xs' className={classes.tableCandidate}>
-              <Table.Tbody>
-                <Table.Tr>
+          <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td className={classes.tdCandidate} width={'30px'}>
+                  <Checkbox
+                    value={e.Name}
+                    key={e.CandidateId}
+                    size='sm'
+                    onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
+                  />
+                </Table.Td>
+                {avatarCount > 0 && (
                   <Table.Td className={classes.tdCandidate} width={'30px'}>
-                    <Checkbox
-                      value={e.Name}
-                      key={e.CandidateId}
-                      size='sm'
-                      onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
-                    />
+                    <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
                   </Table.Td>
-                  {avatarCount > 0 && (
-                    <Table.Td className={classes.tdCandidate} width={'30px'}>
-                      <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
-                    </Table.Td>
-                  )}
-                  <Table.Td>
-                    <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
-                  </Table.Td>
-                </Table.Tr>
-              </Table.Tbody>
-            </Table>
-          </>
+                )}
+                <Table.Td>
+                  <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
         ))}
       </Checkbox.Group>
     );
@@ -126,6 +132,8 @@ const RaceGroup: any = ({
 };
 
 export const Race: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
+  // If the Race has no avatars amongst all the candidates, then this counter will be used above to
+  // hide the avatar elements completely.
   const candidatesWithImages: any = _.countBy(
     race.Candidates,
     (e: CandidateModel) => e.CandidateImageUrl !== '',
@@ -134,8 +142,8 @@ export const Race: any = ({ race, election }: { race: RaceModel; election: Elect
   const avatarCount: number = candidatesWithImages.true | 0;
 
   return (
-    <Card className={classes.cardWide} shadow='sm' p='xs' radius='lg' withBorder>
-      <RaceGroup race={race} election={election} avatarCount={avatarCount} />
+    <Card key={race.RaceId} className={classes.cardWide} shadow='sm' p='xs' radius='lg' withBorder>
+      <RaceGroup key={race.RaceId} race={race} election={election} avatarCount={avatarCount} />
     </Card>
   );
 };

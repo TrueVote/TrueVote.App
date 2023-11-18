@@ -481,6 +481,13 @@ export interface RaceModel {
    */
   RaceTypeName?: string | null;
   /**
+   * Race Type Metadata
+   * @format string
+   * @maxLength 2048
+   * @pattern ^[A-Za-z0-9]
+   */
+  RaceTypeMetadata?: string | null;
+  /**
    * DateCreated
    * @format date
    * @maxLength 2048
