@@ -8,9 +8,9 @@ export const ConfettiExplosion: React.FC = () => {
   for (let i: number = 0; i < 100; i++) {
     const left: string = random(0, window.innerWidth) + 'px';
     const top: string = random(0, window.innerHeight) + 'px';
-    const randomSize: string = random(20, 150) + 'px'; // Randomize width between 50-100px
-    const animationDuration: any = random(1, 3) + 's'; // Randomize animation duration between 1 and 3 seconds
-    const animationDelay: any = 0.1 * Math.random() * 10; // Calculate random animation delay
+    const randomSize: string = random(20, 150) + 'px';
+    const animationDuration: string = random(1, 3) + 's';
+    const animationDelay: string = String(0.1 * Math.random() * 10);
 
     const confettiImageStyle: React.CSSProperties = {
       left,

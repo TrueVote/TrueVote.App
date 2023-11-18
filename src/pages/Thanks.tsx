@@ -3,7 +3,7 @@ import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Container, Image, Stack, Table, Text } from '@mantine/core';
 import { FC } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Thanks: FC = () => {
   const location: any = useLocation();
@@ -26,20 +26,34 @@ export const Thanks: FC = () => {
           <Table.Tbody>
             <Table.Tr>
               <Table.Td className={classes.tdRight}>Election Id:</Table.Td>
-              <Table.Td className={classes.tdLeft}>{submitBallotModelResponse.ElectionId}</Table.Td>
+              <Table.Td className={classes.tdLeft}>
+                <Link
+                  to={`/ballot/${submitBallotModelResponse.ElectionId}`}
+                  className={classes.link}
+                >
+                  {submitBallotModelResponse.ElectionId}
+                </Link>
+              </Table.Td>
             </Table.Tr>
             <Table.Tr>
               <Table.Td className={classes.tdRight}>Ballot Id:</Table.Td>
-              <Table.Td className={classes.tdLeft}>{submitBallotModelResponse.BallotId}</Table.Td>
+              <Table.Td className={classes.tdLeft}>
+                <Link
+                  to={`/ballotview/${submitBallotModelResponse.BallotId}`}
+                  className={classes.link}
+                >
+                  {submitBallotModelResponse.BallotId}
+                </Link>
+              </Table.Td>
             </Table.Tr>
           </Table.Tbody>
         </Table>
         <Text>You will receive a notification once your ballot has been validated!</Text>
         <Table
           verticalSpacing='xs'
-          striped
-          withTableBorder
-          withColumnBorders
+          striped={false}
+          withTableBorder={false}
+          withColumnBorders={false}
           className={classes.table}
         >
           <Table.Tbody>
