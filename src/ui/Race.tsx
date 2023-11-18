@@ -3,6 +3,7 @@ import { RaceTypes } from '@/TrueVote.Api.ManualModels';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Avatar, Card, Checkbox, Radio, Space, Table, Text, Title } from '@mantine/core';
 import _ from 'lodash';
+import { useState } from 'react';
 import { formatCandidateName } from './Helpers';
 
 const RaceGroup: any = ({
@@ -20,6 +21,22 @@ const RaceGroup: any = ({
     </Title>
   );
 
+  // If it's a multi-select race type, then determine how many multi-selects
+  let numSelections: number = 0;
+  if (race.RaceTypeMetadata !== null && race.RaceTypeMetadata !== '') {
+    numSelections = Number(race.RaceTypeMetadata);
+  }
+
+  // Save state for Group level handleChange() to make sure user can't select more candidates than allowed
+  const [values, setValues] = useState<string[]>([]);
+
+  const handleChange: any = (selected: string[]): any => {
+    if (numSelections > 0) {
+      setValues(selected.slice(0, numSelections));
+      console.info('handleChange()', selected);
+    }
+  };
+
   const setVal: any = (cc: CandidateModel, val: string) => {
     console.info('setVal()', cc, val);
 
@@ -28,27 +45,51 @@ const RaceGroup: any = ({
       (rm: RaceModel) => rm.RaceId == race.RaceId,
     );
 
-    if (r) {
-      // If this Race is a "choose one", need to loop through all the candidates and
-      // unselect them in the data model.
-      if (r.RaceType.toString() === RaceTypes.ChooseOne) {
-        r.Candidates?.map((cm: CandidateModel) => {
-          console.info('Setting choice to false for candidate: ', cm.Name);
-          cm.Selected = JSON.parse('false');
-        });
-      }
+    if (!r) return;
 
-      // Find the candidate user clicked on
-      const c: CandidateModel | undefined = r.Candidates?.find(
-        (cm: CandidateModel) => cm.CandidateId == cc.CandidateId,
+    // Find the candidate user clicked on
+    const c: CandidateModel | undefined = r.Candidates?.find(
+      (cm: CandidateModel) => cm.CandidateId == cc.CandidateId,
+    );
+
+    // If this Race is a "choose one", need to loop through all the candidates and
+    // unselect them in the data model.
+    if (r.RaceType.toString() === RaceTypes.ChooseOne) {
+      r.Candidates?.map((cm: CandidateModel) => {
+        console.info('Setting choice to false for candidate: ', cm.Name);
+        cm.Selected = JSON.parse('false');
+      });
+    } else if (r.RaceTypeMetadata !== null && r.RaceTypeMetadata !== '') {
+      // It's choose many. See if the metadata property was set for "how many"
+      // If the user is selecting > than the total number, don't let them do it
+      const candidatesSelected: any = _.countBy(
+        r.Candidates,
+        (e: CandidateModel) => e.Selected === true,
       );
 
-      // Finally, set the candidate selected state to user selection
-      // This will likely always be 'true' for 'choose one' and 'toggle' for 'choose many'
-      if (c) {
-        console.info('Setting choice to ' + val + ' for candidate: ', c.Name);
-        c.Selected = JSON.parse(val);
+      const candidatesSelectedCount: number = candidatesSelected.true | 0;
+      console.info('Candidates Selected Count ', candidatesSelectedCount);
+      if (candidatesSelectedCount === Number(r.RaceTypeMetadata)) {
+        console.info('User trying to select more than ' + r.RaceTypeMetadata + ' candidates');
+        if (c) {
+          r.Candidates?.map((cm: CandidateModel) => {
+            if (c.CandidateId === cm.CandidateId) {
+              console.info('Setting choice to false for candidate: ', cm.Name);
+              cm.Selected = JSON.parse('false');
+            }
+          });
+          c.Selected = JSON.parse('false');
+          cc.Selected = false;
+          return;
+        }
       }
+    }
+
+    // Finally, set the candidate selected state to user selection
+    // This will likely always be 'true' for 'choose one' and 'toggle' for 'choose many'
+    if (c) {
+      console.info('Setting choice to ' + val + ' for candidate: ', c.Name);
+      c.Selected = JSON.parse(val);
     }
   };
 
@@ -92,6 +133,8 @@ const RaceGroup: any = ({
   } else {
     return (
       <Checkbox.Group
+        value={values}
+        onChange={handleChange}
         key={race.RaceId}
         label={raceLabel}
         size='sm'
