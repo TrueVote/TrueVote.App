@@ -378,7 +378,15 @@
   text-align: left;
 }
 
+.tdTight {
+  width: 30px;
+}
+
 .tableCandidate {
   padding-top: 20px;
   width: 100%;
+}
+
+.largeText {
+  font-size: var(--mantine-h3-font-size);
 }
