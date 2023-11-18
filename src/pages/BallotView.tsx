@@ -114,7 +114,13 @@ const Ballot: FC = () => {
         </Title>
         <Group grow>
           <Card.Section>
-            <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
+            <Table
+              key={ballot.BallotId}
+              verticalSpacing='xs'
+              striped
+              withTableBorder
+              withColumnBorders
+            >
               <Table.Tbody>
                 <Table.Tr>
                   <Table.Td className={classes.tdRight}>Submitted:</Table.Td>
