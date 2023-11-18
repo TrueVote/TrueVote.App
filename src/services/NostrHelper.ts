@@ -26,10 +26,10 @@ const nostrPublicRelays: string[] = [
   'wss://nostr-relay.truevote.org',
   'wss://nostr.relayable.org',
   'wss://nostr.pjv.me',
-  'wss://nostr.lnproxy.org',
   'wss://relay.nostrss.re',
   'wss://relay.damus.io',
 ];
+//  'wss://nostr.lnproxy.org',
 const nostrPrivateRelays: string[] = ['wss://nostr-relay.truevote.org'];
 
 let _nostrProfile: NostrProfile | null;

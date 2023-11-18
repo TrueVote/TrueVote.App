@@ -38,7 +38,6 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
       <Accordion.Item key='Preferences' value='Preferences'>
         <Accordion.Control icon={'⚙️'}>User Preferences</Accordion.Control>
         <Accordion.Panel>
-          <h3>User Preferences</h3>
           <Table
             verticalSpacing='xs'
             striped

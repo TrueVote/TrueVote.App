@@ -1,4 +1,5 @@
 import { useGlobalContext } from '@/Global';
+import { ElectionCode } from '@/ui/ElelctionCode';
 import { Hero } from '@/ui/Hero';
 import { Preferences } from '@/ui/Preferences';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -53,6 +54,8 @@ export const Profile: FC = () => {
               </Table.Tr>
             </Table.Tbody>
           </Table>
+          <Space h='md'></Space>
+          <ElectionCode />
           <Space h='md'></Space>
           <Preferences nostrProfile={nostrProfile} />
           <Space h='md'></Space>
