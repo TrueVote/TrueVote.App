@@ -343,7 +343,8 @@
 
 .voterImage,
 .chartsImage,
-.homeLogoImage {
+.homeLogoImage,
+.thanksLogoImage {
   padding: 2px;
   margin-bottom: 10px;
   border: 1px solid light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
@@ -362,6 +363,12 @@
 .homeLogoImage {
   content: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
   width: 120px;
+}
+
+.thanksLogoImage {
+  content: light-dark(url('/static/tv03@2x.png'), url('/static/tv01@2x.png'));
+  width: 120px;
+  animation: zoomAndGlowStay 2s forwards;
 }
 
 .title,
@@ -389,4 +396,69 @@
 
 .largeText {
   font-size: var(--mantine-h3-font-size);
+}
+
+.confettiContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.confettiImage {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background-image: light-dark(url('/static/tv01@2x.png'), url('/static/tv03@2x.png'));
+  background-size: cover;
+  background-position: center;
+  animation: zoomAndGlow 3s forwards;
+}
+
+.confettiImage__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes spinAndZoom {
+  from {
+    transform: rotate(0deg) scale(0.3);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+    top: window.innerHeight;
+    opacity: 0;
+  }
+}
+@keyframes zoomAndGlow {
+  from {
+    transform: scale(0.5); /* Start with a smaller size */
+  }
+
+  to {
+    transform: scale(1); /* Zoom to regular size */
+    opacity: 0;
+  }
+}
+
+@keyframes zoomAndGlowStay {
+  from {
+    transform: scale(0.5);
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg) scale(0.4);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
 }
