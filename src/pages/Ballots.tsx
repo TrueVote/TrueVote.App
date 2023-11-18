@@ -52,31 +52,38 @@ export const AllBallots: any = ({ theme }: { theme: MantineTheme }) => {
             {moment(e.DateCreated).format('MMMM DD, YYYY')} - {e.Election?.Name}
           </Accordion.Control>
           <Accordion.Panel>
-            <Table withRowBorders={false} withColumnBorders={false} withTableBorder={false}>
-              <Table.Tr>
-                <Table.Td className={(classes.smallText, classes.tdRight)} c={getColor('orange')}>
-                  Ballot Id:
-                </Table.Td>
-                <Table.Td className={(classes.smallText, classes.tdLeft)}>
-                  <Text>{e.BallotId}</Text>
-                </Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td colSpan={2}>
-                  {' '}
-                  <Link to={`/ballotview/${e.BallotId}`} className={classes.buttonText}>
-                    <Button
-                      fullWidth
-                      radius='md'
-                      color='green'
-                      variant='light'
-                      rightSection={<IconZoomIn style={{ width: rem(16), height: rem(16) }} />}
-                    >
-                      <span className={classes.buttonText}>Details</span>
-                    </Button>
-                  </Link>
-                </Table.Td>
-              </Table.Tr>
+            <Table
+              key={e.BallotId}
+              withRowBorders={false}
+              withColumnBorders={false}
+              withTableBorder={false}
+            >
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td className={(classes.smallText, classes.tdRight)} c={getColor('orange')}>
+                    Ballot Id:
+                  </Table.Td>
+                  <Table.Td className={(classes.smallText, classes.tdLeft)}>
+                    <Text>{e.BallotId}</Text>
+                  </Table.Td>
+                </Table.Tr>
+                <Table.Tr>
+                  <Table.Td colSpan={2}>
+                    {' '}
+                    <Link to={`/ballotview/${e.BallotId}`} className={classes.buttonText}>
+                      <Button
+                        fullWidth
+                        radius='md'
+                        color='green'
+                        variant='light'
+                        rightSection={<IconZoomIn style={{ width: rem(16), height: rem(16) }} />}
+                      >
+                        <span className={classes.buttonText}>Details</span>
+                      </Button>
+                    </Link>
+                  </Table.Td>
+                </Table.Tr>
+              </Table.Tbody>
             </Table>
           </Accordion.Panel>
         </Accordion.Item>
