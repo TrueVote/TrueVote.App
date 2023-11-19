@@ -319,7 +319,13 @@
 }
 
 .profileButtons {
-  width: 100px;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.profileButton {
+  width: 200px;
 }
 
 .electionHeaderImage {

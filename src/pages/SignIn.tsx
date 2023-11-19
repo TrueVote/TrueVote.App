@@ -17,10 +17,10 @@ import {
   HoverCard,
   Image,
   Modal,
+  PasswordInput,
   Space,
   Stack,
   Text,
-  Textarea,
 } from '@mantine/core';
 import { FC, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
@@ -107,7 +107,7 @@ export const SignIn: FC = () => {
             .
           </Text>
           <Space h='md'></Space>
-          <Textarea
+          <PasswordInput
             description='Your secret key'
             placeholder='Nostr nsec1 key'
             onChange={handleChange}

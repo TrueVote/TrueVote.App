@@ -3,7 +3,8 @@ import { ElectionCode } from '@/ui/ElelctionCode';
 import { Hero } from '@/ui/Hero';
 import { Preferences } from '@/ui/Preferences';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Button, Container, Image, Space, Stack, Table } from '@mantine/core';
+import { Button, Container, Image, Space, Stack, Table, Text } from '@mantine/core';
+import { IconLogin, IconUserPlus } from '@tabler/icons-react';
 import { FC } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
@@ -71,7 +72,10 @@ export const Profile: FC = () => {
       ) : (
         <>
           <Stack className={classes.profileButtons}>
+            <Text size={'md'}>Sign In if you have an exising Nostr account</Text>
             <Button
+              leftSection={<IconLogin />}
+              className={classes.profileButton}
               radius='md'
               color='blue'
               variant='light'
@@ -79,7 +83,10 @@ export const Profile: FC = () => {
             >
               Sign In
             </Button>
+            <Text size={'md'}>To get started with a new Nostr account for TrueVote, Register</Text>
             <Button
+              leftSection={<IconUserPlus />}
+              className={classes.profileButton}
               radius='md'
               color='blue'
               variant='light'
