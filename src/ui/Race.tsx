@@ -182,12 +182,18 @@ const RaceGroup: any = ({
         size='sm'
         description={
           race.RaceTypeMetadata !== null && race.RaceTypeMetadata !== ''
-            ? 'Ranked Choice - up to ' + race.RaceTypeMetadata + ' choices'
+            ? 'Ranked Choice - up to ' +
+              race.RaceTypeMetadata +
+              ' selections in order of preference'
             : 'Ranked Choice'
         } // TODO Localize English
       >
         <Space h='md'></Space>
-        <ListOrderer candidates={race.Candidates} avatarCount={avatarCount}></ListOrderer>
+        <ListOrderer
+          candidates={race.Candidates}
+          avatarCount={avatarCount}
+          numChoices={Number(race.RaceTypeMetadata)}
+        ></ListOrderer>
       </Checkbox.Group>
     );
   } else {

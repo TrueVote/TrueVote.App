@@ -22,3 +22,9 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+
+.rank {
+  font-size: rem(30px);
+  font-weight: 700;
+  margin-top: -4px;
+}
