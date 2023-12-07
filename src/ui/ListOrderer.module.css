@@ -13,18 +13,12 @@
   box-shadow: var(--mantine-shadow-sm);
 }
 
-.symbol {
-  font-size: rem(30px);
-  font-weight: 700;
-  width: rem(60px);
-}
-
 .dragHandle {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
   color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
-  padding-left: var(--mantine-spacing-md);
-  padding-right: var(--mantine-spacing-md);
+  padding-left: 0px;
+  padding-right: 0px;
 }

@@ -187,32 +187,7 @@ const RaceGroup: any = ({
         } // TODO Localize English
       >
         <Space h='md'></Space>
-        <ListOrderer candidates={race.Candidates}></ListOrderer>
-        <Space h='md'></Space>
-        {race.Candidates?.map((e: CandidateModel) => (
-          <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
-            <Table.Tbody>
-              <Table.Tr>
-                <Table.Td className={classes.tdCandidate} width={'30px'}>
-                  <Checkbox
-                    value={e.Name}
-                    key={e.CandidateId}
-                    size='sm'
-                    onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
-                  />
-                </Table.Td>
-                {avatarCount > 0 && (
-                  <Table.Td className={classes.tdCandidate} width={'30px'}>
-                    <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
-                  </Table.Td>
-                )}
-                <Table.Td>
-                  <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
-                </Table.Td>
-              </Table.Tr>
-            </Table.Tbody>
-          </Table>
-        ))}
+        <ListOrderer candidates={race.Candidates} avatarCount={avatarCount}></ListOrderer>
       </Checkbox.Group>
     );
   } else {
