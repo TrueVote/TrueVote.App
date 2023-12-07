@@ -1,10 +1,11 @@
 import { CandidateModel, ElectionModel, RaceModel } from '@/TrueVote.Api';
 import { RaceTypes } from '@/TrueVote.Api.ManualModels';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Avatar, Card, Checkbox, Radio, Space, Table, Text, Title } from '@mantine/core';
+import { Avatar, Card, Checkbox, Group, Radio, Space, Table, Text, Title } from '@mantine/core';
 import _ from 'lodash';
 import { useState } from 'react';
 import { formatCandidateName } from './Helpers';
+import { ListOrderer } from './ListOrderer';
 
 const RaceGroup: any = ({
   race,
@@ -130,7 +131,7 @@ const RaceGroup: any = ({
         ))}
       </Radio.Group>
     );
-  } else {
+  } else if (race.RaceType.toString() === RaceTypes.ChooseMany) {
     return (
       <Checkbox.Group
         value={values}
@@ -170,6 +171,74 @@ const RaceGroup: any = ({
           </Table>
         ))}
       </Checkbox.Group>
+    );
+  } else if (race.RaceType.toString() === RaceTypes.RankedChoice) {
+    return (
+      <Checkbox.Group
+        value={values}
+        onChange={handleChange}
+        key={race.RaceId}
+        label={raceLabel}
+        size='sm'
+        description={
+          race.RaceTypeMetadata !== null && race.RaceTypeMetadata !== ''
+            ? 'Ranked Choice - up to ' + race.RaceTypeMetadata + ' choices'
+            : 'Ranked Choice'
+        } // TODO Localize English
+      >
+        <Space h='md'></Space>
+        <ListOrderer candidates={race.Candidates}></ListOrderer>
+        <Space h='md'></Space>
+        {race.Candidates?.map((e: CandidateModel) => (
+          <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td className={classes.tdCandidate} width={'30px'}>
+                  <Checkbox
+                    value={e.Name}
+                    key={e.CandidateId}
+                    size='sm'
+                    onClick={(event: any): any => setVal(e, event.currentTarget.checked)}
+                  />
+                </Table.Td>
+                {avatarCount > 0 && (
+                  <Table.Td className={classes.tdCandidate} width={'30px'}>
+                    <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
+                  </Table.Td>
+                )}
+                <Table.Td>
+                  <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+        ))}
+      </Checkbox.Group>
+    );
+  } else {
+    return (
+      <Group>
+        <Text key={race.RaceId} size='sm'>
+          {raceLabel}Unsupported Race Type
+        </Text>
+        <Space h='md'></Space>
+        {race.Candidates?.map((e: CandidateModel) => (
+          <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
+            <Table.Tbody>
+              <Table.Tr>
+                {avatarCount > 0 && (
+                  <Table.Td className={classes.tdCandidate} width={'30px'}>
+                    <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
+                  </Table.Td>
+                )}
+                <Table.Td>
+                  <Text className={classes.mediumText}>{formatCandidateName(e)}</Text>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+        ))}
+      </Group>
     );
   }
 };

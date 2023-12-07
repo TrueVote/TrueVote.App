@@ -182,7 +182,7 @@ export interface BaseRaceModel {
    * Race Type
    * @format int32
    */
-  RaceType: 0 | 1;
+  RaceType: 0 | 1 | 2;
 }
 
 export interface BaseUserModel {
@@ -473,7 +473,7 @@ export interface RaceModel {
    * Race Type
    * @format int32
    */
-  RaceType: 0 | 1;
+  RaceType: 0 | 1 | 2;
   /**
    * Race Type Name
    * @format string
