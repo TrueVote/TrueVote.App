@@ -6,7 +6,7 @@ import { useListState } from '@mantine/hooks';
 import { IconGripVertical } from '@tabler/icons-react';
 import cx from 'clsx';
 import { formatCandidateName } from './Helpers';
-import listClasses from './ListOrderer.module.css';
+import listClasses from './RankedChoiceList.module.css';
 
 interface Props {
   candidates: CandidateModel[] | null;
@@ -14,7 +14,11 @@ interface Props {
   numChoices: number;
 }
 
-export const ListOrderer: React.FC<Props> = ({ candidates, avatarCount, numChoices }: Props) => {
+export const RankedChoiceList: React.FC<Props> = ({
+  candidates,
+  avatarCount,
+  numChoices,
+}: Props) => {
   const [state, handlers] = useListState<CandidateModel>(candidates ? candidates : undefined);
 
   const items: JSX.Element[] = state.map((item: CandidateModel, index: number) => (

@@ -5,7 +5,7 @@ import { Avatar, Card, Checkbox, Group, Radio, Space, Table, Text, Title } from 
 import _ from 'lodash';
 import { useState } from 'react';
 import { formatCandidateName } from './Helpers';
-import { ListOrderer } from './ListOrderer';
+import { RankedChoiceList } from './RankedChoiceList';
 
 const RaceGroup: any = ({
   race,
@@ -189,11 +189,11 @@ const RaceGroup: any = ({
         } // TODO Localize English
       >
         <Space h='md'></Space>
-        <ListOrderer
+        <RankedChoiceList
           candidates={race.Candidates}
           avatarCount={avatarCount}
           numChoices={Number(race.RaceTypeMetadata)}
-        ></ListOrderer>
+        ></RankedChoiceList>
       </Checkbox.Group>
     );
   } else {
