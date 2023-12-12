@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/typedef */
 import { CandidateModel } from '@/TrueVote.Api';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { DragDropContext, Draggable, Droppable, DroppableProvided } from '@hello-pangea/dnd';
@@ -5,28 +8,23 @@ import { Avatar, Divider, Space, Table, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { IconGripVertical } from '@tabler/icons-react';
 import cx from 'clsx';
+import React, { useState } from 'react';
 import { formatCandidateName } from './Helpers';
 import listClasses from './RankedChoiceList.module.css';
 
 interface Props {
   candidates: CandidateModel[] | null;
   avatarCount: number;
-  numChoices: number;
+  maxChoices: number;
 }
 
-const RenderCandidate: any = ({
-  candidate,
-  avatarCount,
-  numChoices,
-  index,
-  provided,
-}: {
+const RenderCandidate: React.FC<{
   candidate: CandidateModel;
   avatarCount: number;
-  numChoices: number;
   index: number;
   provided: any;
-}) => {
+  showNumbers: boolean;
+}> = ({ candidate, avatarCount, index, provided, showNumbers }) => {
   return (
     <>
       <div {...provided.dragHandleProps} className={listClasses.dragHandle}>
@@ -36,7 +34,7 @@ const RenderCandidate: any = ({
         <Table.Tbody>
           <Table.Tr>
             <Table.Td className={classes.tdCandidate} width={'30px'}>
-              {index < numChoices ? <Text className={listClasses.rank}>{index + 1}</Text> : ''}
+              {showNumbers && <Text className={listClasses.rank}>{index + 1}</Text>}
             </Table.Td>
             {avatarCount > 0 && (
               <Table.Td className={classes.tdCandidate} width={'30px'}>
@@ -56,58 +54,134 @@ const RenderCandidate: any = ({
 export const RankedChoiceList: React.FC<Props> = ({
   candidates,
   avatarCount,
-  numChoices,
+  maxChoices,
 }: Props) => {
-  const [state, handlers] = useListState<CandidateModel>(candidates ? candidates : undefined);
-
-  const items: JSX.Element[] = state.map((item: CandidateModel, index: number) => (
-    <>
-      {index == 0 && (
-        <>
-          <Divider label={<Text>Selected</Text>} size={3} labelPosition='left' color='green' />
-          <Space h='md'></Space>
-        </>
-      )}
-      <Draggable
-        key={item.CandidateId}
-        index={index}
-        draggableId={item.CandidateId ? item.CandidateId : ''}
-      >
-        {(provided: any, snapshot: any) => (
-          <div
-            className={cx(listClasses.item, { [listClasses.itemDragging]: snapshot.isDragging })}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-          >
-            <RenderCandidate
-              candidate={item}
-              avatarCount={avatarCount}
-              numChoices={numChoices}
-              index={index}
-              provided={provided}
-            />
-          </div>
-        )}
-      </Draggable>
-      {index + 1 == numChoices && (
-        <>
-          <Divider label={<Text>Not Selected</Text>} size={3} labelPosition='left' color='pink' />
-          <Space h='md'></Space>
-        </>
-      )}
-    </>
-  ));
-
+  const initialNotSelectedCandidates = candidates ? [...candidates] : [];
+  const [selectedState, selectedHandlers] = useListState<CandidateModel>([]);
+  const [notSelectedState, notSelectedHandlers] = useListState<CandidateModel>(
+    initialNotSelectedCandidates,
+  );
+  const [isMaxSelected, setIsMaxSelected] = useState(false);
+  const selectedDroppableClass = cx({
+    [listClasses.selectedDroppable]: isMaxSelected,
+  });
   return (
     <DragDropContext
-      onDragEnd={({ destination, source }: { destination: any; source: any }) =>
-        handlers.reorder({ from: source.index, to: destination?.index ?? 0 })
-      }
+      onDragStart={() => {
+        setIsMaxSelected(selectedState.length >= maxChoices);
+      }}
+      onDragEnd={({ destination, source }: { destination: any; source: any }) => {
+        setIsMaxSelected(false);
+
+        if (!destination) return;
+
+        const movedCandidate =
+          source.droppableId === 'selected'
+            ? selectedState[source.index]
+            : notSelectedState[source.index];
+
+        if (source.droppableId === 'selected' && destination.droppableId === 'selected') {
+          // Move within 'Selected'
+          selectedHandlers.reorder({ from: source.index, to: destination.index });
+        } else if (source.droppableId === 'notSelected' && destination.droppableId === 'selected') {
+          // Move from 'Not Selected' to 'Selected'
+          if (selectedState.length < maxChoices) {
+            notSelectedHandlers.setState((prev) => {
+              const newState = [...prev];
+              newState.splice(source.index, 1);
+              return newState;
+            });
+
+            selectedHandlers.setState((prev) => {
+              const newState = [...prev];
+              newState.splice(destination.index, 0, movedCandidate);
+              return newState;
+            });
+          }
+        } else if (source.droppableId === 'selected' && destination.droppableId === 'notSelected') {
+          // Move from 'Selected' to 'Not Selected'
+          selectedHandlers.setState((prev) => {
+            const newState = [...prev];
+            newState.splice(source.index, 1);
+            return newState;
+          });
+
+          notSelectedHandlers.setState((prev) => {
+            const newState = [...prev];
+            newState.splice(destination.index, 0, movedCandidate);
+            return newState;
+          });
+        }
+      }}
     >
-      <Droppable droppableId='dnd-list' direction='vertical'>
+      <Droppable droppableId='selected' direction='vertical' isDropDisabled={isMaxSelected}>
+        {(provided: DroppableProvided) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            className={selectedDroppableClass}
+          >
+            <Divider label={<Text>Selected</Text>} size={3} labelPosition='left' color='green' />
+            <Space h='md'></Space>
+            {selectedState.map((candidate, index) => (
+              <Draggable
+                key={candidate.CandidateId}
+                index={index}
+                draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
+              >
+                {(provided: any, snapshot: any) => (
+                  <div
+                    className={cx(listClasses.item, {
+                      [listClasses.itemDragging]: snapshot.isDragging,
+                    })}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                  >
+                    <RenderCandidate
+                      candidate={candidate}
+                      avatarCount={avatarCount}
+                      index={index}
+                      provided={provided}
+                      showNumbers={true}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+      <Droppable droppableId='notSelected' direction='vertical'>
         {(provided: DroppableProvided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
-            {items}
+            <Divider label={<Text>Not Selected</Text>} size={3} labelPosition='left' color='pink' />
+            <Space h='md'></Space>
+            {notSelectedState.map((candidate, index) => (
+              <Draggable
+                key={candidate.CandidateId}
+                index={index}
+                draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
+              >
+                {(provided: any, snapshot: any) => (
+                  <div
+                    className={cx(listClasses.item, {
+                      [listClasses.itemDragging]: snapshot.isDragging,
+                    })}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                  >
+                    <RenderCandidate
+                      candidate={candidate}
+                      avatarCount={avatarCount}
+                      index={index}
+                      provided={provided}
+                      showNumbers={false}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
             {provided.placeholder}
           </div>
         )}

@@ -192,7 +192,7 @@ const RaceGroup: any = ({
         <RankedChoiceList
           candidates={race.Candidates}
           avatarCount={avatarCount}
-          numChoices={Number(race.RaceTypeMetadata)}
+          maxChoices={Number(race.RaceTypeMetadata)}
         ></RankedChoiceList>
       </Checkbox.Group>
     );

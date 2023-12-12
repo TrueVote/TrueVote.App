@@ -28,3 +28,7 @@
   font-weight: 700;
   margin-top: -4px;
 }
+
+.selectedDroppable {
+  opacity: 0.1;
+}
