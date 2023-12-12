@@ -14,6 +14,45 @@ interface Props {
   numChoices: number;
 }
 
+const RenderCandidate: any = ({
+  candidate,
+  avatarCount,
+  numChoices,
+  index,
+  provided,
+}: {
+  candidate: CandidateModel;
+  avatarCount: number;
+  numChoices: number;
+  index: number;
+  provided: any;
+}) => {
+  return (
+    <>
+      <div {...provided.dragHandleProps} className={listClasses.dragHandle}>
+        <IconGripVertical size={26} />
+      </div>
+      <Table key={candidate.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Td className={classes.tdCandidate} width={'30px'}>
+              {index < numChoices ? <Text className={listClasses.rank}>{index + 1}</Text> : ''}
+            </Table.Td>
+            {avatarCount > 0 && (
+              <Table.Td className={classes.tdCandidate} width={'30px'}>
+                <Avatar className={classes.avatarImage} src={candidate.CandidateImageUrl} />
+              </Table.Td>
+            )}
+            <Table.Td>
+              <Text className={classes.mediumText}>{formatCandidateName(candidate)}</Text>
+            </Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
+      </Table>
+    </>
+  );
+};
+
 export const RankedChoiceList: React.FC<Props> = ({
   candidates,
   avatarCount,
@@ -40,30 +79,13 @@ export const RankedChoiceList: React.FC<Props> = ({
             ref={provided.innerRef}
             {...provided.draggableProps}
           >
-            <div {...provided.dragHandleProps} className={listClasses.dragHandle}>
-              <IconGripVertical size={26} />
-            </div>
-            <Table key={item.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
-              <Table.Tbody>
-                <Table.Tr>
-                  <Table.Td className={classes.tdCandidate} width={'30px'}>
-                    {index < numChoices ? (
-                      <Text className={listClasses.rank}>{index + 1}</Text>
-                    ) : (
-                      ''
-                    )}
-                  </Table.Td>
-                  {avatarCount > 0 && (
-                    <Table.Td className={classes.tdCandidate} width={'30px'}>
-                      <Avatar className={classes.avatarImage} src={item.CandidateImageUrl} />
-                    </Table.Td>
-                  )}
-                  <Table.Td>
-                    <Text className={classes.mediumText}>{formatCandidateName(item)}</Text>
-                  </Table.Td>
-                </Table.Tr>
-              </Table.Tbody>
-            </Table>
+            <RenderCandidate
+              candidate={item}
+              avatarCount={avatarCount}
+              numChoices={numChoices}
+              index={index}
+              provided={provided}
+            />
           </div>
         )}
       </Draggable>
