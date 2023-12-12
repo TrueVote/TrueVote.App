@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/typedef */
 import { CandidateModel } from '@/TrueVote.Api';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { DragDropContext, Draggable, Droppable, DroppableProvided } from '@hello-pangea/dnd';
@@ -24,7 +21,7 @@ const RenderCandidate: React.FC<{
   index: number;
   provided: any;
   showNumbers: boolean;
-}> = ({ candidate, avatarCount, index, provided, showNumbers }) => {
+}> = ({ candidate, avatarCount, index, provided, showNumbers }: any): React.JSX.Element => {
   return (
     <>
       <div {...provided.dragHandleProps} className={listClasses.dragHandle}>
@@ -56,13 +53,13 @@ export const RankedChoiceList: React.FC<Props> = ({
   avatarCount,
   maxChoices,
 }: Props) => {
-  const initialNotSelectedCandidates = candidates ? [...candidates] : [];
+  const initialNotSelectedCandidates: any = candidates ? [...candidates] : [];
   const [selectedState, selectedHandlers] = useListState<CandidateModel>([]);
   const [notSelectedState, notSelectedHandlers] = useListState<CandidateModel>(
     initialNotSelectedCandidates,
   );
   const [isMaxSelected, setIsMaxSelected] = useState(false);
-  const selectedDroppableClass = cx({
+  const selectedDroppableClass: any = cx({
     [listClasses.selectedDroppable]: isMaxSelected,
   });
   return (
@@ -75,7 +72,7 @@ export const RankedChoiceList: React.FC<Props> = ({
 
         if (!destination) return;
 
-        const movedCandidate =
+        const movedCandidate: any =
           source.droppableId === 'selected'
             ? selectedState[source.index]
             : notSelectedState[source.index];
@@ -86,28 +83,28 @@ export const RankedChoiceList: React.FC<Props> = ({
         } else if (source.droppableId === 'notSelected' && destination.droppableId === 'selected') {
           // Move from 'Not Selected' to 'Selected'
           if (selectedState.length < maxChoices) {
-            notSelectedHandlers.setState((prev) => {
-              const newState = [...prev];
+            notSelectedHandlers.setState((prev: any) => {
+              const newState: any = [...prev];
               newState.splice(source.index, 1);
               return newState;
             });
 
-            selectedHandlers.setState((prev) => {
-              const newState = [...prev];
+            selectedHandlers.setState((prev: any) => {
+              const newState: any = [...prev];
               newState.splice(destination.index, 0, movedCandidate);
               return newState;
             });
           }
         } else if (source.droppableId === 'selected' && destination.droppableId === 'notSelected') {
           // Move from 'Selected' to 'Not Selected'
-          selectedHandlers.setState((prev) => {
-            const newState = [...prev];
+          selectedHandlers.setState((prev: any) => {
+            const newState: any = [...prev];
             newState.splice(source.index, 1);
             return newState;
           });
 
-          notSelectedHandlers.setState((prev) => {
-            const newState = [...prev];
+          notSelectedHandlers.setState((prev: any) => {
+            const newState: any = [...prev];
             newState.splice(destination.index, 0, movedCandidate);
             return newState;
           });
@@ -123,7 +120,7 @@ export const RankedChoiceList: React.FC<Props> = ({
           >
             <Divider label={<Text>Selected</Text>} size={3} labelPosition='left' color='green' />
             <Space h='md'></Space>
-            {selectedState.map((candidate, index) => (
+            {selectedState.map((candidate: any, index: any) => (
               <Draggable
                 key={candidate.CandidateId}
                 index={index}
@@ -157,7 +154,7 @@ export const RankedChoiceList: React.FC<Props> = ({
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <Divider label={<Text>Not Selected</Text>} size={3} labelPosition='left' color='pink' />
             <Space h='md'></Space>
-            {notSelectedState.map((candidate, index) => (
+            {notSelectedState.map((candidate: any, index: any) => (
               <Draggable
                 key={candidate.CandidateId}
                 index={index}
