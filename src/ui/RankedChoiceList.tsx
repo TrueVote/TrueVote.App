@@ -1,6 +1,12 @@
 import { CandidateModel } from '@/TrueVote.Api';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { DragDropContext, Draggable, Droppable, DroppableProvided } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  Draggable,
+  DraggableProvided,
+  Droppable,
+  DroppableProvided,
+} from '@hello-pangea/dnd';
 import { Avatar, Divider, Space, Table, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { IconGripVertical } from '@tabler/icons-react';
@@ -19,9 +25,16 @@ const RenderCandidate: React.FC<{
   candidate: CandidateModel;
   avatarCount: number;
   index: number;
-  provided: any;
+  provided: DraggableProvided;
   showNumbers: boolean;
-}> = ({ candidate, avatarCount, index, provided, showNumbers }: any): React.JSX.Element => {
+}> = (props: {
+  candidate: CandidateModel;
+  avatarCount: number;
+  index: number;
+  provided: DraggableProvided;
+  showNumbers: boolean;
+}) => {
+  const { candidate, avatarCount, index, provided, showNumbers } = props;
   return (
     <>
       <div {...provided.dragHandleProps} className={listClasses.dragHandle}>
@@ -53,26 +66,28 @@ export const RankedChoiceList: React.FC<Props> = ({
   avatarCount,
   maxChoices,
 }: Props) => {
-  const initialNotSelectedCandidates: any = candidates ? [...candidates] : [];
+  const initialNotSelectedCandidates: CandidateModel[] = candidates ? [...candidates] : [];
   const [selectedState, selectedHandlers] = useListState<CandidateModel>([]);
   const [notSelectedState, notSelectedHandlers] = useListState<CandidateModel>(
     initialNotSelectedCandidates,
   );
   const [isMaxSelected, setIsMaxSelected] = useState(false);
-  const selectedDroppableClass: any = cx({
+
+  const selectedDroppableClass: string = cx({
     [listClasses.selectedDroppable]: isMaxSelected,
   });
+
   return (
     <DragDropContext
       onDragStart={() => {
         setIsMaxSelected(selectedState.length >= maxChoices);
       }}
-      onDragEnd={({ destination, source }: { destination: any; source: any }) => {
+      onDragEnd={({ destination, source }: any) => {
         setIsMaxSelected(false);
 
         if (!destination) return;
 
-        const movedCandidate: any =
+        const movedCandidate: CandidateModel =
           source.droppableId === 'selected'
             ? selectedState[source.index]
             : notSelectedState[source.index];
@@ -83,28 +98,28 @@ export const RankedChoiceList: React.FC<Props> = ({
         } else if (source.droppableId === 'notSelected' && destination.droppableId === 'selected') {
           // Move from 'Not Selected' to 'Selected'
           if (selectedState.length < maxChoices) {
-            notSelectedHandlers.setState((prev: any) => {
-              const newState: any = [...prev];
+            notSelectedHandlers.setState((prev: CandidateModel[]) => {
+              const newState: CandidateModel[] = [...prev];
               newState.splice(source.index, 1);
               return newState;
             });
 
-            selectedHandlers.setState((prev: any) => {
-              const newState: any = [...prev];
+            selectedHandlers.setState((prev: CandidateModel[]) => {
+              const newState: CandidateModel[] = [...prev];
               newState.splice(destination.index, 0, movedCandidate);
               return newState;
             });
           }
         } else if (source.droppableId === 'selected' && destination.droppableId === 'notSelected') {
           // Move from 'Selected' to 'Not Selected'
-          selectedHandlers.setState((prev: any) => {
-            const newState: any = [...prev];
+          selectedHandlers.setState((prev: CandidateModel[]) => {
+            const newState: CandidateModel[] = [...prev];
             newState.splice(source.index, 1);
             return newState;
           });
 
-          notSelectedHandlers.setState((prev: any) => {
-            const newState: any = [...prev];
+          notSelectedHandlers.setState((prev: CandidateModel[]) => {
+            const newState: CandidateModel[] = [...prev];
             newState.splice(destination.index, 0, movedCandidate);
             return newState;
           });
@@ -120,16 +135,16 @@ export const RankedChoiceList: React.FC<Props> = ({
           >
             <Divider label={<Text>Selected</Text>} size={3} labelPosition='left' color='green' />
             <Space h='md'></Space>
-            {selectedState.map((candidate: any, index: any) => (
+            {selectedState.map((candidate: CandidateModel, index: number) => (
               <Draggable
                 key={candidate.CandidateId}
                 index={index}
                 draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
               >
-                {(provided: any, snapshot: any) => (
+                {(provided: any) => (
                   <div
                     className={cx(listClasses.item, {
-                      [listClasses.itemDragging]: snapshot.isDragging,
+                      [listClasses.itemDragging]: provided.isDragging,
                     })}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -154,16 +169,16 @@ export const RankedChoiceList: React.FC<Props> = ({
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <Divider label={<Text>Not Selected</Text>} size={3} labelPosition='left' color='pink' />
             <Space h='md'></Space>
-            {notSelectedState.map((candidate: any, index: any) => (
+            {notSelectedState.map((candidate: CandidateModel, index: number) => (
               <Draggable
                 key={candidate.CandidateId}
                 index={index}
                 draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
               >
-                {(provided: any, snapshot: any) => (
+                {(provided: any) => (
                   <div
                     className={cx(listClasses.item, {
-                      [listClasses.itemDragging]: snapshot.isDragging,
+                      [listClasses.itemDragging]: provided.isDragging,
                     })}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
