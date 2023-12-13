@@ -7,33 +7,25 @@ import { useState } from 'react';
 import { formatCandidateName } from './Helpers';
 import { RankedChoiceList } from './RankedChoiceList';
 
-const RaceGroup: any = ({
-  race,
-  election,
-  avatarCount,
-}: {
-  race: RaceModel;
-  election: ElectionModel;
-  avatarCount: number;
-}) => {
+const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: number }) => {
   const raceLabel: React.ReactNode = (
     <Title key={race.RaceId} order={4}>
       {race.Name}
     </Title>
   );
 
-  // If it's a multi-select race type, then determine how many multi-selects
-  let numSelections: number = 0;
+  // If it's a multi-select race type, then determine how many multi-selects or ranked choice
+  let raceTypeMetadata: number = 0;
   if (race.RaceTypeMetadata !== null && race.RaceTypeMetadata !== '') {
-    numSelections = Number(race.RaceTypeMetadata);
+    raceTypeMetadata = Number(race.RaceTypeMetadata);
   }
 
   // Save state for Group level handleChange() to make sure user can't select more candidates than allowed
   const [values, setValues] = useState<string[]>([]);
 
   const handleChange: any = (selected: string[]): any => {
-    if (numSelections > 0) {
-      setValues(selected.slice(0, numSelections));
+    if (raceTypeMetadata > 0) {
+      setValues(selected.slice(0, raceTypeMetadata));
       console.info('handleChange()', selected);
     }
   };
@@ -41,57 +33,51 @@ const RaceGroup: any = ({
   const setVal: any = (cc: CandidateModel, val: string) => {
     console.info('setVal()', cc, val);
 
-    // Find the race for this election
-    const r: RaceModel | undefined = election?.Races?.find(
-      (rm: RaceModel) => rm.RaceId == race.RaceId,
-    );
-
-    if (!r) return;
-
-    // Find the candidate user clicked on
-    const c: CandidateModel | undefined = r.Candidates?.find(
-      (cm: CandidateModel) => cm.CandidateId == cc.CandidateId,
-    );
-
     // If this Race is a "choose one", need to loop through all the candidates and
     // unselect them in the data model.
-    if (r.RaceType.toString() === RaceTypes.ChooseOne) {
-      r.Candidates?.map((cm: CandidateModel) => {
+    if (race.RaceType.toString() === RaceTypes.ChooseOne) {
+      race.Candidates?.map((cm: CandidateModel) => {
         console.info('Setting choice to false for candidate: ', cm.Name);
         cm.Selected = JSON.parse('false');
       });
-    } else if (r.RaceTypeMetadata !== null && r.RaceTypeMetadata !== '') {
+    } else if (
+      race.RaceType.toString() === RaceTypes.ChooseMany &&
+      race.RaceTypeMetadata !== null &&
+      race.RaceTypeMetadata !== ''
+    ) {
       // It's choose many. See if the metadata property was set for "how many"
       // If the user is selecting > than the total number, don't let them do it
       const candidatesSelected: any = _.countBy(
-        r.Candidates,
+        race.Candidates,
         (e: CandidateModel) => e.Selected === true,
       );
 
       const candidatesSelectedCount: number = candidatesSelected.true | 0;
       console.info('Candidates Selected Count ', candidatesSelectedCount);
-      if (candidatesSelectedCount === Number(r.RaceTypeMetadata)) {
-        console.info('User trying to select more than ' + r.RaceTypeMetadata + ' candidates');
-        if (c) {
-          r.Candidates?.map((cm: CandidateModel) => {
-            if (c.CandidateId === cm.CandidateId) {
-              console.info('Setting choice to false for candidate: ', cm.Name);
-              cm.Selected = JSON.parse('false');
-            }
-          });
-          c.Selected = JSON.parse('false');
-          cc.Selected = false;
-          return;
-        }
+      if (candidatesSelectedCount === Number(race.RaceTypeMetadata)) {
+        console.info('User trying to select more than ' + race.RaceTypeMetadata + ' candidates');
+        race.Candidates?.map((cm: CandidateModel) => {
+          if (cc.CandidateId === cm.CandidateId) {
+            console.info('Setting choice to false for candidate: ', cm.Name);
+            cm.Selected = JSON.parse('false');
+          }
+        });
+        cc.Selected = JSON.parse('false');
+        cc.Selected = false;
+        return;
       }
+    } else if (
+      race.RaceType.toString() === RaceTypes.RankedChoice &&
+      race.RaceTypeMetadata !== null &&
+      race.RaceTypeMetadata !== ''
+    ) {
+      console.info('Ranked');
     }
 
     // Finally, set the candidate selected state to user selection
     // This will likely always be 'true' for 'choose one' and 'toggle' for 'choose many'
-    if (c) {
-      console.info('Setting choice to ' + val + ' for candidate: ', c.Name);
-      c.Selected = JSON.parse(val);
-    }
+    console.info('Setting choice to ' + val + ' for candidate: ', cc.Name);
+    cc.Selected = JSON.parse(val);
   };
 
   // TODO DRY this out

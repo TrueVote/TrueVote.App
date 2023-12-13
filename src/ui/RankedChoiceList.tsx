@@ -11,7 +11,7 @@ import { Avatar, Divider, Space, Table, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { IconGripVertical } from '@tabler/icons-react';
 import cx from 'clsx';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { formatCandidateName } from './Helpers';
 import listClasses from './RankedChoiceList.module.css';
 
@@ -75,6 +75,24 @@ export const RankedChoiceList: React.FC<Props> = ({
 
   const selectedDroppableClass: string = cx({
     [listClasses.selectedDroppable]: isMaxSelected,
+  });
+
+  const reSelect: any = () => {
+    // Loop through all the selected candidates and reset the order and selected state
+    selectedState.map((c: CandidateModel, index: number) => {
+      c.Selected = true;
+      c.SelectedMetadata = index.toString();
+    });
+
+    // Loop through all the unselected candidates and reset the order and selected state
+    notSelectedState.map((c: CandidateModel) => {
+      c.Selected = false;
+      c.SelectedMetadata = '';
+    });
+  };
+
+  useEffect(() => {
+    reSelect();
   });
 
   return (

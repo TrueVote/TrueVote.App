@@ -58,8 +58,8 @@ const Election: FC = () => {
 
   const modifiedElection: ElectionModel = _.cloneDeep(election);
 
-  const races: RaceModel[] = election.Races?.map((e: RaceModel) => (
-    <Race race={e} key={e.RaceId} election={modifiedElection} />
+  const races: RaceModel[] = modifiedElection.Races?.map((e: RaceModel) => (
+    <Race race={e} key={e.RaceId} />
   )) as unknown as RaceModel[];
 
   const HeaderImage: any = ({ election }: { election: ElectionModel }) => {

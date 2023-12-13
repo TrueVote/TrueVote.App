@@ -267,6 +267,12 @@ export interface CandidateModel {
   DateCreated?: string | null;
   /** Selected */
   Selected?: boolean | null;
+  /**
+   * SelectedMetadata
+   * @format string
+   * @maxLength 1024
+   */
+  SelectedMetadata?: string | null;
 }
 
 export interface CandidateModelList {
