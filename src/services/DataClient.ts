@@ -90,6 +90,7 @@ export const DBAllBallots = (): QueryResult<{
             Races {
               Name
               RaceId
+              RaceType
               RaceTypeName
               Candidates {
                 CandidateId
@@ -153,6 +154,7 @@ export const DBGetBallotById = (
             Races {
               Name
               RaceId
+              RaceType
               RaceTypeName
               Candidates {
                 CandidateId
