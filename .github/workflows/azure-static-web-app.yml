@@ -22,10 +22,8 @@ jobs:
         with:
           submodules: true
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+      - name: Set Node.js environment
+        run: echo "NODE_VERSION=20" >> $GITHUB_ENV
 
       - name: Build And Deploy
         id: builddeploy
