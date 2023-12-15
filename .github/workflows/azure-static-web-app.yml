@@ -23,7 +23,7 @@ jobs:
           submodules: true
 
       - name: Set Node.js environment
-        run: echo "NODE_VERSION=20" >> $GITHUB_ENV
+        run: echo "NODE_VERSION=21" >> $GITHUB_ENV
 
       - name: Build And Deploy
         id: builddeploy
