@@ -37,6 +37,7 @@ export const DBGetElectionById = (
             PartyAffiliation
             CandidateImageUrl
             Selected
+            SelectedMetadata
           }
         }
       }
@@ -89,6 +90,7 @@ export const DBAllBallots = (): QueryResult<{
             Races {
               Name
               RaceId
+              RaceType
               RaceTypeName
               Candidates {
                 CandidateId
@@ -97,6 +99,7 @@ export const DBAllBallots = (): QueryResult<{
                 PartyAffiliation
                 CandidateImageUrl
                 Selected
+                SelectedMetadata
               }
             }
           }
@@ -151,6 +154,7 @@ export const DBGetBallotById = (
             Races {
               Name
               RaceId
+              RaceType
               RaceTypeName
               Candidates {
                 CandidateId
@@ -159,6 +163,7 @@ export const DBGetBallotById = (
                 PartyAffiliation
                 CandidateImageUrl
                 Selected
+                SelectedMetadata
               }
             }
           }

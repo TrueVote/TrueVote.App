@@ -2,4 +2,5 @@
 export enum RaceTypes {
   ChooseOne = 'CHOOSE_ONE',
   ChooseMany = 'CHOOSE_MANY',
+  RankedChoice = 'RANKED_CHOICE',
 }

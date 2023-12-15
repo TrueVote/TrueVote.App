@@ -5,6 +5,7 @@ import {
   CandidateModel,
   RaceModel,
 } from '@/TrueVote.Api';
+import { RaceTypes } from '@/TrueVote.Api.ManualModels';
 import { DBGetBallotById } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatCandidateName } from '@/ui/Helpers';
@@ -26,6 +27,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
+import _ from 'lodash';
 import moment from 'moment';
 import { FC } from 'react';
 import ReactJson from 'react-json-view';
@@ -68,36 +70,91 @@ const Ballot: FC = () => {
   }
   const ballotHash: BallotHashModel = ballotList!.BallotHashes![0];
 
+  const sortCandidates: (candidates: CandidateModel[]) => CandidateModel[] = (
+    candidates: CandidateModel[],
+  ) => {
+    return candidates.sort((a: CandidateModel, b: CandidateModel) => {
+      const aSelected: boolean = a.Selected ?? false;
+      const bSelected: boolean = b.Selected ?? false;
+
+      const aMetadata: string = a.SelectedMetadata ?? '';
+      const bMetadata: string = b.SelectedMetadata ?? '';
+
+      if (aSelected === bSelected) {
+        return aMetadata.localeCompare(bMetadata);
+      }
+
+      return Number(bSelected) - Number(aSelected);
+    });
+  };
   const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
     return (
       <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
         <Text key={r.RaceId} component='span' className={classes.raceNameTitle}>
-          <span className={classes.raceNameTitle}>{r.Name}</span>
+          <span className={classes.raceNameTitle}>{r.Name} - </span>
+          <span className={classes.raceName}>{r.RaceTypeName}</span>
         </Text>
-        {r.Candidates?.map((c: CandidateModel) =>
-          c.Selected === true ? (
-            <Checkbox
-              key={c.CandidateId}
-              size={'sm'}
-              icon={IconCheck}
-              color='green'
-              radius={'xl'}
-              labelPosition='left'
-              label={formatCandidateName(c)}
-              className={classes.checkboxLabel}
-              defaultChecked
-            />
-          ) : (
-            <Text
-              size={'xs'}
-              key={c.CandidateId}
-              component='span'
-              className={classes.raceNameUnselected}
-            >
-              <span className={classes.raceNameUnselected}>{formatCandidateName(c)}</span>
-            </Text>
-          ),
-        )}
+        {r.RaceType.toString() === RaceTypes.RankedChoice
+          ? sortCandidates(_.cloneDeep(r.Candidates) ?? []).map((c: CandidateModel) =>
+              c.Selected === true ? (
+                <>
+                  <div className={classes.checkboxAndRank}>
+                    <Checkbox
+                      key={c.CandidateId}
+                      size={'sm'}
+                      icon={IconCheck}
+                      color='green'
+                      radius={'xl'}
+                      labelPosition='left'
+                      label={formatCandidateName(c)}
+                      className={classes.checkboxLabel}
+                      defaultChecked
+                    />
+                    <Text
+                      size={'xs'}
+                      key={c.CandidateId}
+                      component='span'
+                      className={classes.rankedIndex}
+                    >
+                      <span className={classes.rankedIndex}>{Number(c.SelectedMetadata) + 1}</span>
+                    </Text>
+                  </div>
+                </>
+              ) : (
+                <Text
+                  size={'xs'}
+                  key={c.CandidateId}
+                  component='span'
+                  className={classes.raceNameUnselected}
+                >
+                  <span className={classes.raceNameUnselected}>{formatCandidateName(c)}</span>
+                </Text>
+              ),
+            )
+          : r.Candidates?.map((c: CandidateModel) =>
+              c.Selected === true ? (
+                <Checkbox
+                  key={c.CandidateId}
+                  size={'sm'}
+                  icon={IconCheck}
+                  color='green'
+                  radius={'xl'}
+                  labelPosition='left'
+                  label={formatCandidateName(c)}
+                  className={classes.checkboxLabel}
+                  defaultChecked
+                />
+              ) : (
+                <Text
+                  size={'xs'}
+                  key={c.CandidateId}
+                  component='span'
+                  className={classes.raceNameUnselected}
+                >
+                  <span className={classes.raceNameUnselected}>{formatCandidateName(c)}</span>
+                </Text>
+              ),
+            )}
       </SimpleGrid>
     );
   });
