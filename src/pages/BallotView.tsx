@@ -97,29 +97,22 @@ const Ballot: FC = () => {
         {r.RaceType.toString() === RaceTypes.RankedChoice
           ? sortCandidates(_.cloneDeep(r.Candidates) ?? []).map((c: CandidateModel) =>
               c.Selected === true ? (
-                <>
-                  <div className={classes.checkboxAndRank}>
-                    <Checkbox
-                      key={c.CandidateId}
-                      size={'sm'}
-                      icon={IconCheck}
-                      color='green'
-                      radius={'xl'}
-                      labelPosition='left'
-                      label={formatCandidateName(c)}
-                      className={classes.checkboxLabel}
-                      defaultChecked
-                    />
-                    <Text
-                      size={'xs'}
-                      key={c.CandidateId}
-                      component='span'
-                      className={classes.rankedIndex}
-                    >
-                      <span className={classes.rankedIndex}>{Number(c.SelectedMetadata) + 1}</span>
-                    </Text>
-                  </div>
-                </>
+                <div key={c.CandidateId} className={classes.checkboxAndRank}>
+                  <Checkbox
+                    key={c.CandidateId}
+                    size={'sm'}
+                    icon={IconCheck}
+                    color='green'
+                    radius={'xl'}
+                    labelPosition='left'
+                    label={formatCandidateName(c)}
+                    className={classes.checkboxLabel}
+                    defaultChecked
+                  />
+                  <Text size={'xs'} component='span' className={classes.rankedIndex}>
+                    <span className={classes.rankedIndex}>{Number(c.SelectedMetadata) + 1}</span>
+                  </Text>
+                </div>
               ) : (
                 <Text
                   size={'xs'}
