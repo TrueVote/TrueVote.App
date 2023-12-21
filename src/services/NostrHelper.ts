@@ -32,8 +32,6 @@ const nostrPublicRelays: string[] = [
 //  'wss://nostr.lnproxy.org',
 const nostrPrivateRelays: string[] = ['wss://nostr-relay.truevote.org'];
 
-let _nostrProfile: NostrProfile | null;
-
 export interface NostrProfile {
   publicKey: string;
   privateKey: string;
@@ -178,17 +176,11 @@ export const getNostrPrivateKey: any = () => {
 
 export const nostrSignOut: any = () => {
   removeNostrPrivateKey();
-  _nostrProfile = null;
 };
 
 export const getNostrProfileInfo: any = async (
   publicKey: string,
 ): Promise<NostrProfile | undefined> => {
-  // Optimization. If the nostrProfile is alerady set, why go out and fetch it from a relay.
-  if (_nostrProfile && _nostrProfile.displayName && _nostrProfile.displayName.length > 0) {
-    console.info('Retrieving stored nostrProfile');
-    return _nostrProfile;
-  }
   console.info('getNostrProfileInfo()', publicKey);
 
   const nprofile: any = nip19.nprofileEncode({ pubkey: publicKey, relays: nostrPublicRelays });
@@ -228,7 +220,7 @@ export const getNostrProfileInfo: any = async (
     }
 
     const json: any = JSON.parse(latestProfileEvent.content);
-    console.info('Returned from relay', json);
+    console.info('Returned nostrProfile from relay', json);
 
     const nostrProfile: NostrProfile = {
       publicKey: publicKey,
@@ -240,7 +232,6 @@ export const getNostrProfileInfo: any = async (
       nip05: json.nip05,
     };
 
-    _nostrProfile = nostrProfile;
     return nostrProfile;
   } finally {
     sub.unsub();
