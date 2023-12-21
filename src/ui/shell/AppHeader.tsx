@@ -30,20 +30,24 @@ export const AppHeader: FC = () => {
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const { localization, updateLocalization } = useGlobalContext();
 
+  const [fetched, setFetched] = useState(false);
+
   useEffect(() => {
     if (localization === undefined) {
       updateLocalization(new Localization());
     }
 
-    if (nostrPublicKey === null || String(nostrPublicKey).length <= 0) {
+    if (nostrPublicKey === null || String(nostrPublicKey).length <= 0 || fetched) {
       return;
     }
+
+    setFetched(true); // Mark as fetched immediately to avoid multiple calls
 
     // Async function to fetch the user profile
     const fetchNostrProfile: any = async () => {
       try {
         const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
-        console.info('Returned Back', nostrProfile);
+        console.info('Returned Back from getNostrProfileInfo()', nostrProfile);
         if (nostrProfile && nostrProfile !== undefined) {
           updateNostrProfile(nostrProfile);
         } else {
@@ -52,7 +56,7 @@ export const AppHeader: FC = () => {
         }
       } catch (error) {
         // Handle any errors, e.g., show an error message
-        console.error('Error fetching user profile:', error);
+        console.error('Error fetching nostrProfile:', error);
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
       }
@@ -60,7 +64,7 @@ export const AppHeader: FC = () => {
 
     // Call the async function
     fetchNostrProfile();
-  }, [localization, nostrPublicKey, updateLocalization, updateNostrProfile]);
+  }, [fetched, localization, nostrPublicKey, updateLocalization, updateNostrProfile]);
 
   interface LinkType {
     id: string;
