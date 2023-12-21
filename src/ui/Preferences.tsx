@@ -66,7 +66,7 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                         <Table.Td className={classes.tdLeft}>
                           <HoverCard shadow='md'>
                             <HoverCard.Target>
-                              <Text className={classes.textChoppedSmall}>{nostrPublicKey}</Text>
+                              <span className={classes.textChoppedSmall}>{nostrPublicKey}</span>
                             </HoverCard.Target>
                             <HoverCard.Dropdown>
                               <Text size='sm'>{nostrPublicKey}</Text>

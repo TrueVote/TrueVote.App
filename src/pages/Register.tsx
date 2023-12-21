@@ -110,7 +110,7 @@ export const Register: FC = () => {
             <b>Signed In Public Key:</b>{' '}
             <HoverCard shadow='md'>
               <HoverCard.Target>
-                <Text className={classes.textChopped}>{nostrProfile?.npub}</Text>
+                <span className={classes.textChopped}>{nostrProfile?.npub}</span>
               </HoverCard.Target>
               <HoverCard.Dropdown>
                 <Text size='sm'>{nostrProfile?.npub}</Text>

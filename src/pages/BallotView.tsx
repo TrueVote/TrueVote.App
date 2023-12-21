@@ -234,7 +234,7 @@ const Ballot: FC = () => {
                   <Table.Td className={classes.tdLeft}>
                     <HoverCard shadow='md'>
                       <HoverCard.Target>
-                        <Text className={classes.textChopped}>{ballotHash.ServerBallotHashS}</Text>
+                        <span className={classes.textChopped}>{ballotHash.ServerBallotHashS}</span>
                       </HoverCard.Target>
                       <HoverCard.Dropdown>
                         <Text size='sm'>{ballotHash.ServerBallotHashS}</Text>
