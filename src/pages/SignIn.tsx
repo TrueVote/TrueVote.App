@@ -12,6 +12,7 @@ import {
   storeNostrPrivateKey,
 } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
+import { uint8ArrayToArray } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
@@ -86,7 +87,7 @@ export const SignIn: FC = () => {
         // Sign the model
         const signature: Uint8Array = await signEvent(signInEventModel, privateKey);
         console.info('Success from signEvent', signature);
-        signInEventModel.Signature = signature;
+        signInEventModel.Signature = uint8ArrayToArray(signature) as unknown as Uint8Array;
 
         const res: SecureString = await DBUserSignIn(signInEventModel);
         console.info('Success from signIn', res);
