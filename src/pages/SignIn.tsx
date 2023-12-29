@@ -1,4 +1,6 @@
 import { useGlobalContext } from '@/Global';
+import { SecureString, SignInEventModel } from '@/TrueVote.Api';
+import { DBUserSignIn } from '@/services/DataClient';
 import {
   NostrProfile,
   emptyNostrProfile,
@@ -6,6 +8,7 @@ import {
   getNostrPublicKeyFromPrivate,
   nostrKeyKeyHandler,
   nostrSignOut,
+  signEvent,
   storeNostrPrivateKey,
 } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
@@ -51,33 +54,50 @@ export const SignIn: FC = () => {
     setPrivateKey(inputValue);
   };
 
-  const signInClick: any = () => {
+  const handleError: any = (e: SecureString): void => {
+    console.error('Error from signIn', e);
+    setVisible((v: boolean) => !v);
+    errorModal(e.Value);
+    updateNostrProfile(emptyNostrProfile);
+    nostrSignOut();
+  };
+
+  const signInClick: any = async () => {
     setVisible((v: any) => !v);
 
     console.info('Nostr Key:', privateKey);
     const publicKey: any = getNostrPublicKeyFromPrivate(privateKey);
-    getNostrProfileInfo(publicKey)
-      .then((retreivedProfile: NostrProfile) => {
-        console.info('Returned Back', retreivedProfile);
-        setVisible((v: any) => !v);
-        if (retreivedProfile && retreivedProfile !== undefined) {
-          updateNostrProfile(retreivedProfile);
-          storeNostrPrivateKey(privateKey);
-          navigate('/profile');
-        } else {
-          errorModal('Could not retreive nostr profile');
-          updateNostrProfile(emptyNostrProfile);
-          nostrSignOut();
-        }
-      })
-      .catch((e: any) => {
-        // Handle any errors, e.g., show an error message
-        console.error('Caught error fetching nostr profile:', e);
-        errorModal(e);
-        updateNostrProfile(emptyNostrProfile);
-        nostrSignOut();
-        setVisible((v: any) => !v);
-      });
+
+    try {
+      const retreivedProfile: NostrProfile = await getNostrProfileInfo(publicKey);
+      console.info('Returned Back', retreivedProfile);
+
+      if (retreivedProfile && retreivedProfile !== undefined) {
+        updateNostrProfile(retreivedProfile);
+        storeNostrPrivateKey(privateKey);
+
+        // Now that we got the Nostr profile, sign into the TrueVote api
+        const signInEventModel: SignInEventModel = {
+          Kind: { Value: '1' },
+          CreatedAt: { Value: Math.floor(Date.now() / 1000) },
+          PubKey: { Value: publicKey },
+        };
+
+        // Sign the model
+        const signature: Uint8Array = await signEvent(signInEventModel, privateKey);
+        console.info('Success from signEvent', signature);
+        signInEventModel.Signature = signature;
+
+        const res: SecureString = await DBUserSignIn(signInEventModel);
+        console.info('Success from signIn', res);
+        setVisible((v: boolean) => !v);
+        navigate('/profile');
+      } else {
+        handleError({ Value: 'Could not retreive nostr profile' });
+      }
+    } catch (e) {
+      handleError(e);
+    }
   };
 
   return (

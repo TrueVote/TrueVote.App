@@ -1,11 +1,22 @@
+import { UserModel } from '@/TrueVote.Api';
 import React, { Context, ReactNode, createContext, useContext, useState } from 'react';
 import { Localization } from './services/Localization';
 import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
 
+export const emptyUserModel: UserModel = {
+  UserId: null,
+  NostrPubKey: null,
+  FirstName: '',
+  Email: '',
+  DateCreated: null,
+};
+
 interface GlobalContextType {
   nostrProfile: NostrProfile | undefined;
+  userModel: UserModel | undefined;
   localization: Localization | undefined;
   updateNostrProfile: (np: NostrProfile) => void;
+  updateUserModel: (ui: UserModel) => void;
   updateLocalization: (loc: Localization) => void;
 }
 
@@ -21,10 +32,15 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   children,
 }: GlobalProviderProps) => {
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
+  const [userModel, setUserModel] = useState<UserModel>(emptyUserModel);
   const [localization, setLocalization] = useState<Localization>();
 
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
+  };
+
+  const updateUserModel: (um: UserModel) => void = (um: UserModel) => {
+    setUserModel(um);
   };
 
   const updateLocalization: (loc: Localization) => void = (loc: Localization) => {
@@ -33,7 +49,14 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
 
   return (
     <GlobalContext.Provider
-      value={{ nostrProfile, updateNostrProfile, localization, updateLocalization }}
+      value={{
+        nostrProfile,
+        updateNostrProfile,
+        userModel,
+        updateUserModel,
+        localization,
+        updateLocalization,
+      }}
     >
       {children}
     </GlobalContext.Provider>

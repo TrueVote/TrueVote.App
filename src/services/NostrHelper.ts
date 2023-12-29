@@ -1,3 +1,4 @@
+import { SignInEventModel } from '@/TrueVote.Api';
 import {
   Event,
   SimplePool,
@@ -361,4 +362,69 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
     throw error;
   }
   console.info('publishEvent()->End()');
+};
+
+export const signEvent: any = async (
+  signInEventModel: SignInEventModel,
+  privateKey: string,
+): Promise<any> => {
+  // Create a Kind 1 event for signIn
+  const event: any = {
+    kind: 1,
+    pubkey: signInEventModel.PubKey?.Value,
+    created_at: Math.floor(Date.now() / 1000),
+    content: JSON.stringify(signInEventModel),
+    tags: [],
+  };
+  console.info('signEvent->Kind 1 Event', event);
+
+  // Ensure the event is valid for this kind and has all the right properties so far
+  const valid: any = validateEvent(event);
+  console.info('signEvent->Valid', valid);
+  if (valid === false) {
+    console.error('signEvent->Invalid event');
+    return Promise.reject('Invalid event');
+  }
+
+  try {
+    const hash: any = getEventHash(event);
+    console.info('signEvent->Hash', hash);
+    event.id = hash;
+  } catch (e: any) {
+    console.error('signEvent->Hash Error', e);
+    return Promise.reject(`Invalid hash: ${e}`);
+  }
+
+  let signature: string;
+  try {
+    const normalized: any = normalizeKey(privateKey);
+    signature = getSignature(event, normalized);
+    console.info('signEvent->Signature', signature);
+    event.sig = signature;
+  } catch (e: any) {
+    console.error('signEvent->Signature Error', e);
+    return Promise.reject(`Invalid signature: ${e}`);
+  }
+
+  console.info('signEvent->Kind 1 Event - Filled', event);
+
+  // Ensure the event is valid for this kind is still valid after adding additional properties
+  const valid2: any = validateEvent(event);
+  console.info('signEvent->Valid2', valid2);
+  if (valid2 === false) {
+    console.error('Invalid event after property update');
+    return Promise.reject('Invalid event after property update');
+  }
+
+  try {
+    const validsig: any = verifySignature(event);
+    console.info('signEvent->Valid Sig', validsig);
+  } catch {
+    console.error('Invalid signature after verification');
+    return Promise.reject('Invalid signature after verification');
+  }
+
+  return Promise.resolve(
+    Uint8Array.from(Array.from(signature).map((letter: any) => letter.charCodeAt(0))),
+  );
 };

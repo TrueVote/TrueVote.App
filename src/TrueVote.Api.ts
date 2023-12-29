@@ -460,6 +460,15 @@ export interface FindUserModel {
   Email?: string | null;
 }
 
+/** PubKey */
+export type PubKeyWrapper = {
+  /**
+   * Value
+   * @format binary
+   */
+  Value?: Uint8Array | null;
+};
+
 export interface RaceModel {
   /**
    * Race Id
@@ -521,6 +530,20 @@ export interface SecureString {
   Value?: string | null;
 }
 
+export interface SignInEventModel {
+  /** Kind */
+  Kind?: StringWrapper;
+  /** PubKey */
+  PubKey?: PubKeyWrapper;
+  /** CreatedAt */
+  CreatedAt?: UInt64Wrapper;
+  /**
+   * Signature
+   * @format binary
+   */
+  Signature?: Uint8Array | null;
+}
+
 export interface StatusModel {
   /**
    * Current Time
@@ -558,6 +581,12 @@ export interface StatusModel {
   BuildInfoReadTime?: string | null;
 }
 
+/** Kind */
+export type StringWrapper = {
+  /** Value */
+  Value?: string | null;
+};
+
 export interface SubmitBallotModel {
   Election: ElectionModel;
 }
@@ -586,6 +615,15 @@ export interface SubmitBallotModelResponse {
   Message?: string | null;
 }
 
+/** CreatedAt */
+export type UInt64Wrapper = {
+  /**
+   * Value
+   * @format int64
+   */
+  Value?: number | null;
+};
+
 export interface UserModel {
   /**
    * User Id
@@ -594,6 +632,13 @@ export interface UserModel {
    * @pattern ^[A-Za-z0-9]
    */
   UserId?: string | null;
+  /**
+   * Nostr PubKey
+   * @format string
+   * @maxLength 2048
+   * @pattern ^[A-Za-z0-9]
+   */
+  NostrPubKey?: string | null;
   /**
    * First Name
    * @format string

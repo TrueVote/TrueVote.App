@@ -5,6 +5,8 @@ import {
   BallotHashModel,
   BallotModel,
   ElectionModel,
+  SecureString,
+  SignInEventModel,
   StatusModel,
   SubmitBallotModel,
   SubmitBallotModelResponse,
@@ -226,29 +228,60 @@ export const DBSubmitBallot = async (
 };
 
 export const APIStatus = async (): Promise<StatusModel> => {
-  console.info('Body: /status');
+  console.info('Request: /status');
 
-  return await Promise.resolve(
-    fetch(EnvConfig.apiRoot + '/api/status', {
+  try {
+    const response = await fetch(EnvConfig.apiRoot + '/api/status', {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
-    })
-      .then((res: Response) => {
-        console.info('Response: /status', res);
-        if (res.status !== 200) {
-          console.error(res.status, ' Error ', res.statusText);
-          return Promise.reject<any>(res);
-        }
-        return res.json();
-      })
-      .then((data: StatusModel) => {
-        console.info('Data: /status', data);
-        return Promise.resolve<StatusModel>(data);
-      })
-      .catch((e: any) => {
-        return Promise.reject<any>(e);
-      }),
-  );
+    });
+
+    console.info('Response: /status', response);
+
+    if (!response.ok) {
+      console.error(response.status, ' Error ', response.statusText);
+      throw response;
+    }
+
+    const data: StatusModel = await response.json();
+    console.info('Data: /status', data);
+    return data;
+  } catch (error) {
+    console.error('Error in APIStatus', error);
+    throw error;
+  }
+};
+
+export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<SecureString> => {
+  console.info('DBUserSignIn->signInEventModel', signInEventModel);
+
+  try {
+    const body: string = JSON.stringify(signInEventModel);
+    console.info('Body: /user/signin', body);
+
+    const response = await fetch(EnvConfig.apiRoot + '/api/user/signin', {
+      method: 'POST',
+      body: body,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+
+    console.info('Response: /user/signin', response);
+
+    if (response.status === 400) {
+      const errorJson = await response.json();
+      console.error('400 Error', errorJson);
+      throw errorJson;
+    }
+
+    const data: SecureString = await response.json();
+    console.info('Data: /user/signin', data);
+    return data;
+  } catch (error) {
+    console.error('Error in DBUserSignIn', error);
+    throw error;
+  }
 };
