@@ -271,13 +271,13 @@ export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<
 
     console.info('Response: /user/signin', response);
 
-    if (response.status !== 200) {
-      const statusText = { Value: await response.statusText };
-      console.error('Error', response.status, statusText);
-      throw statusText;
+    if (response.status === 400) {
+      const errorJson = await response.json();
+      console.error('400 Error', errorJson);
+      throw errorJson;
     }
 
-    const data: SecureString = { Value: await response.statusText };
+    const data: SecureString = await response.json();
     console.info('Data: /user/signin', data);
     return data;
   } catch (error) {
