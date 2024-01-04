@@ -460,15 +460,6 @@ export interface FindUserModel {
   Email?: string | null;
 }
 
-/** PubKey */
-export type PubKeyWrapper = {
-  /**
-   * Value
-   * @format binary
-   */
-  Value?: Uint8Array | null;
-};
-
 export interface RaceModel {
   /**
    * Race Id
@@ -531,17 +522,74 @@ export interface SecureString {
 }
 
 export interface SignInEventModel {
-  /** Kind */
-  Kind?: StringWrapper;
-  /** PubKey */
-  PubKey?: PubKeyWrapper;
-  /** CreatedAt */
-  CreatedAt?: UInt64Wrapper;
+  /**
+   * Kind
+   * @format int32
+   */
+  Kind:
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 16
+    | 40
+    | 41
+    | 42
+    | 43
+    | 44
+    | 1063
+    | 1311
+    | 1984
+    | 1985
+    | 9734
+    | 9735
+    | 10000
+    | 10001
+    | 10002
+    | 13194
+    | 22242
+    | 23194
+    | 23195
+    | 24133
+    | 27235
+    | 30000
+    | 30001
+    | 30008
+    | 30009
+    | 30023
+    | 30024
+    | 30078
+    | 30311
+    | 30402;
+  /**
+   * PubKey
+   * @format string
+   * @maxLength 2048
+   */
+  PubKey: string;
+  /**
+   * CreatedAt
+   * @format string
+   * @maxLength 2048
+   */
+  CreatedAt: string;
   /**
    * Signature
-   * @format binary
+   * @format string
+   * @maxLength 2048
    */
-  Signature?: Uint8Array | null;
+  Signature: string;
+  /**
+   * Content
+   * @format string
+   * @maxLength 2048
+   */
+  Content: string;
 }
 
 export interface StatusModel {
@@ -581,12 +629,6 @@ export interface StatusModel {
   BuildInfoReadTime?: string | null;
 }
 
-/** Kind */
-export type StringWrapper = {
-  /** Value */
-  Value?: string | null;
-};
-
 export interface SubmitBallotModel {
   Election: ElectionModel;
 }
@@ -614,15 +656,6 @@ export interface SubmitBallotModelResponse {
    */
   Message?: string | null;
 }
-
-/** CreatedAt */
-export type UInt64Wrapper = {
-  /**
-   * Value
-   * @format int64
-   */
-  Value?: number | null;
-};
 
 export interface UserModel {
   /**

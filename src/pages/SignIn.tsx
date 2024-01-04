@@ -1,18 +1,19 @@
 import { useGlobalContext } from '@/Global';
 import { SecureString, SignInEventModel } from '@/TrueVote.Api';
+import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { DBUserSignIn } from '@/services/DataClient';
 import {
   NostrProfile,
   emptyNostrProfile,
   getNostrProfileInfo,
   getNostrPublicKeyFromPrivate,
+  getNpub,
   nostrKeyKeyHandler,
   nostrSignOut,
   signEvent,
   storeNostrPrivateKey,
 } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
-import { uint8ArrayToArray } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
@@ -68,29 +69,32 @@ export const SignIn: FC = () => {
 
     console.info('Nostr Key:', privateKey);
     const publicKey: any = getNostrPublicKeyFromPrivate(privateKey);
+    const npub: any = getNpub(publicKey);
 
     try {
       const retreivedProfile: NostrProfile = await getNostrProfileInfo(publicKey);
       console.info('Returned Back', retreivedProfile);
 
       if (retreivedProfile && retreivedProfile !== undefined) {
-        updateNostrProfile(retreivedProfile);
-        storeNostrPrivateKey(privateKey);
-
         // Now that we got the Nostr profile, sign into the TrueVote api
         const signInEventModel: SignInEventModel = {
-          Kind: { Value: '1' },
-          CreatedAt: { Value: Math.floor(Date.now() / 1000) },
-          PubKey: { Value: publicKey },
+          Kind: NostrKind.ShortTextNote,
+          CreatedAt: String(Math.floor(new Date().getTime() / 1000)),
+          PubKey: publicKey,
+          Signature: '',
+          Content: 'SIGNIN',
         };
 
         // Sign the model
-        const signature: Uint8Array = await signEvent(signInEventModel, privateKey);
+        const signature: string = await signEvent(signInEventModel, privateKey);
         console.info('Success from signEvent', signature);
-        signInEventModel.Signature = uint8ArrayToArray(signature) as unknown as Uint8Array;
+        signInEventModel.Signature = signature;
+        signInEventModel.PubKey = npub;
 
         const res: SecureString = await DBUserSignIn(signInEventModel);
         console.info('Success from signIn', res);
+        updateNostrProfile(retreivedProfile);
+        storeNostrPrivateKey(privateKey);
         setVisible((v: boolean) => !v);
         navigate('/profile');
       } else {

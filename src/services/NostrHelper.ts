@@ -134,8 +134,15 @@ export const getNostrPublicKeyFromPrivate: any = (privateKey: any) => {
   console.info('Normalized', normalized);
 
   const pubkey: string = getPublicKey(normalized);
+  console.info('Pubkey', pubkey);
 
   return pubkey;
+};
+
+export const getNpub: any = (publicKey: any) => {
+  const npub: string = nip19.npubEncode(publicKey);
+
+  return npub;
 };
 
 const storeNostrPublicKey: any = (privateKey: any) => {
@@ -295,7 +302,7 @@ const signProfile: any = (privateKey: string, publicKey: string, profile: NostrP
   const event: any = {
     kind: 0,
     pubkey: publicKey,
-    created_at: Math.floor(Date.now() / 1000),
+    created_at: Math.floor(new Date().getTime() / 1000),
     content: JSON.stringify(profile),
     tags: [],
   };
@@ -367,13 +374,13 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
 export const signEvent: any = async (
   signInEventModel: SignInEventModel,
   privateKey: string,
-): Promise<any> => {
+): Promise<string> => {
   // Create a Kind 1 event for signIn
   const event: any = {
     kind: 1,
-    pubkey: signInEventModel.PubKey?.Value,
-    created_at: Math.floor(Date.now() / 1000),
-    content: JSON.stringify(signInEventModel),
+    pubkey: signInEventModel.PubKey,
+    created_at: Number(signInEventModel.CreatedAt),
+    content: signInEventModel.Content,
     tags: [],
   };
   console.info('signEvent->Kind 1 Event', event);
@@ -424,7 +431,5 @@ export const signEvent: any = async (
     return Promise.reject('Invalid signature after verification');
   }
 
-  return Promise.resolve(
-    Uint8Array.from(Array.from(signature).map((letter: any) => letter.charCodeAt(0))),
-  );
+  return Promise.resolve(signature);
 };
