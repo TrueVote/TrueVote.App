@@ -574,7 +574,7 @@ export interface SignInEventModel {
   PubKey: string;
   /**
    * CreatedAt
-   * @format string
+   * @format date
    * @maxLength 2048
    */
   CreatedAt: string;

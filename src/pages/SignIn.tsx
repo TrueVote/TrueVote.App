@@ -76,10 +76,12 @@ export const SignIn: FC = () => {
       console.info('Returned Back', retreivedProfile);
 
       if (retreivedProfile && retreivedProfile !== undefined) {
+        const dt: number = Math.floor(new Date().getTime() / 1000);
+
         // Now that we got the Nostr profile, sign into the TrueVote api
         const signInEventModel: SignInEventModel = {
           Kind: NostrKind.ShortTextNote,
-          CreatedAt: String(Math.floor(new Date().getTime() / 1000)),
+          CreatedAt: String(dt),
           PubKey: publicKey,
           Signature: '',
           Content: 'SIGNIN',
@@ -90,6 +92,7 @@ export const SignIn: FC = () => {
         console.info('Success from signEvent', signature);
         signInEventModel.Signature = signature;
         signInEventModel.PubKey = npub;
+        signInEventModel.CreatedAt = new Date(dt * 1000).toISOString();
 
         const res: SecureString = await DBUserSignIn(signInEventModel);
         console.info('Success from signIn', res);
