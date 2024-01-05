@@ -1,4 +1,3 @@
-import { SignInEventModel } from '@/TrueVote.Api';
 import {
   Event,
   SimplePool,
@@ -372,15 +371,17 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
 };
 
 export const signEvent: any = async (
-  signInEventModel: SignInEventModel,
+  publicKey: string,
   privateKey: string,
+  content: string,
+  createdAt: string,
 ): Promise<string> => {
   // Create a Kind 1 event for signIn
   const event: any = {
     kind: 1,
-    pubkey: signInEventModel.PubKey,
-    created_at: Number(signInEventModel.CreatedAt),
-    content: signInEventModel.Content,
+    pubkey: publicKey,
+    created_at: Number(createdAt),
+    content: content,
     tags: [],
   };
   console.info('signEvent->Kind 1 Event', event);

@@ -69,7 +69,6 @@ export const SignIn: FC = () => {
 
     console.info('Nostr Key:', privateKey);
     const publicKey: any = getNostrPublicKeyFromPrivate(privateKey);
-    const npub: any = getNpub(publicKey);
 
     try {
       const retreivedProfile: NostrProfile = await getNostrProfileInfo(publicKey);
@@ -77,25 +76,26 @@ export const SignIn: FC = () => {
 
       if (retreivedProfile && retreivedProfile !== undefined) {
         const dt: number = Math.floor(new Date().getTime() / 1000);
+        const content: string = 'SIGNIN';
 
-        // Now that we got the Nostr profile, sign into the TrueVote api
+        // Sign the event we're going to send to the API
+        const signature: string = await signEvent(publicKey, privateKey, content, String(dt));
+        console.info('Success from signEvent', signature);
+
+        const npub: any = getNpub(publicKey);
+
+        // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
         const signInEventModel: SignInEventModel = {
           Kind: NostrKind.ShortTextNote,
-          CreatedAt: String(dt),
-          PubKey: publicKey,
-          Signature: '',
+          CreatedAt: new Date(dt * 1000).toISOString(),
+          PubKey: npub,
+          Signature: signature,
           Content: 'SIGNIN',
         };
 
-        // Sign the model
-        const signature: string = await signEvent(signInEventModel, privateKey);
-        console.info('Success from signEvent', signature);
-        signInEventModel.Signature = signature;
-        signInEventModel.PubKey = npub;
-        signInEventModel.CreatedAt = new Date(dt * 1000).toISOString();
-
         const res: SecureString = await DBUserSignIn(signInEventModel);
         console.info('Success from signIn', res);
+
         updateNostrProfile(retreivedProfile);
         storeNostrPrivateKey(privateKey);
         setVisible((v: boolean) => !v);
