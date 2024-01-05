@@ -133,8 +133,15 @@ export const getNostrPublicKeyFromPrivate: any = (privateKey: any) => {
   console.info('Normalized', normalized);
 
   const pubkey: string = getPublicKey(normalized);
+  console.info('Pubkey', pubkey);
 
   return pubkey;
+};
+
+export const getNpub: any = (publicKey: any) => {
+  const npub: string = nip19.npubEncode(publicKey);
+
+  return npub;
 };
 
 const storeNostrPublicKey: any = (privateKey: any) => {
@@ -294,7 +301,7 @@ const signProfile: any = (privateKey: string, publicKey: string, profile: NostrP
   const event: any = {
     kind: 0,
     pubkey: publicKey,
-    created_at: Math.floor(Date.now() / 1000),
+    created_at: Math.floor(new Date().getTime() / 1000),
     content: JSON.stringify(profile),
     tags: [],
   };
@@ -361,4 +368,69 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
     throw error;
   }
   console.info('publishEvent()->End()');
+};
+
+export const signEvent: any = async (
+  publicKey: string,
+  privateKey: string,
+  content: string,
+  createdAt: string,
+): Promise<string> => {
+  // Create a Kind 1 event for signIn
+  const event: any = {
+    kind: 1,
+    pubkey: publicKey,
+    created_at: Number(createdAt),
+    content: content,
+    tags: [],
+  };
+  console.info('signEvent->Kind 1 Event', event);
+
+  // Ensure the event is valid for this kind and has all the right properties so far
+  const valid: any = validateEvent(event);
+  console.info('signEvent->Valid', valid);
+  if (valid === false) {
+    console.error('signEvent->Invalid event');
+    return Promise.reject('Invalid event');
+  }
+
+  try {
+    const hash: any = getEventHash(event);
+    console.info('signEvent->Hash', hash);
+    event.id = hash;
+  } catch (e: any) {
+    console.error('signEvent->Hash Error', e);
+    return Promise.reject(`Invalid hash: ${e}`);
+  }
+
+  let signature: string;
+  try {
+    const normalized: any = normalizeKey(privateKey);
+    signature = getSignature(event, normalized);
+    console.info('signEvent->Signature', signature);
+    event.sig = signature;
+  } catch (e: any) {
+    console.error('signEvent->Signature Error', e);
+    return Promise.reject(`Invalid signature: ${e}`);
+  }
+
+  console.info('signEvent->Kind 1 Event - Filled', event);
+
+  // Ensure the event is valid for this kind is still valid after adding additional properties
+  const valid2: any = validateEvent(event);
+  console.info('signEvent->Valid2', valid2);
+  if (valid2 === false) {
+    console.error('Invalid event after property update');
+    return Promise.reject('Invalid event after property update');
+  }
+
+  try {
+    const validsig: any = verifySignature(event);
+    console.info('signEvent->Valid Sig', validsig);
+  } catch {
+    console.error('Invalid signature after verification');
+    return Promise.reject('Invalid signature after verification');
+  }
+
+  return Promise.resolve(signature);
 };

@@ -41,3 +41,8 @@ export const delay: any = async (ms: number): Promise<void> => {
     console.info('Delay Fired', ms),
   );
 };
+
+// Function to convert Uint8Array to a regular array
+export const uint8ArrayToArray: (uint8Array: Uint8Array) => number[] = (uint8Array: Uint8Array) => {
+  return Array.from(uint8Array);
+};

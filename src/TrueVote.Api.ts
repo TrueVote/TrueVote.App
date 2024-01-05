@@ -521,6 +521,77 @@ export interface SecureString {
   Value?: string | null;
 }
 
+export interface SignInEventModel {
+  /**
+   * Kind
+   * @format int32
+   */
+  Kind:
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 16
+    | 40
+    | 41
+    | 42
+    | 43
+    | 44
+    | 1063
+    | 1311
+    | 1984
+    | 1985
+    | 9734
+    | 9735
+    | 10000
+    | 10001
+    | 10002
+    | 13194
+    | 22242
+    | 23194
+    | 23195
+    | 24133
+    | 27235
+    | 30000
+    | 30001
+    | 30008
+    | 30009
+    | 30023
+    | 30024
+    | 30078
+    | 30311
+    | 30402;
+  /**
+   * PubKey
+   * @format string
+   * @maxLength 2048
+   */
+  PubKey: string;
+  /**
+   * CreatedAt
+   * @format date
+   * @maxLength 2048
+   */
+  CreatedAt: string;
+  /**
+   * Signature
+   * @format string
+   * @maxLength 2048
+   */
+  Signature: string;
+  /**
+   * Content
+   * @format string
+   * @maxLength 2048
+   */
+  Content: string;
+}
+
 export interface StatusModel {
   /**
    * Current Time
@@ -594,6 +665,13 @@ export interface UserModel {
    * @pattern ^[A-Za-z0-9]
    */
   UserId?: string | null;
+  /**
+   * Nostr PubKey
+   * @format string
+   * @maxLength 2048
+   * @pattern ^[A-Za-z0-9]
+   */
+  NostrPubKey?: string | null;
   /**
    * First Name
    * @format string

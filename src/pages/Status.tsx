@@ -43,18 +43,14 @@ export const Status: FC = () => {
         <Text size='xl'>API Status</Text>
       </Stack>
       <Group mt='md' mb='xs'>
-        <ScrollArea>
+        <ScrollArea className={classes.rawJson}>
           {!error ? (
-            <Text size='xs'>
-              <div>
-                <ReactJson
-                  src={statusData ?? Object.create(null)}
-                  name='StatusData'
-                  collapsed={false}
-                  theme={getColor()}
-                />
-              </div>
-            </Text>
+            <ReactJson
+              src={statusData ?? Object.create(null)}
+              name='StatusData'
+              collapsed={false}
+              theme={getColor()}
+            />
           ) : (
             <></>
           )}
