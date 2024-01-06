@@ -19,7 +19,8 @@
     "jsx": "react-jsx",
     "types": ["node"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "nostr-tools/*": ["./node_modules/nostr-tools/lib/types/*"]
     }
   },
   "include": ["src"],

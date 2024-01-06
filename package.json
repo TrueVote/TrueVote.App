@@ -36,7 +36,7 @@
     "@mantine/notifications": "^7.4.0",
     "graphql": "^16.8.1",
     "lodash": "^4.17.21",
-    "nostr-tools": "^1.17.0",
+    "nostr-tools": "^2.1.2",
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -69,7 +69,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "http-server": "^14.1.1",
     "npm-check-updates": "^16.14.12",
-    "postcss": "^8.4.32",
+    "postcss": "^8.4.33",
     "postcss-preset-mantine": "^1.12.3",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.1.1",
@@ -78,7 +78,7 @@
     "swagger-typescript-api": "^13.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "vite": "^5.0.10",
+    "vite": "^5.0.11",
     "vite-plugin-environment": "^1.1.3"
   }
 }
