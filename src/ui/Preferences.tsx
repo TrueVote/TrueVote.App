@@ -1,4 +1,4 @@
-import { NostrProfile, getNostrPublicKeyNpub } from '@/services/NostrHelper';
+import { NostrProfile } from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   Accordion,
@@ -23,7 +23,6 @@ import {
 import { useState } from 'react';
 
 export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile }) => {
-  const nostrPublicKey: string | null = getNostrPublicKeyNpub();
   const clipboard: any = useClipboard({ timeout: 500 });
   const emailIcon: any = <IconMail style={{ width: rem(16), height: rem(16) }} />;
   const [emailValue, setEmailValue] = useState(nostrProfile?.nip05);
@@ -66,16 +65,16 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                         <Table.Td className={classes.tdLeft}>
                           <HoverCard shadow='md'>
                             <HoverCard.Target>
-                              <span className={classes.textChoppedSmall}>{nostrPublicKey}</span>
+                              <span className={classes.textChoppedSmall}>{nostrProfile.npub}</span>
                             </HoverCard.Target>
                             <HoverCard.Dropdown>
-                              <Text size='sm'>{nostrPublicKey}</Text>
+                              <Text size='sm'>{nostrProfile.npub}</Text>
                             </HoverCard.Dropdown>
                           </HoverCard>
                         </Table.Td>
                         <Table.Td>
                           <ActionIcon
-                            onClick={(): void => clipboard.copy(nostrPublicKey)}
+                            onClick={(): void => clipboard.copy(nostrProfile.npub)}
                             aria-label='Copy'
                             variant='transparent'
                           >

@@ -3,8 +3,8 @@ import { Localization } from '@/services/Localization';
 import {
   NostrProfile,
   emptyNostrProfile,
+  getNostrNpubFromStorage,
   getNostrProfileInfo,
-  getNostrPublicKey,
   nostrSignOut,
 } from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -26,7 +26,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
-  const nostrPublicKey: string | null = getNostrPublicKey();
+  const nostrPublicKey: string | null = getNostrNpubFromStorage();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const { localization, updateLocalization } = useGlobalContext();
 
