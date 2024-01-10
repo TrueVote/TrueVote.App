@@ -1,9 +1,9 @@
 import { useGlobalContext } from '@/Global';
 import {
-  NostrProfile,
   emptyNostrProfile,
   generateKeyPair,
   generateProfile,
+  NostrProfile,
   nostrSignOut,
   storeNostrKeys,
 } from '@/services/NostrHelper';
@@ -50,7 +50,7 @@ export const Register: FC = () => {
         console.info('New Profile Returned back to Register', newProfile);
         setVisible((v: any) => !v);
         updateNostrProfile(newProfile);
-        storeNostrKeys(nsec);
+        storeNostrKeys(npub, nsec);
         navigate('/profile');
       })
       .catch((e: any) => {

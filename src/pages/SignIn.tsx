@@ -1,17 +1,17 @@
 import { useGlobalContext } from '@/Global';
-import { SecureString, SignInEventModel } from '@/TrueVote.Api';
-import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { DBUserSignIn } from '@/services/DataClient';
 import {
-  NostrProfile,
   emptyNostrProfile,
   getNostrProfileInfo,
   nostrKeyKeyHandler,
+  NostrProfile,
   nostrSignOut,
   npubfromnsec,
   signEvent,
   storeNostrKeys,
 } from '@/services/NostrHelper';
+import { SecureString, SignInEventModel } from '@/TrueVote.Api';
+import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -99,7 +99,7 @@ export const SignIn: FC = () => {
         console.info('Success from signIn', res);
 
         updateNostrProfile(retreivedProfile);
-        storeNostrKeys(nsec, npub);
+        storeNostrKeys(npub, nsec);
         setVisible((v: boolean) => !v);
         navigate('/profile');
       } else {

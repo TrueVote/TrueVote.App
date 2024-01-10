@@ -1,11 +1,11 @@
-import { SimplePool, SubCloser, nip19 } from 'nostr-tools';
+import { nip19, SimplePool, SubCloser } from 'nostr-tools';
 import {
-  VerifiedEvent,
   finalizeEvent,
   generateSecretKey,
   getEventHash,
   getPublicKey,
   validateEvent,
+  VerifiedEvent,
   verifyEvent,
 } from 'nostr-tools/pure';
 import React from 'react';
@@ -111,11 +111,11 @@ export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
   return { error, message, valid };
 };
 
-export const storeNostrKeys: any = (nsec: string, npub: string) => {
-  console.info('storing keys', nsec, npub);
+export const storeNostrKeys: any = (npub: string, nsec: string) => {
+  console.info('storeNostrKeys', npub, nsec);
 
-  localStorage.setItem(nostrPrivateKeyStorageKey, nsec);
   localStorage.setItem(nostrPublicKeyStorageKey, npub);
+  localStorage.setItem(nostrPrivateKeyStorageKey, nsec);
 };
 
 const removeNostrPrivateKey: any = () => {
@@ -137,7 +137,7 @@ export const nostrSignOut: any = () => {
 
 export const getNostrProfileInfo: any = async (npub: string): Promise<NostrProfile | undefined> => {
   const pubKey: any = nip19.decode(npub);
-  const nprofile: any = nip19.nprofileEncode({ pubkey: pubKey.data, relays: nostrPublicRelays });
+  const nprofile: any = nip19.nprofileEncode({ pubkey: pubKey.data, relays: nostrPrivateRelays });
   const { type, data } = nip19.decode(nprofile);
   console.info('Data', data);
 
@@ -222,14 +222,14 @@ export const generateProfile: any = async (
   };
 
   // Sign profile
-  const signedProfile: VerifiedEvent = signProfile(npub, nsec, profile);
-  console.info('generateProfile()->signProfile', signedProfile);
-  if (signedProfile === null) {
+  const verifiedEvent: VerifiedEvent = await signProfile(npub, nsec, profile);
+  console.info('generateProfile()->signProfile', verifiedEvent);
+  if (verifiedEvent === null) {
     throw 'Could not sign create profile event';
   }
 
   // Publish the event
-  return await publishEvent(signedProfile)
+  return await publishEvent(verifiedEvent)
     .then(() => {
       return Promise.resolve(profile);
     })
@@ -323,6 +323,7 @@ export const publishEvent: any = async (signedEvent: VerifiedEvent): Promise<any
     throw error;
   }
   console.info('publishEvent()->End()');
+  Promise.resolve();
 };
 
 export const signEvent: any = async (
