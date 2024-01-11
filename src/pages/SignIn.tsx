@@ -1,18 +1,17 @@
 import { useGlobalContext } from '@/Global';
-import { SecureString, SignInEventModel } from '@/TrueVote.Api';
-import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { DBUserSignIn } from '@/services/DataClient';
 import {
-  NostrProfile,
   emptyNostrProfile,
   getNostrProfileInfo,
-  getNostrPublicKeyFromPrivate,
-  getNpub,
   nostrKeyKeyHandler,
+  NostrProfile,
   nostrSignOut,
+  npubfromnsec,
   signEvent,
-  storeNostrPrivateKey,
+  storeNostrKeys,
 } from '@/services/NostrHelper';
+import { SecureString, SignInEventModel } from '@/TrueVote.Api';
+import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -36,7 +35,7 @@ export const SignIn: FC = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [valid, setValid] = useState(false);
-  const [privateKey, setPrivateKey] = useState('');
+  const [nsec, setNsec] = useState('');
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -53,7 +52,7 @@ export const SignIn: FC = () => {
     setError(error);
     setMessage(message);
     setValid(valid);
-    setPrivateKey(inputValue);
+    setNsec(inputValue);
   };
 
   const handleError: any = (e: SecureString): void => {
@@ -67,11 +66,12 @@ export const SignIn: FC = () => {
   const signInClick: any = async () => {
     setVisible((v: any) => !v);
 
-    console.info('Nostr Key:', privateKey);
-    const publicKey: any = getNostrPublicKeyFromPrivate(privateKey);
+    console.info('Nostr Key:', nsec);
 
     try {
-      const retreivedProfile: NostrProfile = await getNostrProfileInfo(publicKey);
+      const npub: string = npubfromnsec(nsec);
+
+      const retreivedProfile: NostrProfile = await getNostrProfileInfo(npub);
       console.info('Returned Back', retreivedProfile);
 
       if (retreivedProfile && retreivedProfile !== undefined) {
@@ -79,10 +79,12 @@ export const SignIn: FC = () => {
         const content: string = 'SIGNIN';
 
         // Sign the event we're going to send to the API
-        const signature: string = await signEvent(publicKey, privateKey, content, String(dt));
-        console.info('Success from signEvent', signature);
-
-        const npub: any = getNpub(publicKey);
+        const signature: string = await signEvent(nsec, npub, content, String(dt));
+        console.info('Returned from signEvent', signature, npub);
+        if (signature === undefined || npub === undefined) {
+          handleError({ Value: 'No data returned from signEvent' });
+          return;
+        }
 
         // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
         const signInEventModel: SignInEventModel = {
@@ -97,13 +99,14 @@ export const SignIn: FC = () => {
         console.info('Success from signIn', res);
 
         updateNostrProfile(retreivedProfile);
-        storeNostrPrivateKey(privateKey);
+        storeNostrKeys(npub, nsec);
         setVisible((v: boolean) => !v);
         navigate('/profile');
       } else {
         handleError({ Value: 'Could not retreive nostr profile' });
       }
     } catch (e) {
+      console.error('Exception getting nostrProfileInfo', e);
       handleError(e);
     }
   };
@@ -123,7 +126,7 @@ export const SignIn: FC = () => {
       >
         <Text>Error: {errorMessage}</Text>
       </Modal>
-      {nostrProfile === null || String(nostrProfile?.publicKey).length === 0 ? (
+      {nostrProfile === null || String(nostrProfile?.npub).length === 0 ? (
         <>
           <Text>
             To sign in, please provide your nostr secret (nsec1) key. If you would like to create a

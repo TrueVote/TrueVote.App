@@ -1,10 +1,10 @@
 import { useGlobalContext } from '@/Global';
 import { Localization } from '@/services/Localization';
 import {
-  NostrProfile,
   emptyNostrProfile,
+  getNostrNpubFromStorage,
   getNostrProfileInfo,
-  getNostrPublicKey,
+  NostrProfile,
   nostrSignOut,
 } from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -26,7 +26,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
-  const nostrPublicKey: string | null = getNostrPublicKey();
+  const npub: string | null = getNostrNpubFromStorage();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const { localization, updateLocalization } = useGlobalContext();
 
@@ -37,7 +37,7 @@ export const AppHeader: FC = () => {
       updateLocalization(new Localization());
     }
 
-    if (nostrPublicKey === null || String(nostrPublicKey).length <= 0 || fetched) {
+    if (npub === null || String(npub).length <= 0 || fetched) {
       return;
     }
 
@@ -46,7 +46,7 @@ export const AppHeader: FC = () => {
     // Async function to fetch the user profile
     const fetchNostrProfile: any = async () => {
       try {
-        const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(nostrPublicKey);
+        const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(npub);
         console.info('Returned Back from getNostrProfileInfo()', nostrProfile);
         if (nostrProfile && nostrProfile !== undefined) {
           updateNostrProfile(nostrProfile);
@@ -64,7 +64,7 @@ export const AppHeader: FC = () => {
 
     // Call the async function
     fetchNostrProfile();
-  }, [fetched, localization, nostrPublicKey, updateLocalization, updateNostrProfile]);
+  }, [fetched, localization, npub, updateLocalization, updateNostrProfile]);
 
   interface LinkType {
     id: string;

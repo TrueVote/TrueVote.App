@@ -1,11 +1,11 @@
 import { useGlobalContext } from '@/Global';
 import {
-  NostrProfile,
   emptyNostrProfile,
   generateKeyPair,
   generateProfile,
+  NostrProfile,
   nostrSignOut,
-  storeNostrPrivateKey,
+  storeNostrKeys,
 } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
@@ -29,10 +29,8 @@ import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 export const Register: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
-  const [nostrPublicKey, updatePublicKey] = useState<string | null>(null);
-  const [nostrPrivateKey, updatePrivateKey] = useState<string | null>(null);
-  const [nostrNpub, updateNpub] = useState<string | null>(null);
-  const [nostrNsec, updateNsec] = useState<string | null>(null);
+  const [npub, updateNpub] = useState<string | null>(null);
+  const [nsec, updateNsec] = useState<string | null>(null);
   const [nsecCheckbox, updateNsecCheckbox] = useState<boolean>(false);
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
@@ -47,12 +45,12 @@ export const Register: FC = () => {
   const createProfile: any = () => {
     setVisible((v: any) => !v);
 
-    generateProfile(nostrPrivateKey, nostrPublicKey)
+    generateProfile(npub, nsec)
       .then((newProfile: NostrProfile) => {
         console.info('New Profile Returned back to Register', newProfile);
         setVisible((v: any) => !v);
         updateNostrProfile(newProfile);
-        storeNostrPrivateKey(nostrPrivateKey);
+        storeNostrKeys(npub, nsec);
         navigate('/profile');
       })
       .catch((e: any) => {
@@ -65,10 +63,8 @@ export const Register: FC = () => {
   };
 
   const getKeyPair: any = () => {
-    const { privateKey, publicKey, npub, nsec } = generateKeyPair();
+    const { npub, nsec } = generateKeyPair();
 
-    updatePublicKey(publicKey);
-    updatePrivateKey(privateKey);
     updateNpub(npub);
     updateNsec(nsec);
   };
@@ -101,7 +97,7 @@ export const Register: FC = () => {
       >
         <Text>Error: {errorMessage}</Text>
       </Modal>
-      {nostrProfile !== null && String(nostrProfile?.publicKey).length > 0 ? (
+      {nostrProfile !== null && String(nostrProfile?.npub).length > 0 ? (
         <>
           <Space h='md'></Space>
           <Text>Already Signed In</Text>
@@ -129,16 +125,16 @@ export const Register: FC = () => {
             Sign Out
           </Button>
         </>
-      ) : nostrPublicKey !== null && nostrPrivateKey !== null ? (
+      ) : npub !== null && nsec !== null ? (
         <>
           <Space h='md'></Space>
           <Text className={classes.profileText}>
-            <b>Npub (Public) Key:</b> {nostrNpub}
+            <b>Npub (Public) Key:</b> {npub}
           </Text>
           <Text className={classes.profileText}>
-            <b>Nsec (Private) Key:</b> {nostrNsec}{' '}
+            <b>Nsec (Private) Key:</b> {nsec}{' '}
             <ActionIcon
-              onClick={(): void => clipboard.copy(nostrNsec)}
+              onClick={(): void => clipboard.copy(nsec)}
               aria-label='Copy'
               variant='transparent'
             >

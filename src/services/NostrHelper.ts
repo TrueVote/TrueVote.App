@@ -1,15 +1,13 @@
+import { nip19, SimplePool, SubCloser } from 'nostr-tools';
 import {
-  Event,
-  SimplePool,
-  generatePrivateKey,
+  finalizeEvent,
+  generateSecretKey,
   getEventHash,
   getPublicKey,
-  getSignature,
-  nip19,
   validateEvent,
-  verifySignature,
-} from 'nostr-tools';
-import { DecodeResult } from 'nostr-tools/lib/types/nip19';
+  VerifiedEvent,
+  verifyEvent
+} from 'nostr-tools/pure';
 import React from 'react';
 
 const hexchars: string = '0123456789abcdef';
@@ -33,8 +31,6 @@ const nostrPublicRelays: string[] = [
 const nostrPrivateRelays: string[] = ['wss://nostr-relay.truevote.org'];
 
 export interface NostrProfile {
-  publicKey: string;
-  privateKey: string;
   npub: string;
   displayName: string;
   picture: string;
@@ -44,8 +40,6 @@ export interface NostrProfile {
 
 // TODO Need to deprecate this and use something from nostr-tools or match the names
 export const emptyNostrProfile: NostrProfile = {
-  publicKey: '',
-  privateKey: '',
   npub: '',
   displayName: '',
   picture: '',
@@ -93,7 +87,7 @@ export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
       return { error, message, valid };
     } else {
       // Attempt to decode to detect errors
-      const decoded: DecodeResult = nip19.decode(val);
+      const decoded: nip19.DecodeResult = nip19.decode(val);
       console.info(decoded);
 
       if (decoded.type === 'npub') {
@@ -117,48 +111,11 @@ export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
   return { error, message, valid };
 };
 
-export const normalizeKey: any = (val: string) => {
-  let hex: any;
+export const storeNostrKeys: any = (npub: string, nsec: string) => {
+  console.info('storeNostrKeys', npub, nsec);
 
-  if (val.substring(0, 4) === 'nsec' || val.substring(0, 4) === 'npub') {
-    const decoded: DecodeResult = nip19.decode(val);
-    hex = decoded.data;
-  }
-
-  return hex || val;
-};
-
-export const getNostrPublicKeyFromPrivate: any = (privateKey: any) => {
-  const normalized: string = normalizeKey(privateKey);
-  console.info('Normalized', normalized);
-
-  const pubkey: string = getPublicKey(normalized);
-  console.info('Pubkey', pubkey);
-
-  return pubkey;
-};
-
-export const getNpub: any = (publicKey: any) => {
-  const npub: string = nip19.npubEncode(publicKey);
-
-  return npub;
-};
-
-const storeNostrPublicKey: any = (privateKey: any) => {
-  const normalized: string = normalizeKey(privateKey);
-  console.info('Normalized', normalized);
-
-  const pubkey: string = getPublicKey(normalized);
-  const npub: string = nip19.npubEncode(pubkey);
-  console.info('PubKey', pubkey, 'Npub', npub);
-
-  localStorage.setItem(nostrPublicKeyStorageKey, pubkey);
-};
-
-export const storeNostrPrivateKey: any = (privateKey: any) => {
-  localStorage.setItem(nostrPrivateKeyStorageKey, privateKey);
-
-  storeNostrPublicKey(privateKey);
+  localStorage.setItem(nostrPublicKeyStorageKey, npub);
+  localStorage.setItem(nostrPrivateKeyStorageKey, nsec);
 };
 
 const removeNostrPrivateKey: any = () => {
@@ -166,18 +123,11 @@ const removeNostrPrivateKey: any = () => {
   localStorage.removeItem(nostrPublicKeyStorageKey);
 };
 
-export const getNostrPublicKey: any = () => {
+export const getNostrNpubFromStorage: any = () => {
   return localStorage.getItem(nostrPublicKeyStorageKey);
 };
 
-export const getNostrPublicKeyNpub: any = () => {
-  const nostrPublicKey: string = getNostrPublicKey();
-  const npub: string = nip19.npubEncode(nostrPublicKey);
-
-  return npub;
-};
-
-export const getNostrPrivateKey: any = () => {
+export const getNostrNsecFromStorage: any = () => {
   return localStorage.getItem(nostrPrivateKeyStorageKey);
 };
 
@@ -185,12 +135,9 @@ export const nostrSignOut: any = () => {
   removeNostrPrivateKey();
 };
 
-export const getNostrProfileInfo: any = async (
-  publicKey: string,
-): Promise<NostrProfile | undefined> => {
-  console.info('getNostrProfileInfo()', publicKey);
-
-  const nprofile: any = nip19.nprofileEncode({ pubkey: publicKey, relays: nostrPublicRelays });
+export const getNostrProfileInfo: any = async (npub: string): Promise<NostrProfile | undefined> => {
+  const pubKey: any = nip19.decode(npub);
+  const nprofile: any = nip19.nprofileEncode({ pubkey: pubKey.data, relays: nostrPrivateRelays });
   const { type, data } = nip19.decode(nprofile);
   console.info('Data', data);
 
@@ -199,27 +146,31 @@ export const getNostrProfileInfo: any = async (
   }
 
   const pool: SimplePool = new SimplePool();
-  const sub: any = pool.sub(nostrPublicRelays, [{ kinds: [0], authors: [publicKey] }]);
 
   try {
     const latestProfileEvent: any = await new Promise<any>((resolve: any) => {
       let latestEvent: any = null;
 
-      sub.on('event', (event: any) => {
-        if (!latestEvent || latestEvent.created_at < event.created_at) {
-          latestEvent = event;
-        }
-      });
+      const sub: SubCloser = pool.subscribeMany(
+        nostrPublicRelays,
+        [{ kinds: [0], authors: [pubKey.data] }],
+        {
+          onevent(event: any) {
+            if (!latestEvent || latestEvent.created_at < event.created_at) {
+              latestEvent = event;
+            }
+          },
+          oneose() {
+            sub.close();
 
-      sub.on('eose', () => {
-        sub.unsub();
-
-        if (!latestEvent) {
-          resolve(undefined);
-        } else {
-          resolve(latestEvent);
-        }
-      });
+            if (!latestEvent) {
+              resolve(undefined);
+            } else {
+              resolve(latestEvent);
+            }
+          },
+        },
+      );
     });
 
     if (!latestProfileEvent) {
@@ -230,9 +181,7 @@ export const getNostrProfileInfo: any = async (
     console.info('Returned nostrProfile from relay', json);
 
     const nostrProfile: NostrProfile = {
-      publicKey: publicKey,
-      privateKey: '',
-      npub: nip19.npubEncode(publicKey),
+      npub: npub,
       displayName: json.displayName,
       picture: json.picture,
       about: json.about,
@@ -240,53 +189,47 @@ export const getNostrProfileInfo: any = async (
     };
 
     return nostrProfile;
-  } finally {
-    sub.unsub();
+  } catch (e: any) {
+    console.error('Error getting NostrProfileInfo', e);
   }
 };
 
 export const generateKeyPair: () => {
-  privateKey: string;
-  publicKey: string;
   npub: string;
   nsec: string;
 } = () => {
-  const privateKey: string = generatePrivateKey();
-  const publicKey: string = getPublicKey(privateKey);
-  const npub: string = nip19.npubEncode(publicKey);
-  const nsec: string = nip19.nsecEncode(privateKey);
+  const sk: Uint8Array = generateSecretKey();
+  const npub: string = nip19.npubEncode(getPublicKey(sk));
+  const nsec: string = nip19.nsecEncode(sk);
+  console.info('generateKeyPair()', npub, nsec);
 
-  return { privateKey, publicKey, npub, nsec };
+  return { npub, nsec };
 };
 
 export const generateProfile: any = async (
-  privateKey: string,
-  publicKey: string,
+  npub: string,
+  nsec: string,
 ): Promise<NostrProfile | undefined> => {
-  const nsec: string = nip19.nsecEncode(privateKey);
-  const npub: string = nip19.npubEncode(publicKey);
-
-  console.info('generateProfile()', privateKey, publicKey, nsec, npub);
+  console.info('generateProfile()', npub, nsec);
 
   // Create profile
   const profile: NostrProfile = {
     displayName: 'TrueVote User',
     about: 'A TrueVote voter ready to vote!',
-    publicKey: publicKey,
-    privateKey: '',
     npub: npub,
     picture: '',
     nip05: '',
   };
 
   // Sign profile
-  const signedProfile: any = signProfile(privateKey, publicKey, profile);
-  if (signedProfile === '') {
+  const verifiedEvent: VerifiedEvent = await signProfile(npub, nsec, profile);
+  console.info('generateProfile()->signProfile', verifiedEvent);
+  if (verifiedEvent === null) {
     throw 'Could not sign create profile event';
   }
 
   // Publish the event
-  return await publishEvent(signedProfile)
+  return await publishEvent(verifiedEvent)
     .then(() => {
       return Promise.resolve(profile);
     })
@@ -296,11 +239,17 @@ export const generateProfile: any = async (
     });
 };
 
-const signProfile: any = (privateKey: string, publicKey: string, profile: NostrProfile): string => {
+const signProfile: any = async (
+  npub: string,
+  nsec: string,
+  profile: NostrProfile,
+): Promise<VerifiedEvent | null> => {
+  const pubKey: nip19.DecodeResult = nip19.decode(npub);
+
   // Create a Kind 0 event to create the profile
   const event: any = {
     kind: 0,
-    pubkey: publicKey,
+    pubkey: pubKey.data,
     created_at: Math.floor(new Date().getTime() / 1000),
     content: JSON.stringify(profile),
     tags: [],
@@ -311,49 +260,55 @@ const signProfile: any = (privateKey: string, publicKey: string, profile: NostrP
   const valid: any = validateEvent(event);
   console.info('Valid', valid);
   if (valid === false) {
-    return '';
+    return null;
   }
 
   try {
     const hash: any = getEventHash(event);
     console.info('Hash', hash);
     event.id = hash;
-  } catch {
-    return '';
+  } catch (e: any) {
+    console.error('signProfile->Hash Error', e);
+    return null;
   }
 
+  let finalEvent: VerifiedEvent;
   try {
-    const signature: any = getSignature(event, privateKey);
-    console.info('Signature', signature);
-    event.sig = signature;
-  } catch {
-    return '';
+    const privKey: nip19.DecodeResult = nip19.decode(nsec);
+    const privKeyArray: Uint8Array = privKey.data as Uint8Array;
+    console.info('signProfile keys', nsec, npub, privKey, privKeyArray);
+    finalEvent = finalizeEvent(event, privKeyArray);
+  } catch (e: any) {
+    console.error('finalizeEvent->Signature Error', e);
+    return null;
   }
 
-  console.info('Kind 0 Event - Filled', event);
+  console.info('Kind 0 Event - Filled', finalEvent);
 
   // Ensure the event is valid for this kind is still valid after adding additional properties
-  const valid2: any = validateEvent(event);
+  const valid2: any = validateEvent(finalEvent);
   console.info('Valid2', valid2);
   if (valid2 === false) {
-    return '';
+    return null;
   }
 
   try {
-    const validsig: any = verifySignature(event);
-    console.info('Valid Sig', validsig);
+    const validEvent: boolean = verifyEvent(finalEvent);
+    console.info('Valid Event', validEvent);
   } catch {
-    return '';
+    console.error('Invalid signature after verification');
+    return null;
   }
 
-  return event;
+  console.info('signProfile finally finalEvent', finalEvent);
+  return finalEvent;
 };
 
-export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
+export const publishEvent: any = async (signedEvent: VerifiedEvent): Promise<any> => {
   const pool: SimplePool = new SimplePool();
 
   try {
-    const promises: any = await pool.publish(nostrPrivateRelays, signedEvent);
+    const promises: any = await pool.publish(nostrPublicRelays, signedEvent);
     const results: any = await Promise.allSettled(promises);
     for (const result of results) {
       if (result.status === 'rejected') {
@@ -368,26 +323,33 @@ export const publishEvent: any = async (signedEvent: Event): Promise<any> => {
     throw error;
   }
   console.info('publishEvent()->End()');
+  Promise.resolve();
 };
 
 export const signEvent: any = async (
-  publicKey: string,
-  privateKey: string,
+  nsec: string,
+  npub: string,
   content: string,
   createdAt: string,
 ): Promise<string> => {
+  const privKey: nip19.DecodeResult = nip19.decode(nsec);
+  const privKeyArray: Uint8Array = privKey.data as Uint8Array;
+  const pubKey: any = getPublicKey(privKeyArray);
+  console.info('signEvent keys', nsec, npub, pubKey, privKey, privKeyArray);
+
   // Create a Kind 1 event for signIn
   const event: any = {
     kind: 1,
-    pubkey: publicKey,
+    pubkey: pubKey,
     created_at: Number(createdAt),
     content: content,
     tags: [],
   };
+
   console.info('signEvent->Kind 1 Event', event);
 
   // Ensure the event is valid for this kind and has all the right properties so far
-  const valid: any = validateEvent(event);
+  const valid: boolean = validateEvent(event);
   console.info('signEvent->Valid', valid);
   if (valid === false) {
     console.error('signEvent->Invalid event');
@@ -403,21 +365,18 @@ export const signEvent: any = async (
     return Promise.reject(`Invalid hash: ${e}`);
   }
 
-  let signature: string;
+  let finalEvent: VerifiedEvent;
   try {
-    const normalized: any = normalizeKey(privateKey);
-    signature = getSignature(event, normalized);
-    console.info('signEvent->Signature', signature);
-    event.sig = signature;
+    finalEvent = finalizeEvent(event, privKeyArray);
   } catch (e: any) {
-    console.error('signEvent->Signature Error', e);
+    console.error('finalizeEvent->Signature Error', e);
     return Promise.reject(`Invalid signature: ${e}`);
   }
 
-  console.info('signEvent->Kind 1 Event - Filled', event);
+  console.info('signEvent->Kind 1 Event - Filled', finalEvent);
 
   // Ensure the event is valid for this kind is still valid after adding additional properties
-  const valid2: any = validateEvent(event);
+  const valid2: boolean = validateEvent(finalEvent);
   console.info('signEvent->Valid2', valid2);
   if (valid2 === false) {
     console.error('Invalid event after property update');
@@ -425,12 +384,22 @@ export const signEvent: any = async (
   }
 
   try {
-    const validsig: any = verifySignature(event);
-    console.info('signEvent->Valid Sig', validsig);
+    const validEvent: boolean = verifyEvent(finalEvent);
+    console.info('signEvent->Valid Event', validEvent);
   } catch {
     console.error('Invalid signature after verification');
     return Promise.reject('Invalid signature after verification');
   }
 
-  return Promise.resolve(signature);
+  console.info('signEvent->returning', finalEvent.sig, npub);
+  return Promise.resolve(finalEvent.sig);
+};
+
+export const npubfromnsec: any = (nsec: string): string => {
+  const privKey: nip19.DecodeResult = nip19.decode(nsec);
+  const privKeyArray: Uint8Array = privKey.data as Uint8Array;
+  const pubKey: any = getPublicKey(privKeyArray);
+  const npub: string = nip19.npubEncode(pubKey);
+
+  return npub;
 };

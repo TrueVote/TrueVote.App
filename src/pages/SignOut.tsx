@@ -22,7 +22,7 @@ export const SignOut: FC = () => {
       <Stack gap={32}>
         <Hero title='Sign Out' />
       </Stack>
-      {nostrProfile !== null && String(nostrProfile?.publicKey).length > 0 ? (
+      {nostrProfile !== null && String(nostrProfile?.npub).length > 0 ? (
         <>
           <Space h='md'></Space>
           <Text className={classes.profileText}>
