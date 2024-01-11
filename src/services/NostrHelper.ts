@@ -6,7 +6,7 @@ import {
   getPublicKey,
   validateEvent,
   VerifiedEvent,
-  verifyEvent,
+  verifyEvent
 } from 'nostr-tools/pure';
 import React from 'react';
 
@@ -403,54 +403,3 @@ export const npubfromnsec: any = (nsec: string): string => {
 
   return npub;
 };
-
-/*
-export const xxnormalizeKey: any = (val: string) => {
-  let hex: any;
-
-  if (val.substring(0, 4) === 'nsec' || val.substring(0, 4) === 'npub') {
-    const decoded: nip19.DecodeResult = nip19.decode(val);
-    hex = decoded.data;
-  }
-
-  return hex || val;
-};
-
-export const xxxgetNostrPublicKeyNpub: any = () => {
-  const nostrPublicKey: string = getNostrNpubFromStorage();
-  const npub: string = nip19.npubEncode(nostrPublicKey);
-
-  return npub;
-};
-
-export const xxxgetNostrPublicKeyFromPrivate: any = (privateKey: any) => {
-  const normalized: any = normalizeKey(privateKey);
-  console.info('Normalized', normalized);
-
-  const pubkey: string = getPublicKey(normalized);
-  console.info('Pubkey', pubkey);
-
-  return pubkey;
-};
-
-const xxxstoreNostrPublicKey: any = (npub: any) => {
-  const normalized: any = normalizeKey(privateKey);
-  console.info('Normalized', normalized);
-
-  const pubkey: string = getPublicKey(normalized);
-  const npub: string = nip19.npubEncode(pubkey);
-  console.info('PubKey', pubkey, 'Npub', npub);
-
-  localStorage.setItem(nostrPublicKeyStorageKey, pubkey);
-};
-
-const xxxgetNpub: any = (publicKey: any) => {
-  const npub: string = nip19.npubEncode(publicKey);
-
-  return npub;
-};
-
-const xxxpubKeyfromNpub: any = (npub: string): DecodeResult => {
-  return nip19.decode(npub);
-};
-*/
