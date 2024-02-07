@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { DBUserSignIn } from '@/services/DataClient';
+import { DBUserSignIn, storeJwt } from '@/services/DataClient';
 import {
   emptyNostrProfile,
   getNostrProfileInfo,
@@ -100,6 +100,7 @@ export const SignIn: FC = () => {
 
         updateNostrProfile(retreivedProfile);
         storeNostrKeys(npub, nsec);
+        storeJwt(res.Value);
         setVisible((v: boolean) => !v);
         navigate('/profile');
       } else {

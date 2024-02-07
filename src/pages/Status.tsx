@@ -34,7 +34,7 @@ export const Status: FC = () => {
     return <TrueVoteLoader />;
   }
 
-  console.info(statusData);
+  console.info('Status Data', statusData);
 
   return (
     <Container size='xs' px='xs' className={classes.container}>

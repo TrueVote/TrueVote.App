@@ -12,6 +12,25 @@ import {
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
 import { QueryResult, TypedDocumentNode, gql, useQuery } from '@apollo/client';
+import { FetchHelper } from './FetchHelper';
+
+const JwtStorageKey: string = 'jwt_token';
+
+export const storeJwt = (token: string | null | undefined): void => {
+  localStorage.setItem(JwtStorageKey, token ?? '');
+};
+
+export const getJwt = (): string | null => {
+  return localStorage.getItem(JwtStorageKey) ?? null;
+};
+
+const setHeaders: any = () => {
+  const headers: HeadersInit = {
+    'Content-type': 'application/json; charset=UTF-8',
+  };
+
+  return headers;
+};
 
 export const DBGetElectionById = (
   electionId: string | undefined,
@@ -200,12 +219,10 @@ export const DBSubmitBallot = async (
   console.info('Body: /ballot/submitballot', body);
 
   return await Promise.resolve(
-    fetch(EnvConfig.apiRoot + '/api/ballot/submitballot', {
+    FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/ballot/submitballot', {
       method: 'POST',
       body: body,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
+      headers: setHeaders(),
     })
       .then((res: Response) => {
         console.info('Response: /ballot/submitballot', res);
@@ -231,11 +248,9 @@ export const APIStatus = async (): Promise<StatusModel> => {
   console.info('Request: /status');
 
   try {
-    const response = await fetch(EnvConfig.apiRoot + '/api/status', {
+    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/status', {
       method: 'GET',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
+      headers: setHeaders(),
     });
 
     console.info('Response: /status', response);
@@ -264,9 +279,7 @@ export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<
     const response = await fetch(EnvConfig.apiRoot + '/api/user/signin', {
       method: 'POST',
       body: body,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
+      headers: setHeaders(),
     });
 
     console.info('Response: /user/signin', response);
