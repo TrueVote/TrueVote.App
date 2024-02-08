@@ -212,6 +212,7 @@ export const DBGetBallotById = (
 
 export const DBSubmitBallot = async (
   submitBallotModel: SubmitBallotModel,
+  signOutFunction: () => void,
 ): Promise<SubmitBallotModelResponse> => {
   console.info('DBSubmitBallot->submitBallotModel', submitBallotModel);
 
@@ -219,11 +220,16 @@ export const DBSubmitBallot = async (
   console.info('Body: /ballot/submitballot', body);
 
   return await Promise.resolve(
-    FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/ballot/submitballot', {
-      method: 'POST',
-      body: body,
-      headers: setHeaders(),
-    })
+    FetchHelper.fetchWithToken(
+      getJwt(),
+      EnvConfig.apiRoot + '/api/ballot/submitballot',
+      signOutFunction,
+      {
+        method: 'POST',
+        body: body,
+        headers: setHeaders(),
+      },
+    )
       .then((res: Response) => {
         console.info('Response: /ballot/submitballot', res);
         if (res.status === 409) {
@@ -244,14 +250,19 @@ export const DBSubmitBallot = async (
   );
 };
 
-export const APIStatus = async (): Promise<StatusModel> => {
+export const APIStatus = async (signOutFunction: () => void): Promise<StatusModel> => {
   console.info('Request: /status');
 
   try {
-    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/status', {
-      method: 'GET',
-      headers: setHeaders(),
-    });
+    const response = await FetchHelper.fetchWithToken(
+      getJwt(),
+      EnvConfig.apiRoot + '/api/status',
+      signOutFunction,
+      {
+        method: 'GET',
+        headers: setHeaders(),
+      },
+    );
 
     console.info('Response: /status', response);
 

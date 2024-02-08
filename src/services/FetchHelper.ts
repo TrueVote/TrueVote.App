@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/typedef */
-import { useNostrProfile } from '@/Global';
 import { storeJwt } from './DataClient';
-import { nostrSignOut } from './NostrHelper';
 
 export class FetchHelper {
   public static async fetchWithToken(
     currentToken: string | null,
     url: string,
+    signOutFunction: () => void,
     options?: RequestInit,
   ): Promise<Response> {
     //const { nostrProfile, updateNostrProfile } = useGlobalState();
@@ -33,10 +32,7 @@ export class FetchHelper {
     if (response.status === 401) {
       console.error('FetchHelper, 401 Unauthorized');
 
-      console.info('Current NostrProfile', useNostrProfile);
-      // useUpdateNostrProfile(emptyNostrProfile);
-      nostrSignOut();
-      console.info('Updated NostrProfile', useNostrProfile);
+      signOutFunction();
 
       return response;
     }
@@ -51,7 +47,8 @@ export class FetchHelper {
       // Compare the new token with the current token
       if (newToken !== currentToken) {
         // Update the current token
-        storeJwt(currentToken);
+        console.info('Received new token, updating storage');
+        storeJwt(newToken);
       }
     }
 

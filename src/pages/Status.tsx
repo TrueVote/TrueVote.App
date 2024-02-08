@@ -1,5 +1,7 @@
+import { useGlobalContext } from '@/Global';
 import { StatusModel } from '@/TrueVote.Api';
 import { APIStatus } from '@/services/DataClient';
+import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -14,10 +16,17 @@ export const Status: FC = () => {
   const [statusData, setStatusData] = useState<StatusModel | null>(null);
   const [error, setError] = useState<string | null>(null);
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
+  const { updateNostrProfile } = useGlobalContext();
+
+  const signOutFunction: any = () => {
+    console.info('~signOutFunction');
+    updateNostrProfile(emptyNostrProfile);
+    nostrSignOut();
+  };
 
   useEffect(() => {
     // Call the APIStatus function
-    APIStatus()
+    APIStatus(signOutFunction)
       .then((data: StatusModel) => {
         setStatusData(data);
       })
