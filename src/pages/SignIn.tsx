@@ -88,7 +88,7 @@ export const SignIn: FC = () => {
 
         // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
         const signInEventModel: SignInEventModel = {
-          Kind: NostrKind.ShortTextNote,
+          Kind: NostrKind.ShortTextNote as number,
           CreatedAt: new Date(dt * 1000).toISOString(),
           PubKey: npub,
           Signature: signature,

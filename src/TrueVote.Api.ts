@@ -11,190 +11,134 @@
 
 export interface AddCandidatesModel {
   /**
-   * Race Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   RaceId: string;
-  /**
-   * Candidate Ids
-   * @pattern ^[A-Za-z0-9]
-   */
   CandidateIds: string[];
 }
 
 export interface AddRacesModel {
   /**
-   * Election Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  ElectionId?: string | null;
-  /**
-   * Race Ids
-   * @pattern ^[A-Za-z0-9]
-   */
+  ElectionId: string;
   RaceIds: string[];
 }
 
 export interface BallotHashModel {
   /**
-   * Ballot Hash Id
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotHashId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotId: string;
+  /** @format byte */
+  ServerBallotHash: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ServerBallotHashS: string;
+  /** @format date */
+  DateCreated: string;
+  /** @format date */
+  DateUpdated: string;
+  /**
    * @format string
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  BallotHashId?: string | null;
-  /**
-   * Ballot Id
-   * @format string
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
-  BallotId?: string | null;
-  /**
-   * Server Ballot Hash
-   * @format binary
-   */
-  ServerBallotHash?: Uint8Array | null;
-  /**
-   * Server Ballot Hash String
-   * @format string
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
-  ServerBallotHashS?: string | null;
-  /**
-   * DateCreated
-   * @format date
-   * @maxLength 2048
-   */
-  DateCreated?: string | null;
-  /**
-   * DateUpdated
-   * @format date
-   * @maxLength 2048
-   */
-  DateUpdated?: string | null;
-  /**
-   * Timestamp Id
-   * @format string
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
-  TimestampId: string | null;
+  TimestampId?: string | null;
 }
 
 export interface BallotList {
-  /**
-   * List of Ballots
-   * @maxItems 2048
-   */
-  Ballots?: BallotModel[] | null;
-  /**
-   * List of Ballot Hashes
-   * @maxItems 2048
-   */
-  BallotHashes?: BallotHashModel[] | null;
+  /** @maxItems 2048 */
+  Ballots: BallotModel[];
+  /** @maxItems 2048 */
+  BallotHashes: BallotHashModel[];
 }
 
 export interface BallotModel {
   /**
-   * Ballot Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   BallotId: string;
-  Election?: ElectionModel;
-  /**
-   * DateCreated
-   * @format date
-   * @maxLength 2048
-   */
-  DateCreated?: string | null;
+  Election: ElectionModel;
+  /** @format date */
+  DateCreated: string;
 }
 
 export interface BaseCandidateModel {
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   Name: string;
   /**
-   * Party Affiliation
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  PartyAffiliation?: string | null;
+  PartyAffiliation: string;
 }
 
 export interface BaseElectionModel {
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   Name: string;
   /**
-   * Description
    * @format string
+   * @minLength 1
    * @maxLength 32768
    */
-  Description?: string | null;
+  Description: string;
   /**
-   * HeaderImageUrl
    * @format string
+   * @minLength 1
    * @maxLength 1024
    */
-  HeaderImageUrl?: string | null;
-  /**
-   * StartDate
-   * @format date
-   * @maxLength 2048
-   */
+  HeaderImageUrl: string;
+  /** @format date */
   StartDate: string;
-  /**
-   * EndDate
-   * @format date
-   * @maxLength 2048
-   */
+  /** @format date */
   EndDate: string;
-  /** List of Races */
-  Races: RaceModel[] | null;
+  Races: RaceModel[];
 }
 
 export interface BaseRaceModel {
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   Name: string;
-  /**
-   * Race Type
-   * @format int32
-   */
-  RaceType: 0 | 1 | 2;
+  RaceType: RaceTypes;
 }
 
 export interface BaseUserModel {
   /**
-   * First Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   FirstName: string;
   /**
-   * Email Address
    * @format email
    * @minLength 1
    * @maxLength 2048
@@ -203,72 +147,44 @@ export interface BaseUserModel {
   Email: string;
 }
 
-/** Build information model */
-export type BuildInfo = {
-  /**
-   * Git branch of instance
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+export interface BuildInfo {
+  /** @maxLength 2048 */
   Branch?: string | null;
-  /**
-   * Timestamp build was created
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+  /** @maxLength 2048 */
   BuildTime?: string | null;
-  /**
-   * Git tag of instance
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+  /** @maxLength 2048 */
   LastTag?: string | null;
-  /**
-   * Git commit hash of instance
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+  /** @maxLength 2048 */
   Commit?: string | null;
-};
+}
 
 export interface CandidateModel {
   /**
-   * Candidate Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  CandidateId?: string | null;
+  CandidateId: string;
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   Name: string;
   /**
-   * Party Affiliation
    * @format string
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   PartyAffiliation?: string | null;
   /**
-   * CandidateImageUrl
    * @format string
    * @maxLength 1024
    */
   CandidateImageUrl?: string | null;
+  /** @format date */
+  DateCreated: string;
+  Selected?: boolean;
   /**
-   * DateCreated
-   * @format date
-   * @maxLength 2048
-   */
-  DateCreated?: string | null;
-  /** Selected */
-  Selected?: boolean | null;
-  /**
-   * SelectedMetadata
    * @format string
    * @maxLength 1024
    */
@@ -276,183 +192,138 @@ export interface CandidateModel {
 }
 
 export interface CandidateModelList {
-  /**
-   * List of Candidates
-   * @maxItems 2048
-   */
-  Candidates?: CandidateModel[] | null;
+  /** @maxItems 2048 */
+  Candidates: CandidateModel[];
 }
 
 export interface CountBallotModel {
-  /**
-   * DateCreatedStart
-   * @format date
-   * @maxLength 2048
-   */
+  /** @format date */
   DateCreatedStart: string;
-  /**
-   * DateCreatedEnd
-   * @format date
-   * @maxLength 2048
-   */
+  /** @format date */
   DateCreatedEnd: string;
 }
 
 export interface CountBallotModelResponse {
   /**
-   * Number of Ballots
    * @format int64
    * @min 0
    */
-  BallotCount?: number | null;
+  BallotCount: number;
 }
 
 export interface ElectionModel {
   /**
-   * Election Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  ElectionId?: string | null;
+  ElectionId: string;
   /**
-   * Parent Election Id
    * @format string
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   ParentElectionId?: string | null;
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   Name: string;
   /**
-   * Description
    * @format string
+   * @minLength 1
    * @maxLength 32768
    */
-  Description?: string | null;
+  Description: string;
   /**
-   * HeaderImageUrl
    * @format string
+   * @minLength 1
    * @maxLength 32768
    */
-  HeaderImageUrl?: string | null;
-  /**
-   * StartDate
-   * @format date
-   * @maxLength 2048
-   */
+  HeaderImageUrl: string;
+  /** @format date */
   StartDate: string;
-  /**
-   * EndDate
-   * @format date
-   * @maxLength 2048
-   */
+  /** @format date */
   EndDate: string;
-  /**
-   * DateCreated
-   * @format date
-   * @maxLength 2048
-   */
-  DateCreated?: string | null;
-  /** List of Races */
-  Races: RaceModel[] | null;
+  /** @format date */
+  DateCreated: string;
+  Races: RaceModel[];
 }
 
 export interface ElectionModelList {
-  /**
-   * List of Elections
-   * @maxItems 2048
-   */
-  Elections?: ElectionModel[] | null;
+  /** @maxItems 2048 */
+  Elections: ElectionModel[];
+}
+
+export interface Error500Flag {
+  Error: boolean;
 }
 
 export interface FindBallotHashModel {
   /**
-   * Ballot Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  BallotId?: string | null;
+  BallotId: string;
 }
 
 export interface FindBallotModel {
   /**
-   * Ballot Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  BallotId?: string | null;
+  BallotId: string;
 }
 
 export interface FindCandidateModel {
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  Name?: string | null;
+  Name: string;
   /**
-   * Party Affiliation
    * @format string
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   PartyAffiliation?: string | null;
 }
 
 export interface FindElectionModel {
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  Name?: string | null;
+  Name: string;
 }
 
 export interface FindRaceModel {
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  Name?: string | null;
+  Name: string;
 }
 
 export interface FindTimestampModel {
-  /**
-   * DateCreatedStart
-   * @format date
-   * @maxLength 2048
-   */
+  /** @format date */
   DateCreatedStart: string;
-  /**
-   * DateCreatedEnd
-   * @format date
-   * @maxLength 2048
-   */
+  /** @format date */
   DateCreatedEnd: string;
 }
 
 export interface FindUserModel {
   /**
-   * First Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  FirstName?: string | null;
+  FirstName: string;
   /**
-   * Email Address
    * @format email
    * @maxLength 2048
    * @pattern ^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$
@@ -460,172 +331,139 @@ export interface FindUserModel {
   Email?: string | null;
 }
 
+/** @format int32 */
+export enum NostrKind {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+  Value3 = 3,
+  Value4 = 4,
+  Value5 = 5,
+  Value6 = 6,
+  Value7 = 7,
+  Value8 = 8,
+  Value16 = 16,
+  Value40 = 40,
+  Value41 = 41,
+  Value42 = 42,
+  Value43 = 43,
+  Value44 = 44,
+  Value1063 = 1063,
+  Value1311 = 1311,
+  Value1984 = 1984,
+  Value1985 = 1985,
+  Value9734 = 9734,
+  Value9735 = 9735,
+  Value10000 = 10000,
+  Value10001 = 10001,
+  Value10002 = 10002,
+  Value13194 = 13194,
+  Value22242 = 22242,
+  Value23194 = 23194,
+  Value23195 = 23195,
+  Value24133 = 24133,
+  Value27235 = 27235,
+  Value30000 = 30000,
+  Value30001 = 30001,
+  Value30008 = 30008,
+  Value30009 = 30009,
+  Value30023 = 30023,
+  Value30024 = 30024,
+  Value30078 = 30078,
+  Value30311 = 30311,
+  Value30402 = 30402,
+}
+
 export interface RaceModel {
   /**
-   * Race Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  RaceId?: string | null;
+  RaceId: string;
   /**
-   * Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   Name: string;
+  RaceType: RaceTypes;
   /**
-   * Race Type
-   * @format int32
-   */
-  RaceType: 0 | 1 | 2;
-  /**
-   * Race Type Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
    */
-  RaceTypeName?: string | null;
+  RaceTypeName: string;
   /**
-   * Race Type Metadata
    * @format string
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   RaceTypeMetadata?: string | null;
-  /**
-   * DateCreated
-   * @format date
-   * @maxLength 2048
-   */
-  DateCreated?: string | null;
-  /** List of Candidates */
-  Candidates: CandidateModel[] | null;
+  /** @format date */
+  DateCreated: string;
+  Candidates?: CandidateModel[] | null;
 }
 
 export interface RaceModelList {
-  /**
-   * List of Races
-   * @maxItems 2048
-   */
-  Races?: RaceModel[] | null;
+  /** @maxItems 2048 */
+  Races: RaceModel[];
+}
+
+/** @format int32 */
+export enum RaceTypes {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
 }
 
 export interface SecureString {
   /**
-   * Value
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  Value?: string | null;
+  Value: string;
 }
 
 export interface SignInEventModel {
+  Kind: NostrKind;
   /**
-   * Kind
-   * @format int32
-   */
-  Kind:
-    | 0
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5
-    | 6
-    | 7
-    | 8
-    | 16
-    | 40
-    | 41
-    | 42
-    | 43
-    | 44
-    | 1063
-    | 1311
-    | 1984
-    | 1985
-    | 9734
-    | 9735
-    | 10000
-    | 10001
-    | 10002
-    | 13194
-    | 22242
-    | 23194
-    | 23195
-    | 24133
-    | 27235
-    | 30000
-    | 30001
-    | 30008
-    | 30009
-    | 30023
-    | 30024
-    | 30078
-    | 30311
-    | 30402;
-  /**
-   * PubKey
    * @format string
+   * @minLength 1
    * @maxLength 2048
    */
   PubKey: string;
-  /**
-   * CreatedAt
-   * @format date
-   * @maxLength 2048
-   */
+  /** @format date */
   CreatedAt: string;
   /**
-   * Signature
    * @format string
+   * @minLength 1
    * @maxLength 2048
    */
   Signature: string;
   /**
-   * Content
    * @format string
+   * @minLength 1
    * @maxLength 2048
    */
   Content: string;
 }
 
 export interface StatusModel {
-  /**
-   * Current Time
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+  /** @maxLength 2048 */
   CurrentTime?: string | null;
   /**
-   * Stopwatch time to run this method
    * @format int64
    * @min 0
    */
-  ExecutionTime?: number | null;
-  /**
-   * Stopwatch time to run this method (message)
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+  ExecutionTime?: number;
+  /** @maxLength 2048 */
   ExecutionTimeMsg?: string | null;
-  /** True if method responds. Likely never false */
-  Responds?: boolean | null;
-  /**
-   * True if method responds. Likely never false (message)
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+  Responds?: boolean;
+  /** @maxLength 2048 */
   RespondsMsg?: string | null;
-  /** Build information model */
   BuildInfo?: BuildInfo;
-  /**
-   * Timestamp this Build information data model was populated
-   * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
-   */
+  /** @maxLength 2048 */
   BuildInfoReadTime?: string | null;
 }
 
@@ -635,70 +473,87 @@ export interface SubmitBallotModel {
 
 export interface SubmitBallotModelResponse {
   /**
-   * Ballot Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  BallotId?: string | null;
+  BallotId: string;
   /**
-   * Election Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  ElectionId?: string | null;
+  ElectionId: string;
   /**
-   * Message
    * @format string
+   * @minLength 1
    * @maxLength 32768
-   * @pattern ^[A-Za-z0-9]
    */
-  Message?: string | null;
+  Message: string;
+}
+
+export interface TimestampModel {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  TimestampId: string;
+  /** @format byte */
+  MerkleRoot: string;
+  /** @format byte */
+  MerkleRootHash: string;
+  /** @format byte */
+  TimestampHash: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  TimestampHashS: string;
+  /** @format date-time */
+  timestampAt?: string;
+  /**
+   * @format uri
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CalendarServerUrl: string;
+  /** @format date */
+  DateCreated: string;
 }
 
 export interface UserModel {
   /**
-   * User Id
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  UserId?: string | null;
+  UserId: string;
   /**
-   * Nostr PubKey
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
-  NostrPubKey?: string | null;
+  NostrPubKey: string;
   /**
-   * First Name
    * @format string
+   * @minLength 1
    * @maxLength 2048
-   * @pattern ^[A-Za-z0-9]
    */
   FirstName: string;
   /**
-   * Email Address
    * @format email
    * @minLength 1
    * @maxLength 2048
    * @pattern ^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$
    */
   Email: string;
-  /**
-   * DateCreated
-   * @format date
-   * @maxLength 2048
-   */
-  DateCreated?: string | null;
+  /** @format date */
+  DateCreated: string;
 }
 
 export interface UserModelList {
-  /**
-   * List of Users
-   * @maxItems 2048
-   */
-  Users?: UserModel[] | null;
+  /** @maxItems 2048 */
+  Users: UserModel[];
 }

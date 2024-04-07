@@ -4,11 +4,11 @@ import { Localization } from './services/Localization';
 import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
 
 export const emptyUserModel: UserModel = {
-  UserId: null,
-  NostrPubKey: null,
+  UserId: '',
+  NostrPubKey: '',
   FirstName: '',
   Email: '',
-  DateCreated: null,
+  DateCreated: '',
 };
 
 interface GlobalContextType {

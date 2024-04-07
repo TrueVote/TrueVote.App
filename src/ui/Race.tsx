@@ -159,29 +159,31 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
       </Checkbox.Group>
     );
   } else if (race.RaceType.toString() === RaceTypes.RankedChoice) {
-    return (
-      <Checkbox.Group
-        value={values}
-        onChange={handleChange}
-        key={race.RaceId}
-        label={raceLabel}
-        size='sm'
-        description={
-          race.RaceTypeMetadata !== null && race.RaceTypeMetadata !== ''
-            ? 'Ranked Choice - up to ' +
-              race.RaceTypeMetadata +
-              ' selections in order of preference'
-            : 'Ranked Choice'
-        } // TODO Localize English
-      >
-        <Space h='md'></Space>
-        <RankedChoiceList
-          candidates={race.Candidates}
-          avatarCount={avatarCount}
-          maxChoices={Number(race.RaceTypeMetadata)}
-        ></RankedChoiceList>
-      </Checkbox.Group>
-    );
+    if (race.Candidates) {
+      return (
+        <Checkbox.Group
+          value={values}
+          onChange={handleChange}
+          key={race.RaceId}
+          label={raceLabel}
+          size='sm'
+          description={
+            race.RaceTypeMetadata !== null && race.RaceTypeMetadata !== ''
+              ? 'Ranked Choice - up to ' +
+                race.RaceTypeMetadata +
+                ' selections in order of preference'
+              : 'Ranked Choice'
+          } // TODO Localize English
+        >
+          <Space h='md' />
+          <RankedChoiceList
+            candidates={race.Candidates}
+            avatarCount={avatarCount}
+            maxChoices={Number(race.RaceTypeMetadata)}
+          />
+        </Checkbox.Group>
+      );
+    }
   } else {
     return (
       <Group>

@@ -26,7 +26,6 @@ import {
   Title,
   useMantineColorScheme,
 } from '@mantine/core';
-import { IconCheck } from '@tabler/icons-react';
 import _ from 'lodash';
 import moment from 'moment';
 import { FC } from 'react';
@@ -101,7 +100,6 @@ const Ballot: FC = () => {
                   <Checkbox
                     key={c.CandidateId}
                     size={'sm'}
-                    icon={IconCheck}
                     color='green'
                     radius={'xl'}
                     labelPosition='left'
@@ -129,7 +127,6 @@ const Ballot: FC = () => {
                 <Checkbox
                   key={c.CandidateId}
                   size={'sm'}
-                  icon={IconCheck}
                   color='green'
                   radius={'xl'}
                   labelPosition='left'
