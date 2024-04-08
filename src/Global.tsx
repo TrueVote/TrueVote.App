@@ -4,20 +4,22 @@ import { Localization } from './services/Localization';
 import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
 
 export const emptyUserModel: UserModel = {
-  UserId: null,
-  NostrPubKey: null,
+  UserId: '',
+  NostrPubKey: '',
   FirstName: '',
   Email: '',
-  DateCreated: null,
+  DateCreated: '',
 };
 
 interface GlobalContextType {
   nostrProfile: NostrProfile | undefined;
   userModel: UserModel | undefined;
   localization: Localization | undefined;
+  accessToken: string | undefined;
   updateNostrProfile: (np: NostrProfile) => void;
   updateUserModel: (ui: UserModel) => void;
   updateLocalization: (loc: Localization) => void;
+  updateAccessToken: (token: string) => void;
 }
 
 const GlobalContext: Context<GlobalContextType | undefined> = createContext<
@@ -34,6 +36,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
   const [userModel, setUserModel] = useState<UserModel>(emptyUserModel);
   const [localization, setLocalization] = useState<Localization>();
+  const [accessToken, setAccessToken] = useState<string>('');
 
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
@@ -47,6 +50,10 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
     setLocalization(loc);
   };
 
+  const updateAccessToken: (token: string) => void = (token: string) => {
+    setAccessToken(token);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -56,6 +63,8 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
         updateUserModel,
         localization,
         updateLocalization,
+        accessToken,
+        updateAccessToken,
       }}
     >
       {children}

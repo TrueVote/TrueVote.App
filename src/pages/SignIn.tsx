@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { DBUserSignIn } from '@/services/DataClient';
+import { DBUserSignIn, storeJwt } from '@/services/DataClient';
 import {
   emptyNostrProfile,
   getNostrProfileInfo,
@@ -88,7 +88,7 @@ export const SignIn: FC = () => {
 
         // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
         const signInEventModel: SignInEventModel = {
-          Kind: NostrKind.ShortTextNote,
+          Kind: NostrKind.ShortTextNote as number,
           CreatedAt: new Date(dt * 1000).toISOString(),
           PubKey: npub,
           Signature: signature,
@@ -100,6 +100,7 @@ export const SignIn: FC = () => {
 
         updateNostrProfile(retreivedProfile);
         storeNostrKeys(npub, nsec);
+        storeJwt(res.Value);
         setVisible((v: boolean) => !v);
         navigate('/profile');
       } else {
