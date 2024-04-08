@@ -16,7 +16,7 @@ The main technology stack platform is [React](https://react.dev) and the visual 
 
 ## 🛠 Prerequisites
 
-* Setup and install the [TrueVote.Api](https://github.com/TrueVote/TrueVote.Api). Be sure and follow the '[proxy](https://github.com/TrueVote/TrueVote.Api#%EF%B8%8F-proxying-truevoteapi-locally)' step.
+* Setup and install the [TrueVote.Api](https://github.com/TrueVote/TrueVote.Api)
 * Install [NodeJS](https://nodejs.org/) and [Yarn](https://yarnpkg.com/getting-started/install)
 
 ## ⌨️ Install, Build, and Serve the Site
@@ -31,7 +31,7 @@ Serve up the instance of the app locally, using [Vite](https://vitejs.dev/).
 
 ![](public/static/vite-output.png)
 
-Vite expects the local TrueVote.Api to be listening on port 8080. See [vite.config.ts](vite.config.ts).
+Vite expects the local TrueVote.Api to be listening on port `5273`. See [vite.config.mjs](vite.config.mjs).
 
 ## 🎛️ Updating data models from the Api
 
