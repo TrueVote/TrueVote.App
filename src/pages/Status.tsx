@@ -1,6 +1,6 @@
 import { useGlobalContext } from '@/Global';
-import { StatusModel } from '@/TrueVote.Api';
-import { APIStatus } from '@/services/DataClient';
+import { SecureString, StatusModel } from '@/TrueVote.Api';
+import { APIAdd, APIPing, APIStatus } from '@/services/DataClient';
 import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
@@ -14,7 +14,9 @@ export const Status: FC = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [statusData, setStatusData] = useState<StatusModel | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [pingData, setPingData] = useState<SecureString | null>(null);
+  const [addData, setAddData] = useState<SecureString | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
   const { updateNostrProfile } = useGlobalContext();
 
@@ -24,15 +26,45 @@ export const Status: FC = () => {
     nostrSignOut();
   };
 
+  const setError: any = (errorMessage: string) => {
+    setErrors((prevErrors) => [...prevErrors, errorMessage]);
+  };
+
   useEffect(() => {
     // Call the APIStatus function
     APIStatus(signOutFunction)
       .then((data: StatusModel) => {
         setStatusData(data);
       })
-      .catch((e: any) => {
-        setError('An error occurred: ' + e.status + ' : ' + e.statusText);
-        console.error('Error:', e);
+      .catch((e: SecureString) => {
+        setError('A status error occurred: ' + e.Value);
+        console.error('Status Error:', e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    // Call the APIPing function
+    APIPing(signOutFunction)
+      .then((data: SecureString) => {
+        setPingData(data);
+      })
+      .catch((e: SecureString) => {
+        setError('A ping error occurred: ' + e.Value);
+        console.error('Ping Error:', e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    // Call the APIPing function
+    APIAdd(signOutFunction)
+      .then((data: SecureString) => {
+        setAddData(data);
+      })
+      .catch((e: SecureString) => {
+        setError('An add error occurred: ' + e.Value);
+        console.error('Add Error:', e);
       })
       .finally(() => {
         setLoading(false);
@@ -44,28 +76,56 @@ export const Status: FC = () => {
   }
 
   console.info('Status Data', statusData);
+  console.info('Ping Data', pingData);
+  console.info('Add Data', addData);
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Stack gap={32}>
         <Hero title='Status' />
-        <Text size='xl'>API Status</Text>
       </Stack>
       <Group mt='md' mb='xs'>
-        <ScrollArea className={classes.rawJson}>
-          {!error ? (
-            <ReactJson
-              src={statusData ?? Object.create(null)}
-              name='StatusData'
-              collapsed={false}
-              theme={getColor()}
-            />
-          ) : (
-            <></>
-          )}
-          {error ? <Text>{error}</Text> : <></>}
-        </ScrollArea>
+        <Stack>
+          <Text size='xl'>
+            API Ping Status:{' '}
+            {pingData !== undefined && pingData?.Value !== undefined
+              ? String(pingData?.Value)
+              : '<error>'}
+          </Text>
+        </Stack>
       </Group>
+      <Group mt='md' mb='xs'>
+        <Stack>
+          <Text size='xl'>
+            API Add Status (Secure):{' '}
+            {addData !== undefined && addData?.Value !== undefined
+              ? String(addData?.Value)
+              : '<error>'}
+          </Text>
+        </Stack>
+      </Group>
+      <Group mt='md' mb='xs'>
+        <Stack>
+          <Text size='xl'>API Status:</Text>
+          {statusData !== null && statusData !== undefined ? (
+            <ScrollArea className={classes.rawJson}>
+              <ReactJson
+                src={statusData ?? Object.create(null)}
+                name='StatusData'
+                collapsed={false}
+                theme={getColor()}
+              />
+            </ScrollArea>
+          ) : (
+            <Text size='xl'>{String('<error>')}</Text>
+          )}
+        </Stack>
+      </Group>
+      {errors.length > 0 ? (
+        errors.map((e: string, index: number) => <Text key={index}>Error: {e}</Text>)
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };
