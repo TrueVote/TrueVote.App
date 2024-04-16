@@ -24,6 +24,10 @@ export const getJwt = (): string | null => {
   return localStorage.getItem(JwtStorageKey) ?? null;
 };
 
+export const jwtSignOut = (): void => {
+  localStorage.removeItem(JwtStorageKey);
+};
+
 const setHeaders: any = () => {
   const headers: HeadersInit = {
     'Content-type': 'application/json; charset=UTF-8',

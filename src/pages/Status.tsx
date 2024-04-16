@@ -1,7 +1,5 @@
-import { useGlobalContext } from '@/Global';
 import { SecureString, StatusModel } from '@/TrueVote.Api';
-import { APIAdd, APIPing, APIStatus } from '@/services/DataClient';
-import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
+import { APIAdd, APIPing, APIStatus, jwtSignOut } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -18,12 +16,13 @@ export const Status: FC = () => {
   const [addData, setAddData] = useState<SecureString | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
-  const { updateNostrProfile } = useGlobalContext();
+  // const { updateNostrProfile } = useGlobalContext();
 
   const signOutFunction: any = () => {
     console.info('~signOutFunction');
-    updateNostrProfile(emptyNostrProfile);
-    nostrSignOut();
+    // updateNostrProfile(emptyNostrProfile);
+    // nostrSignOut();
+    jwtSignOut();
   };
 
   const setError: any = (errorMessage: string) => {
