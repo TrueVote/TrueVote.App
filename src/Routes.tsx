@@ -15,6 +15,7 @@ import { SignIn } from './pages/SignIn';
 import { SignOut } from './pages/SignOut';
 import { Status } from './pages/Status';
 import { Thanks } from './pages/Thanks';
+import { Version } from './pages/Version';
 
 export const ROUTES: ReactElement = (
   <Routes>
@@ -33,6 +34,7 @@ export const ROUTES: ReactElement = (
       <Route path='/signin' element={<SignIn />} />
       <Route path='/signout' element={<SignOut />} />
       <Route path='/register' element={<Register />} />
+      <Route path='/version' element={<Version />} />
     </Route>
     <Route path='*' element={<Navigate to='/' replace />} />
   </Routes>
