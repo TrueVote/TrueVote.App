@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "yarn build-version && tsc && vite build",
     "serve": "http-server dist",
     "preview": "vite preview",
     "lint": "eslint \"**/*.{ts,tsx}\"",
@@ -25,6 +25,7 @@
     "refresh-api:local": "yarn build-api:local && yarn fix-api",
     "refresh-api:prod": "yarn build-api:local && yarn fix-api",
     "fix-api": "ts-node -P tsconfig.commonjs.json ./fixApi.ts",
+    "build-version": "bash ./scripts/build-version.sh",
     "update-packages": "ncu -u"
   },
   "dependencies": {

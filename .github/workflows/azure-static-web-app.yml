@@ -25,6 +25,14 @@ jobs:
       - name: Set Node.js environment
         run: echo "NODE_VERSION=20" >> $GITHUB_ENV
 
+      - name: Versions
+        run: |
+          node --version
+          tsc --version
+          git --version
+          az --version
+          bash --version
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

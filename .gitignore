@@ -25,3 +25,4 @@ dist-ssr
 *.sw?
 storybook-static/
 TrueVote.Api.swagger.json
+version.json
