@@ -1,4 +1,3 @@
-import { useGlobalContext } from '@/Global';
 import {
   ElectionModel,
   RaceModel,
@@ -6,7 +5,6 @@ import {
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
-import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
@@ -44,14 +42,6 @@ const Election: FC = () => {
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
     setOpened((v: any) => !v);
-  };
-
-  const { updateNostrProfile } = useGlobalContext();
-
-  const signOutFunction: any = () => {
-    console.info('~signOutFunction');
-    updateNostrProfile(emptyNostrProfile);
-    nostrSignOut();
   };
 
   const { loading, error, data } = DBGetElectionById(params.electionId);
@@ -106,7 +96,7 @@ const Election: FC = () => {
     const submitBallotModel: SubmitBallotModel = {} as SubmitBallotModel;
     submitBallotModel.Election = modifiedElection;
 
-    DBSubmitBallot(submitBallotModel, signOutFunction)
+    DBSubmitBallot(submitBallotModel)
       .then((res: SubmitBallotModelResponse) => {
         console.info('Success from ballot submission', res);
         setVisible((v: any) => !v);

@@ -1,5 +1,5 @@
 import { SecureString, StatusModel } from '@/TrueVote.Api';
-import { APIAdd, APIPing, APIStatus, jwtSignOut } from '@/services/DataClient';
+import { APIAdd, APIPing, APIStatus } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -18,20 +18,13 @@ export const Status: FC = () => {
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
   // const { updateNostrProfile } = useGlobalContext();
 
-  const signOutFunction: any = () => {
-    console.info('~signOutFunction');
-    // updateNostrProfile(emptyNostrProfile);
-    // nostrSignOut();
-    jwtSignOut();
-  };
-
   const setError: any = (errorMessage: string) => {
     setErrors((prevErrors) => [...prevErrors, errorMessage]);
   };
 
   useEffect(() => {
     // Call the APIStatus function
-    APIStatus(signOutFunction)
+    APIStatus()
       .then((data: StatusModel) => {
         setStatusData(data);
       })
@@ -44,7 +37,7 @@ export const Status: FC = () => {
       });
 
     // Call the APIPing function
-    APIPing(signOutFunction)
+    APIPing()
       .then((data: SecureString) => {
         setPingData(data);
       })
@@ -57,7 +50,7 @@ export const Status: FC = () => {
       });
 
     // Call the APIPing function
-    APIAdd(signOutFunction)
+    APIAdd()
       .then((data: SecureString) => {
         setAddData(data);
       })

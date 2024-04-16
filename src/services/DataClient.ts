@@ -216,7 +216,6 @@ export const DBGetBallotById = (
 
 export const DBSubmitBallot = async (
   submitBallotModel: SubmitBallotModel,
-  signOutFunction: () => void,
 ): Promise<SubmitBallotModelResponse> => {
   console.info('DBSubmitBallot->submitBallotModel', submitBallotModel);
 
@@ -224,16 +223,11 @@ export const DBSubmitBallot = async (
   console.info('Body: /ballot/submitballot', body);
 
   return await Promise.resolve(
-    FetchHelper.fetchWithToken(
-      getJwt(),
-      EnvConfig.apiRoot + '/api/ballot/submitballot',
-      signOutFunction,
-      {
-        method: 'POST',
-        body: body,
-        headers: setHeaders(),
-      },
-    )
+    FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/ballot/submitballot', {
+      method: 'POST',
+      body: body,
+      headers: setHeaders(),
+    })
       .then((res: Response) => {
         console.info('Response: /ballot/submitballot', res);
         if (res.status === 409) {
@@ -254,19 +248,14 @@ export const DBSubmitBallot = async (
   );
 };
 
-export const APIStatus = async (signOutFunction: () => void): Promise<StatusModel> => {
+export const APIStatus = async (): Promise<StatusModel> => {
   console.info('Request: /status');
 
   try {
-    const response = await FetchHelper.fetchWithToken(
-      getJwt(),
-      EnvConfig.apiRoot + '/api/status',
-      signOutFunction,
-      {
-        method: 'GET',
-        headers: setHeaders(),
-      },
-    );
+    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/status', {
+      method: 'GET',
+      headers: setHeaders(),
+    });
 
     console.info('Response: /status', response);
 
@@ -285,19 +274,14 @@ export const APIStatus = async (signOutFunction: () => void): Promise<StatusMode
   }
 };
 
-export const APIPing = async (signOutFunction: () => void): Promise<SecureString> => {
+export const APIPing = async (): Promise<SecureString> => {
   console.info('Request: /ping');
 
   try {
-    const response = await FetchHelper.fetchWithToken(
-      getJwt(),
-      EnvConfig.apiRoot + '/api/ping',
-      signOutFunction,
-      {
-        method: 'GET',
-        headers: setHeaders(),
-      },
-    );
+    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/ping', {
+      method: 'GET',
+      headers: setHeaders(),
+    });
 
     console.info('Response: /ping', response);
 
@@ -316,19 +300,14 @@ export const APIPing = async (signOutFunction: () => void): Promise<SecureString
   }
 };
 
-export const APIAdd = async (signOutFunction: () => void): Promise<SecureString> => {
+export const APIAdd = async (): Promise<SecureString> => {
   console.info('Request: /add');
 
   try {
-    const response = await FetchHelper.fetchWithToken(
-      getJwt(),
-      EnvConfig.apiRoot + '/api/add',
-      signOutFunction,
-      {
-        method: 'GET',
-        headers: setHeaders(),
-      },
-    );
+    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/add', {
+      method: 'GET',
+      headers: setHeaders(),
+    });
 
     console.info('Response: /add', response);
 

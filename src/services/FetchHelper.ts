@@ -33,7 +33,6 @@ export class FetchHelper {
   public static async fetchWithToken(
     currentToken: string | null,
     url: string,
-    signOutFunction: () => void,
     options?: RequestInit,
   ): Promise<Response> {
     //const { nostrProfile, updateNostrProfile } = useGlobalState();
@@ -68,12 +67,8 @@ export class FetchHelper {
           storeJwt(res.Value);
 
           // Call self recursively now that we have a new token, this will re-submit the request with the new token
-          return this.fetchWithToken(res.Value, url, signOutFunction);
-        } else {
-          signOutFunction();
+          return this.fetchWithToken(res.Value, url);
         }
-      } else {
-        signOutFunction();
       }
 
       // Return the original response and the caller will handle
