@@ -1,12 +1,38 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/typedef */
+import { SecureString } from '@/TrueVote.Api';
 import { storeJwt } from './DataClient';
+import { getNostrNsecFromStorage } from './NostrHelper';
+import { signInWithNostr } from './PagerHelper';
 
 export class FetchHelper {
+  public static handleError(e: SecureString): void {
+    console.error('Error from FetchHelper->signIn', e);
+  }
+
+  private static async checkForExpiredToken(response: Response): Promise<boolean> {
+    console.debug('FetchHelper->checkForExpiredToken()', response);
+
+    // Check if the response has a 401 Unauthorized status
+    if (response.status !== 401) {
+      return false;
+    }
+
+    // Check if the www-authenticate header is present
+    const wwwAuthenticate = response.headers.get('www-authenticate');
+    if (wwwAuthenticate) {
+      // Parse the www-authenticate header to check for the 'error="invalid_token"' and 'error_description' values
+      if (wwwAuthenticate.includes('invalid_token') && wwwAuthenticate.includes('expired')) {
+        return true; // Token has expired
+      }
+    }
+
+    return false; // Token has not expired. Must be some other reason.
+  }
+
   public static async fetchWithToken(
     currentToken: string | null,
     url: string,
-    signOutFunction: () => void,
     options?: RequestInit,
   ): Promise<Response> {
     //const { nostrProfile, updateNostrProfile } = useGlobalState();
@@ -28,12 +54,24 @@ export class FetchHelper {
     // Perform the fetch request
     const response = await fetch(url, options);
 
-    // Server says no, need to logout user client side
-    if (response.status === 401) {
-      console.error('FetchHelper, 401 Unauthorized');
+    // Determine if it is a 401 because the token is expired or another reason. Inspect the headers.
+    if (response.status === 401 && (await FetchHelper.checkForExpiredToken(response))) {
+      console.error('FetchHelper, 401 Unauthorized - Expired Token', response);
 
-      signOutFunction();
+      // Try and sign in again
+      const nsec: string | null = getNostrNsecFromStorage();
+      if (nsec !== null && String(nsec).length > 0) {
+        const { res } = await signInWithNostr(nsec, FetchHelper.handleError);
+        if (res) {
+          console.info('Success from FetchHelper->signIn', res);
+          storeJwt(res.Value);
 
+          // Call self recursively now that we have a new token, this will re-submit the request with the new token
+          return this.fetchWithToken(res.Value, url);
+        }
+      }
+
+      // Return the original response and the caller will handle
       return response;
     }
 

@@ -1,17 +1,13 @@
 import { useGlobalContext } from '@/Global';
-import { DBUserSignIn, storeJwt } from '@/services/DataClient';
+import { storeJwt } from '@/services/DataClient';
 import {
   emptyNostrProfile,
-  getNostrProfileInfo,
   nostrKeyKeyHandler,
-  NostrProfile,
   nostrSignOut,
-  npubfromnsec,
-  signEvent,
   storeNostrKeys,
 } from '@/services/NostrHelper';
-import { SecureString, SignInEventModel } from '@/TrueVote.Api';
-import { NostrKind } from '@/TrueVote.Api.ManualModels';
+import { signInWithNostr } from '@/services/PagerHelper';
+import { SecureString } from '@/TrueVote.Api';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -68,47 +64,14 @@ export const SignIn: FC = () => {
 
     console.info('Nostr Key:', nsec);
 
-    try {
-      const npub: string = npubfromnsec(nsec);
-
-      const retreivedProfile: NostrProfile = await getNostrProfileInfo(npub);
-      console.info('Returned Back', retreivedProfile);
-
-      if (retreivedProfile && retreivedProfile !== undefined) {
-        const dt: number = Math.floor(new Date().getTime() / 1000);
-        const content: string = 'SIGNIN';
-
-        // Sign the event we're going to send to the API
-        const signature: string = await signEvent(nsec, npub, content, String(dt));
-        console.info('Returned from signEvent', signature, npub);
-        if (signature === undefined || npub === undefined) {
-          handleError({ Value: 'No data returned from signEvent' });
-          return;
-        }
-
-        // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
-        const signInEventModel: SignInEventModel = {
-          Kind: NostrKind.ShortTextNote as number,
-          CreatedAt: new Date(dt * 1000).toISOString(),
-          PubKey: npub,
-          Signature: signature,
-          Content: 'SIGNIN',
-        };
-
-        const res: SecureString = await DBUserSignIn(signInEventModel);
-        console.info('Success from signIn', res);
-
-        updateNostrProfile(retreivedProfile);
-        storeNostrKeys(npub, nsec);
-        storeJwt(res.Value);
-        setVisible((v: boolean) => !v);
-        navigate('/profile');
-      } else {
-        handleError({ Value: 'Could not retreive nostr profile' });
-      }
-    } catch (e) {
-      console.error('Exception getting nostrProfileInfo', e);
-      handleError(e);
+    const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
+    if (res) {
+      console.info('Success from signIn', res);
+      updateNostrProfile(retrievedProfile);
+      storeNostrKeys(npub, nsec);
+      storeJwt(res.Value);
+      setVisible((v: boolean) => !v);
+      navigate('/profile');
     }
   };
 
