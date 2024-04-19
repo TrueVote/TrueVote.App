@@ -355,3 +355,21 @@ export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<
     throw error;
   }
 };
+
+// TODO Implement AD-100 once backend ready
+export const DBSavePreferences = async (): Promise<SecureString> => {
+  console.info('DBSavePreferences');
+
+  try {
+    return new Promise((resolve) => {
+      const message: SecureString = { Value: 'Preferences saved successfully.' };
+
+      setTimeout(() => {
+        resolve(message);
+      }, 3000);
+    });
+  } catch (error) {
+    console.error('Error in DBSavePreferences', error);
+    throw error;
+  }
+};

@@ -330,6 +330,11 @@
   width: 100%;
 }
 
+.tableAuto {
+  width: auto;
+  border-collapse: collapse;
+}
+
 .profileButtons {
   align-items: center;
   width: 100%;

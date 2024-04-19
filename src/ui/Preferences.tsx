@@ -1,3 +1,5 @@
+import { SecureString } from '@/TrueVote.Api';
+import { DBSavePreferences } from '@/services/DataClient';
 import { NostrProfile } from '@/services/NostrHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
@@ -26,6 +28,24 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
   const clipboard: any = useClipboard({ timeout: 500 });
   const emailIcon: any = <IconMail style={{ width: rem(16), height: rem(16) }} />;
   const [emailValue, setEmailValue] = useState(nostrProfile?.nip05);
+  const [isClicked, setIsClicked] = useState(false);
+  const [savedPreferences, setSavedPreferences] = useState('');
+
+  const savePreferences: any = (): any => {
+    setIsClicked(true);
+    setSavedPreferences('Saving');
+    DBSavePreferences()
+      .then((res: SecureString) => {
+        console.info('DBSavePreferences', res);
+        setSavedPreferences('Saved');
+        setTimeout(() => setIsClicked(false), 3000);
+      })
+      .catch((e: any) => {
+        console.error('Error from DBSavePreferences', e);
+        setSavedPreferences('Error saving preferences');
+        setTimeout(() => setIsClicked(false), 3000);
+      });
+  };
 
   return (
     <Accordion
@@ -140,9 +160,25 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
             </Table.Tbody>
           </Table>
           <Space h='md'></Space>
-          <Button radius='md' color='green' variant='light'>
-            Save Preferences
-          </Button>
+          <Table className={classes.tableAuto} withRowBorders={false}>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td className={classes.tdLeft}>
+                  <Button
+                    radius='md'
+                    color='green'
+                    variant='light'
+                    onClick={(): void => savePreferences()}
+                  >
+                    Save Preferences
+                  </Button>
+                </Table.Td>
+                <Table.Td className={classes.tdLeft}>
+                  <Text>{isClicked ? savedPreferences : ''}</Text>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
         </Accordion.Panel>
       </Accordion.Item>
     </Accordion>
