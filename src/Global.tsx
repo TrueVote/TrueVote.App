@@ -6,7 +6,7 @@ import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
 export const emptyUserModel: UserModel = {
   UserId: '',
   NostrPubKey: '',
-  FirstName: '',
+  FullName: '',
   Email: '',
   DateCreated: '',
 };

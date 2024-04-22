@@ -137,7 +137,7 @@ export interface BaseUserModel {
    * @minLength 1
    * @maxLength 2048
    */
-  FirstName: string;
+  FullName: string;
   /**
    * @format email
    * @minLength 1
@@ -145,6 +145,12 @@ export interface BaseUserModel {
    * @pattern ^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$
    */
   Email: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  NostrPubKey: string;
 }
 
 export interface BuildInfo {
@@ -322,7 +328,7 @@ export interface FindUserModel {
    * @minLength 1
    * @maxLength 2048
    */
-  FirstName: string;
+  FullName: string;
   /**
    * @format email
    * @maxLength 2048
@@ -541,7 +547,7 @@ export interface UserModel {
    * @minLength 1
    * @maxLength 2048
    */
-  FirstName: string;
+  FullName: string;
   /**
    * @format email
    * @minLength 1
