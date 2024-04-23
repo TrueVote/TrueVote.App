@@ -1,4 +1,4 @@
-import { SecureString, SignInEventModel } from '@/TrueVote.Api';
+import { BaseUserModel, SecureString, SignInEventModel } from '@/TrueVote.Api';
 import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { DBUserSignIn } from './DataClient';
 import { NostrProfile, getNostrProfileInfo, npubfromnsec, signEvent } from './NostrHelper';
@@ -17,10 +17,14 @@ export const signInWithNostr: (
 
     if (retrievedProfile && retrievedProfile !== undefined) {
       const dt: number = Math.floor(new Date().getTime() / 1000);
-      const content: string = 'SIGNIN';
+      const content: BaseUserModel = {
+        Email: retrievedProfile.nip05,
+        FullName: retrievedProfile.displayName,
+        NostrPubKey: npub,
+      };
 
       // Sign the event we're going to send to the API
-      const signature: string = await signEvent(nsec, npub, content, String(dt));
+      const signature: string = await signEvent(nsec, npub, JSON.stringify(content), String(dt));
 
       if (signature === undefined || npub === undefined) {
         handleError({ Value: 'No data returned from signEvent' });
@@ -33,7 +37,7 @@ export const signInWithNostr: (
         CreatedAt: new Date(dt * 1000).toISOString(),
         PubKey: npub,
         Signature: signature,
-        Content: 'SIGNIN',
+        Content: JSON.stringify(content),
       };
 
       const res: SecureString = await DBUserSignIn(signInEventModel);
