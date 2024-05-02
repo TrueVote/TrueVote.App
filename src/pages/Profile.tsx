@@ -1,4 +1,6 @@
-import { useGlobalContext } from '@/Global';
+import { emptyUserModel, useGlobalContext } from '@/Global';
+import { getNostrNpubFromStorage } from '@/services/NostrHelper';
+import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { ElectionCode } from '@/ui/ElelctionCode';
 import { Hero } from '@/ui/Hero';
 import { Preferences } from '@/ui/Preferences';
@@ -9,15 +11,26 @@ import { FC } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const Profile: FC = () => {
+  return (
+    <Container size='xs' px='xs' className={classes.container}>
+      <Hero title='Profile' />
+      <LoadProfile />
+    </Container>
+  );
+};
+
+const LoadProfile: any = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile } = useGlobalContext();
   const { userModel } = useGlobalContext();
 
+  // Quick check to storage to see if we're even able to fetch a profile
+  if (getNostrNpubFromStorage() !== null && userModel === emptyUserModel) {
+    return <TrueVoteLoader />;
+  }
+
   return (
-    <Container size='xs' px='xs' className={classes.container}>
-      <Stack gap={32}>
-        <Hero title='Profile' />
-      </Stack>
+    <>
       {nostrProfile !== undefined &&
       String(nostrProfile.displayName).length > 0 &&
       userModel !== undefined &&
@@ -109,6 +122,6 @@ export const Profile: FC = () => {
           </Stack>
         </>
       )}
-    </Container>
+    </>
   );
 };
