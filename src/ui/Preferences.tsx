@@ -32,6 +32,30 @@ export const Preferences: any = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [savedPreferences, setSavedPreferences] = useState('');
 
+  const [checkedValues, setCheckedValues] = useState<string[]>(
+    userModel?.UserPreferences
+      ? Object.entries(userModel.UserPreferences)
+          .filter(([_, value]) => value)
+          .map(([key]) => key)
+      : [],
+  );
+
+  const handleGroupChange = (values: string[]) => {
+    setCheckedValues(values);
+
+    const updatedPreferences = Object.fromEntries(
+      Object.entries(userModel?.UserPreferences || {}).map(([key, _]) => [
+        key,
+        values.includes(key),
+      ]),
+    );
+
+    if (userModel) {
+      userModel.UserPreferences = updatedPreferences;
+      updateUserModel(userModel);
+    }
+  };
+
   const savePreferences: any = (): any => {
     console.info('savePreferences()');
 
@@ -52,7 +76,7 @@ export const Preferences: any = () => {
       })
       .catch((e: any) => {
         console.error('Error from DBSaveUser', e);
-        setSavedPreferences('Error saving preferences: ' + e);
+        setSavedPreferences('Error saving preferences: ' + e.Value);
         setTimeout(() => setIsClicked(false), 3000);
       });
   };
@@ -125,41 +149,39 @@ export const Preferences: any = () => {
                   <Stack>
                     <Checkbox.Group
                       label='Push Notifications:'
+                      value={checkedValues}
+                      onChange={handleGroupChange}
                       size='sm'
-                      description={'Select notification types'}
+                      description='Select notification types'
                     >
                       <Space h='md'></Space>
                       <Checkbox
-                        value='NewElections'
+                        value='NotificationNewElections'
                         label='New Elections'
                         key='New Elections'
                         size='sm'
                         className={classes.radioBody}
-                        checked={userModel?.UserPreferences.NotificationNewElections}
                       />
                       <Checkbox
-                        value='ElectionStart'
+                        value='NotificationElectionStart'
                         label='Election Start'
                         key='Election Start'
                         size='sm'
                         className={classes.radioBody}
-                        checked={userModel?.UserPreferences.NotificationElectionStart}
                       />
                       <Checkbox
-                        value='ElectionEnd'
+                        value='NotificationElectionEnd'
                         label='Election End'
                         key='Election End'
                         size='sm'
                         className={classes.radioBody}
-                        checked={userModel?.UserPreferences.NotificationElectionEnd}
                       />
                       <Checkbox
-                        value='NewTrueVoteFeatures'
+                        value='NotificationNewTrueVoteFeatures'
                         label='New TrueVote Features'
                         key='New TrueVote Features'
                         size='sm'
                         className={classes.radioBody}
-                        checked={userModel?.UserPreferences.NotificationNewTrueVoteFeatures}
                       />
                     </Checkbox.Group>
                   </Stack>
