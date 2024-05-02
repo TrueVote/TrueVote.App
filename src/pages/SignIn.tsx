@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { storeJwt } from '@/services/DataClient';
+import { jwtSignOut, storeJwt } from '@/services/DataClient';
 import {
   emptyNostrProfile,
   nostrKeyKeyHandler,
@@ -58,6 +58,7 @@ export const SignIn: FC = () => {
     errorModal(e.Value);
     updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
+    jwtSignOut();
   };
 
   const signInClick: any = async () => {

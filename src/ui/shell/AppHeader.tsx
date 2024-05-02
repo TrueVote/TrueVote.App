@@ -1,5 +1,6 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
 import { SecureString } from '@/TrueVote.Api';
+import { jwtSignOut } from '@/services/DataClient';
 import { Localization } from '@/services/Localization';
 import { emptyNostrProfile, getNostrNsecFromStorage, nostrSignOut } from '@/services/NostrHelper';
 import { signInWithNostr } from '@/services/PagerHelper';
@@ -44,6 +45,7 @@ export const AppHeader: FC = () => {
       console.error('Error from fetchNostrAndUserProfile', e);
       updateNostrProfile(emptyNostrProfile);
       nostrSignOut();
+      jwtSignOut();
     };
 
     // Async function to fetch the user profile
@@ -56,6 +58,7 @@ export const AppHeader: FC = () => {
         } else {
           updateNostrProfile(emptyNostrProfile);
           nostrSignOut();
+          jwtSignOut();
         }
         if (res?.User && res.User !== undefined) {
           console.info('Updating userModel from AppHeader Load', res.User);
@@ -68,6 +71,7 @@ export const AppHeader: FC = () => {
         console.error('Error fetching nostrProfile:', error);
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
+        jwtSignOut();
       }
     };
 

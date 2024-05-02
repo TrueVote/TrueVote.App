@@ -1,4 +1,5 @@
 import { useGlobalContext } from '@/Global';
+import { jwtSignOut } from '@/services/DataClient';
 import {
   emptyNostrProfile,
   generateKeyPair,
@@ -57,6 +58,7 @@ export const Register: FC = () => {
         console.error('Caught Error generating nostr profile:', e);
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
+        jwtSignOut();
         setVisible((v: any) => !v);
         errorModal(e);
       });
