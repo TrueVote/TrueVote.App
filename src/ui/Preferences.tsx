@@ -1,6 +1,6 @@
-import { SecureString } from '@/TrueVote.Api';
-import { DBSavePreferences } from '@/services/DataClient';
-import { NostrProfile } from '@/services/NostrHelper';
+import { useGlobalContext } from '@/Global';
+import { UserModel } from '@/TrueVote.Api';
+import { DBSaveUser } from '@/services/DataClient';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   Accordion,
@@ -24,25 +24,35 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
-export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile }) => {
+export const Preferences: any = () => {
   const clipboard: any = useClipboard({ timeout: 500 });
   const emailIcon: any = <IconMail style={{ width: rem(16), height: rem(16) }} />;
-  const [emailValue, setEmailValue] = useState(nostrProfile?.nip05);
+  const { nostrProfile } = useGlobalContext();
+  const { userModel, updateUserModel } = useGlobalContext();
   const [isClicked, setIsClicked] = useState(false);
   const [savedPreferences, setSavedPreferences] = useState('');
 
   const savePreferences: any = (): any => {
+    console.info('savePreferences()');
+
+    if (userModel === undefined) {
+      setSavedPreferences('User Model undefined');
+      setTimeout(() => setIsClicked(false), 3000);
+      return;
+    }
+
     setIsClicked(true);
     setSavedPreferences('Saving');
-    DBSavePreferences()
-      .then((res: SecureString) => {
-        console.info('DBSavePreferences', res);
+    DBSaveUser(userModel)
+      .then((res: UserModel) => {
+        console.info('DBSaveUser', res);
+        updateUserModel(res);
         setSavedPreferences('Saved');
         setTimeout(() => setIsClicked(false), 3000);
       })
       .catch((e: any) => {
-        console.error('Error from DBSavePreferences', e);
-        setSavedPreferences('Error saving preferences');
+        console.error('Error from DBSaveUser', e);
+        setSavedPreferences('Error saving preferences: ' + e);
         setTimeout(() => setIsClicked(false), 3000);
       });
   };
@@ -71,8 +81,8 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                   <TextInput
                     leftSection={emailIcon}
                     placeholder='Email Address'
-                    value={emailValue}
-                    onChange={(event: any): void => setEmailValue(event.currentTarget.value)}
+                    onChange={(event: any): void => console.info(event.currentTarget.value)}
+                    value={userModel?.Email}
                   ></TextInput>
                 </Table.Td>
               </Table.Tr>
@@ -85,16 +95,16 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                         <Table.Td className={classes.tdLeft}>
                           <HoverCard shadow='md'>
                             <HoverCard.Target>
-                              <span className={classes.textChoppedSmall}>{nostrProfile.npub}</span>
+                              <span className={classes.textChoppedSmall}>{nostrProfile?.npub}</span>
                             </HoverCard.Target>
                             <HoverCard.Dropdown>
-                              <Text size='sm'>{nostrProfile.npub}</Text>
+                              <Text size='sm'>{nostrProfile?.npub}</Text>
                             </HoverCard.Dropdown>
                           </HoverCard>
                         </Table.Td>
                         <Table.Td>
                           <ActionIcon
-                            onClick={(): void => clipboard.copy(nostrProfile.npub)}
+                            onClick={(): void => clipboard.copy(nostrProfile?.npub)}
                             aria-label='Copy'
                             variant='transparent'
                           >
@@ -115,12 +125,6 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                   <Stack>
                     <Checkbox.Group
                       label='Push Notifications:'
-                      defaultValue={[
-                        'NewElections',
-                        'ElectionStart',
-                        'ElectionEnd',
-                        'NewTrueVoteFeatures',
-                      ]}
                       size='sm'
                       description={'Select notification types'}
                     >
@@ -131,6 +135,7 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                         key='New Elections'
                         size='sm'
                         className={classes.radioBody}
+                        checked={userModel?.UserPreferences.NotificationNewElections}
                       />
                       <Checkbox
                         value='ElectionStart'
@@ -138,6 +143,7 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                         key='Election Start'
                         size='sm'
                         className={classes.radioBody}
+                        checked={userModel?.UserPreferences.NotificationElectionStart}
                       />
                       <Checkbox
                         value='ElectionEnd'
@@ -145,6 +151,7 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                         key='Election End'
                         size='sm'
                         className={classes.radioBody}
+                        checked={userModel?.UserPreferences.NotificationElectionEnd}
                       />
                       <Checkbox
                         value='NewTrueVoteFeatures'
@@ -152,6 +159,7 @@ export const Preferences: any = ({ nostrProfile }: { nostrProfile: NostrProfile 
                         key='New TrueVote Features'
                         size='sm'
                         className={classes.radioBody}
+                        checked={userModel?.UserPreferences.NotificationNewTrueVoteFeatures}
                       />
                     </Checkbox.Group>
                   </Stack>

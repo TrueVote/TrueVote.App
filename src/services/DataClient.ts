@@ -7,9 +7,11 @@ import {
   ElectionModel,
   SecureString,
   SignInEventModel,
+  SignInResponse,
   StatusModel,
   SubmitBallotModel,
   SubmitBallotModelResponse,
+  UserModel,
 } from '@/TrueVote.Api';
 import { QueryResult, TypedDocumentNode, gql, useQuery } from '@apollo/client';
 import { FetchHelper } from './FetchHelper';
@@ -326,7 +328,7 @@ export const APIAdd = async (): Promise<SecureString> => {
   }
 };
 
-export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<SecureString> => {
+export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<SignInResponse> => {
   console.info('DBUserSignIn->signInEventModel', signInEventModel);
 
   try {
@@ -343,11 +345,11 @@ export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<
 
     if (response.status !== 200) {
       const errorMessage: SecureString = { Value: await response.statusText };
-      console.error('Error', response.status, errorMessage);
+      console.error('Error in response of DBUserSignIn', response.status, errorMessage);
       throw errorMessage;
     }
 
-    const data: SecureString = await response.json();
+    const data: SignInResponse = await response.json();
     console.info('Data: /user/signin', data);
     return data;
   } catch (error) {
@@ -356,20 +358,36 @@ export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<
   }
 };
 
-// TODO Implement AD-100 once backend ready
-export const DBSavePreferences = async (): Promise<SecureString> => {
-  console.info('DBSavePreferences');
+export const DBSaveUser = async (user: UserModel): Promise<UserModel> => {
+  console.info('DBSaveUser->user', user);
 
   try {
-    return new Promise((resolve) => {
-      const message: SecureString = { Value: 'Preferences saved successfully.' };
+    const body: string = JSON.stringify(user);
+    console.info('Body: /user/saveuser', body);
 
-      setTimeout(() => {
-        resolve(message);
-      }, 3000);
-    });
+    const response = await FetchHelper.fetchWithToken(
+      getJwt(),
+      EnvConfig.apiRoot + '/api/user/saveuser',
+      {
+        method: 'PUT',
+        body: body,
+        headers: setHeaders(),
+      },
+    );
+
+    console.info('Response: /user/saveuser', response);
+
+    if (response.status !== 200) {
+      const errorMessage: SecureString = { Value: await response.statusText };
+      console.error('Error in response of DBSaveUser', response.status, errorMessage);
+      throw errorMessage;
+    }
+
+    const data: UserModel = await response.json();
+    console.info('Data: /user/saveuser', data);
+    return data;
   } catch (error) {
-    console.error('Error in DBSavePreferences', error);
+    console.error('Error in DBSaveUser', error);
     throw error;
   }
 };

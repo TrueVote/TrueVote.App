@@ -9,6 +9,13 @@ export const emptyUserModel: UserModel = {
   FullName: '',
   Email: '',
   DateCreated: '',
+  DateUpdated: '',
+  UserPreferences: {
+    NotificationElectionEnd: false,
+    NotificationElectionStart: false,
+    NotificationNewElections: false,
+    NotificationNewTrueVoteFeatures: false,
+  },
 };
 
 interface GlobalContextType {

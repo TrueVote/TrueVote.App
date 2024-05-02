@@ -11,13 +11,17 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 export const Profile: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile } = useGlobalContext();
+  const { userModel } = useGlobalContext();
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Stack gap={32}>
         <Hero title='Profile' />
       </Stack>
-      {nostrProfile !== undefined && String(nostrProfile.displayName).length > 0 ? (
+      {nostrProfile !== undefined &&
+      String(nostrProfile.displayName).length > 0 &&
+      userModel !== undefined &&
+      String(userModel.FullName).length > 0 ? (
         <>
           {nostrProfile?.picture !== undefined && String(nostrProfile.picture).length > 0 ? (
             <>
@@ -42,8 +46,12 @@ export const Profile: FC = () => {
           >
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td className={classes.tdRight}>Name:</Table.Td>
+                <Table.Td className={classes.tdRight}>Nostr Name:</Table.Td>
                 <Table.Td className={classes.profileName}>{nostrProfile.displayName}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td className={classes.tdRight}>User Full Name:</Table.Td>
+                <Table.Td className={classes.profileName}>{userModel.FullName}</Table.Td>
               </Table.Tr>
               <Table.Tr>
                 <Table.Td className={classes.tdRight}>About:</Table.Td>
@@ -53,12 +61,16 @@ export const Profile: FC = () => {
                 <Table.Td className={classes.tdRight}>Nip05:</Table.Td>
                 <Table.Td className={classes.profileText}>{nostrProfile.nip05}</Table.Td>
               </Table.Tr>
+              <Table.Tr>
+                <Table.Td className={classes.tdRight}>Email:</Table.Td>
+                <Table.Td className={classes.profileText}>{userModel.Email}</Table.Td>
+              </Table.Tr>
             </Table.Tbody>
           </Table>
           <Space h='md'></Space>
           <ElectionCode />
           <Space h='md'></Space>
-          <Preferences nostrProfile={nostrProfile} />
+          <Preferences />
           <Space h='md'></Space>
           <Button
             radius='md'

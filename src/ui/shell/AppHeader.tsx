@@ -1,12 +1,8 @@
-import { useGlobalContext } from '@/Global';
+import { emptyUserModel, useGlobalContext } from '@/Global';
+import { SecureString } from '@/TrueVote.Api';
 import { Localization } from '@/services/Localization';
-import {
-  emptyNostrProfile,
-  getNostrNpubFromStorage,
-  getNostrProfileInfo,
-  NostrProfile,
-  nostrSignOut,
-} from '@/services/NostrHelper';
+import { emptyNostrProfile, getNostrNsecFromStorage, nostrSignOut } from '@/services/NostrHelper';
+import { signInWithNostr } from '@/services/PagerHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   AppShell,
@@ -26,8 +22,9 @@ import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export const AppHeader: FC = () => {
-  const npub: string | null = getNostrNpubFromStorage();
+  const nsec: string | null = getNostrNsecFromStorage();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
+  const { updateUserModel } = useGlobalContext();
   const { localization, updateLocalization } = useGlobalContext();
 
   const [fetched, setFetched] = useState(false);
@@ -37,22 +34,34 @@ export const AppHeader: FC = () => {
       updateLocalization(new Localization());
     }
 
-    if (npub === null || String(npub).length <= 0 || fetched) {
+    if (nsec === null || String(nsec).length <= 0 || fetched) {
       return;
     }
 
     setFetched(true); // Mark as fetched immediately to avoid multiple calls
 
+    const handleError: any = (e: SecureString): void => {
+      console.error('Error from fetchNostrAndUserProfile', e);
+      updateNostrProfile(emptyNostrProfile);
+      nostrSignOut();
+    };
+
     // Async function to fetch the user profile
-    const fetchNostrProfile: any = async () => {
+    const fetchNostrAndUserProfile: any = async () => {
       try {
-        const nostrProfile: NostrProfile | undefined = await getNostrProfileInfo(npub);
-        console.info('Returned Back from getNostrProfileInfo()', nostrProfile);
-        if (nostrProfile && nostrProfile !== undefined) {
-          updateNostrProfile(nostrProfile);
+        const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
+        console.info('Returned Back from signInWithNostr()', retrievedProfile, npub, res);
+        if (retrievedProfile && retrievedProfile !== undefined) {
+          updateNostrProfile(retrievedProfile);
         } else {
           updateNostrProfile(emptyNostrProfile);
           nostrSignOut();
+        }
+        if (res?.User && res.User !== undefined) {
+          console.info('Updating userModel from AppHeader Load', res.User);
+          updateUserModel(res.User);
+        } else {
+          updateUserModel(emptyUserModel);
         }
       } catch (error) {
         // Handle any errors, e.g., show an error message
@@ -63,8 +72,8 @@ export const AppHeader: FC = () => {
     };
 
     // Call the async function
-    fetchNostrProfile();
-  }, [fetched, localization, npub, updateLocalization, updateNostrProfile]);
+    fetchNostrAndUserProfile();
+  }, [fetched, localization, nsec, updateLocalization, updateNostrProfile, updateUserModel]);
 
   interface LinkType {
     id: string;
