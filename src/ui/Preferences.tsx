@@ -22,7 +22,7 @@ import {
   IconClipboardCopy,
   IconMail,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const Preferences: any = () => {
   const clipboard: any = useClipboard({ timeout: 500 });
@@ -31,6 +31,7 @@ export const Preferences: any = () => {
   const { userModel, updateUserModel } = useGlobalContext();
   const [isClicked, setIsClicked] = useState(false);
   const [savedPreferences, setSavedPreferences] = useState('');
+  const [email, setEmail] = useState(userModel?.Email || '');
 
   const [checkedValues, setCheckedValues] = useState<string[]>(
     userModel?.UserPreferences
@@ -55,6 +56,13 @@ export const Preferences: any = () => {
       updateUserModel(userModel);
     }
   };
+
+  useEffect(() => {
+    if (userModel) {
+      userModel.Email = email;
+      updateUserModel(userModel);
+    }
+  }, [email]);
 
   const savePreferences: any = (): any => {
     console.info('savePreferences()');
@@ -105,8 +113,8 @@ export const Preferences: any = () => {
                   <TextInput
                     leftSection={emailIcon}
                     placeholder='Email Address'
-                    onChange={(event: any): void => console.info(event.currentTarget.value)}
-                    value={userModel?.Email}
+                    value={email}
+                    onChange={(event) => setEmail(event.currentTarget.value)}
                   ></TextInput>
                 </Table.Td>
               </Table.Tr>
