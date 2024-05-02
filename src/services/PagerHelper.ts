@@ -1,4 +1,4 @@
-import { BaseUserModel, SecureString, SignInEventModel } from '@/TrueVote.Api';
+import { BaseUserModel, SecureString, SignInEventModel, SignInResponse } from '@/TrueVote.Api';
 import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { DBUserSignIn } from './DataClient';
 import { NostrProfile, getNostrProfileInfo, npubfromnsec, signEvent } from './NostrHelper';
@@ -9,7 +9,7 @@ export const signInWithNostr: (
 ) => Promise<{
   retrievedProfile: NostrProfile;
   npub: string;
-  res: SecureString | undefined;
+  res: SignInResponse | undefined;
 }> = async (nsec, handleError) => {
   try {
     const npub: string = npubfromnsec(nsec);
@@ -40,8 +40,14 @@ export const signInWithNostr: (
         Content: JSON.stringify(content),
       };
 
-      const res: SecureString = await DBUserSignIn(signInEventModel);
-      return { retrievedProfile, npub, res };
+      try {
+        const res: SignInResponse = await DBUserSignIn(signInEventModel);
+        return { retrievedProfile, npub, res };
+      } catch (e) {
+        console.error('Exception calling DBUserSignIn', e);
+        handleError(e as SecureString);
+        return { retrievedProfile: undefined!, npub: '', res: undefined };
+      }
     } else {
       handleError({ Value: 'Could not retrieve nostr profile' });
       return { retrievedProfile: undefined!, npub: '', res: undefined };

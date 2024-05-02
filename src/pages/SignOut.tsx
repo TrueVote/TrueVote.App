@@ -1,4 +1,5 @@
 import { useGlobalContext } from '@/Global';
+import { jwtSignOut } from '@/services/DataClient';
 import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -13,6 +14,7 @@ export const SignOut: FC = () => {
   const signOutClick: any = (): void => {
     updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
+    jwtSignOut();
     console.info('Signed out');
     navigate('/profile');
   };

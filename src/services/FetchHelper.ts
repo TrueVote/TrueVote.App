@@ -35,8 +35,6 @@ export class FetchHelper {
     url: string,
     options?: RequestInit,
   ): Promise<Response> {
-    //const { nostrProfile, updateNostrProfile } = useGlobalState();
-
     // Add authorization header with the current token
     if (currentToken) {
       if (!options) {
@@ -61,13 +59,16 @@ export class FetchHelper {
       // Try and sign in again
       const nsec: string | null = getNostrNsecFromStorage();
       if (nsec !== null && String(nsec).length > 0) {
-        const { res } = await signInWithNostr(nsec, FetchHelper.handleError);
+        const { retrievedProfile, npub, res } = await signInWithNostr(
+          nsec,
+          FetchHelper.handleError,
+        );
         if (res) {
-          console.info('Success from FetchHelper->signIn', res);
-          storeJwt(res.Value);
+          console.info('Success from FetchHelper->signIn', retrievedProfile, res, npub);
+          storeJwt(res.Token);
 
           // Call self recursively now that we have a new token, this will re-submit the request with the new token
-          return this.fetchWithToken(res.Value, url);
+          return this.fetchWithToken(res.Token, url);
         }
       }
 

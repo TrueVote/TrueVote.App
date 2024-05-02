@@ -455,6 +455,16 @@ export interface SignInEventModel {
   Content: string;
 }
 
+export interface SignInResponse {
+  User: UserModel;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Token: string;
+}
+
 export interface StatusModel {
   /** @maxLength 2048 */
   CurrentTime?: string | null;
@@ -557,9 +567,19 @@ export interface UserModel {
   Email: string;
   /** @format date */
   DateCreated: string;
+  /** @format date */
+  DateUpdated: string;
+  UserPreferences: UserPreferencesModel;
 }
 
 export interface UserModelList {
   /** @maxItems 2048 */
   Users: UserModel[];
+}
+
+export interface UserPreferencesModel {
+  NotificationNewElections?: boolean;
+  NotificationElectionStart?: boolean;
+  NotificationElectionEnd?: boolean;
+  NotificationNewTrueVoteFeatures?: boolean;
 }
