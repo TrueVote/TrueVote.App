@@ -386,8 +386,11 @@ export const DBSaveUser = async (user: UserModel): Promise<UserModel> => {
     const data: UserModel = await response.json();
     console.info('Data: /user/saveuser', data);
     return data;
-  } catch (error) {
-    console.error('Error in DBSaveUser', error);
-    throw error;
+  } catch (error: any) {
+    const errorMessage: SecureString = {
+      Value: 'Error in DBSaveUser: ' + (error.Value !== undefined ? error.Value : error),
+    };
+    console.error(errorMessage);
+    throw errorMessage;
   }
 };

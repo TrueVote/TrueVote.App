@@ -1,5 +1,5 @@
 import { useGlobalContext } from '@/Global';
-import { UserModel } from '@/TrueVote.Api';
+import { SecureString, UserModel } from '@/TrueVote.Api';
 import { DBSaveUser } from '@/services/DataClient';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
@@ -74,7 +74,7 @@ export const Preferences: any = () => {
         setSavedPreferences('Saved');
         setTimeout(() => setIsClicked(false), 3000);
       })
-      .catch((e: any) => {
+      .catch((e: SecureString) => {
         console.error('Error from DBSaveUser', e);
         setSavedPreferences('Error saving preferences: ' + e.Value);
         setTimeout(() => setIsClicked(false), 3000);
