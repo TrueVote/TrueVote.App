@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/typedef */
-import { useGlobalContext } from '@/Global';
 import { SecureString } from '@/TrueVote.Api';
 import { storeJwt } from './DataClient';
 import { getNostrNsecFromStorage } from './NostrHelper';
@@ -36,9 +35,6 @@ export class FetchHelper {
     url: string,
     options?: RequestInit,
   ): Promise<Response> {
-    const { updateNostrProfile } = useGlobalContext();
-    const { updateUserModel } = useGlobalContext();
-
     // Add authorization header with the current token
     if (currentToken) {
       if (!options) {
@@ -68,10 +64,8 @@ export class FetchHelper {
           FetchHelper.handleError,
         );
         if (res) {
-          console.info('Success from FetchHelper->signIn', res, npub);
+          console.info('Success from FetchHelper->signIn', retrievedProfile, res, npub);
           storeJwt(res.Token);
-          updateNostrProfile(retrievedProfile);
-          updateUserModel(res.User);
 
           // Call self recursively now that we have a new token, this will re-submit the request with the new token
           return this.fetchWithToken(res.Token, url);
