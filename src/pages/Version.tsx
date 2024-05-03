@@ -1,9 +1,9 @@
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
+import versionJson from '@/version.json';
 import { Container, Group, ScrollArea, Stack, Text, useMantineColorScheme } from '@mantine/core';
 import { FC } from 'react';
 import ReactJson from 'react-json-view';
-import versionJson from '../version.json';
 
 export const Version: FC = () => {
   const { colorScheme } = useMantineColorScheme();

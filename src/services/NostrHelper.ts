@@ -1,3 +1,4 @@
+import settings from '@/settings.json';
 import { nip19, SimplePool, SubCloser } from 'nostr-tools';
 import {
   finalizeEvent,
@@ -6,7 +7,7 @@ import {
   getPublicKey,
   validateEvent,
   VerifiedEvent,
-  verifyEvent
+  verifyEvent,
 } from 'nostr-tools/pure';
 import React from 'react';
 
@@ -20,15 +21,8 @@ const invalidPubKeyError: string = 'Invalid key - public key';
 
 const nostrPrivateKeyStorageKey: string = 'nostr_sk';
 const nostrPublicKeyStorageKey: string = 'nostr_pk';
-const nostrPublicRelays: string[] = [
-  'wss://nostr-relay.truevote.org',
-  'wss://nostr.relayable.org',
-  'wss://nostr.pjv.me',
-  'wss://relay.nostrss.re',
-  'wss://relay.damus.io',
-];
-//  'wss://nostr.lnproxy.org',
-const nostrPrivateRelays: string[] = ['wss://nostr-relay.truevote.org'];
+const nostrPublicRelays: string[] = settings.nostrPublicRelays;
+const nostrPrivateRelays: string[] = settings.nostrPrivateRelays;
 
 export interface NostrProfile {
   npub: string;
