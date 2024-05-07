@@ -74,12 +74,12 @@ export const Preferences: any = () => {
     }
 
     setIsClicked(true);
-    setSavedPreferences('Saving');
+    setSavedPreferences('Saving Preferences');
     DBSaveUser(userModel)
       .then((res: UserModel) => {
         console.info('DBSaveUser', res);
         updateUserModel(res);
-        setSavedPreferences('Saved');
+        setSavedPreferences('Preferences Saved');
         setTimeout(() => setIsClicked(false), 3000);
       })
       .catch((e: SecureString) => {
