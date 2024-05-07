@@ -2,6 +2,7 @@ import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Anchor, Button, Container, Group, Space, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 
 export const About: FC = () => {
   return (
@@ -31,9 +32,11 @@ export const About: FC = () => {
         </Anchor>
       </Group>
       <Group>
-        <Button variant='light' color='blue' mt='md' radius='md'>
-          Submit Feedback
-        </Button>
+        <Link to={`/feedback`} className={classes.buttonText}>
+          <Button variant='light' color='blue' mt='md' radius='md'>
+            Submit Feedback
+          </Button>
+        </Link>
       </Group>
     </Container>
   );

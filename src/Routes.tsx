@@ -6,6 +6,7 @@ import { Ballot } from './pages/Ballot';
 import { BallotView } from './pages/BallotView';
 import { Ballots } from './pages/Ballots';
 import { Elections } from './pages/Elections';
+import { Feedback } from './pages/Feedback';
 import { Home } from './pages/Home';
 import { Polls } from './pages/Polls';
 import { Profile } from './pages/Profile';
@@ -26,6 +27,7 @@ export const ROUTES: ReactElement = (
       <Route path='/ballot/:electionId' element={<Ballot />} />
       <Route path='/ballotview/:ballotId' element={<BallotView />} />
       <Route path='/elections' element={<Elections />} />
+      <Route path='/feedback' element={<Feedback />} />
       <Route path='/polls' element={<Polls />} />
       <Route path='/profile' element={<Profile />} />
       <Route path='/thanks' element={<Thanks />} />
