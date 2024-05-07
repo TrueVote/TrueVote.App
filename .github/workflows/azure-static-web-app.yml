@@ -33,6 +33,9 @@ jobs:
           az --version
           bash --version
 
+      - name: Fetch tags
+        run: git fetch --tags
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
