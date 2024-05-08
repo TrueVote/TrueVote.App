@@ -5,6 +5,7 @@ import {
   BallotHashModel,
   BallotModel,
   ElectionModel,
+  FeedbackModel,
   SecureString,
   SignInEventModel,
   SignInResponse,
@@ -389,6 +390,43 @@ export const DBSaveUser = async (user: UserModel): Promise<UserModel> => {
   } catch (error: any) {
     const errorMessage: SecureString = {
       Value: 'Error in DBSaveUser: ' + (error.Value !== undefined ? error.Value : error),
+    };
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
+
+export const DBSaveFeedback = async (feedback: FeedbackModel): Promise<SecureString> => {
+  console.info('DBSaveFeedback->user', feedback);
+
+  try {
+    const body: string = JSON.stringify(feedback);
+    console.info('Body: /user/savefeedback', body);
+
+    const response = await FetchHelper.fetchWithToken(
+      getJwt(),
+      EnvConfig.apiRoot + '/api/user/savefeedback',
+      {
+        method: 'POST',
+        body: body,
+        headers: setHeaders(),
+      },
+    );
+
+    console.info('Response: /user/savefeedback', response);
+
+    if (response.status !== 200) {
+      const errorMessage: SecureString = { Value: await response.statusText };
+      console.error('Error in response of DBSaveFeedback', response.status, errorMessage);
+      throw errorMessage;
+    }
+
+    const data: SecureString = await response.json();
+    console.info('Data: /user/savefeedback', data);
+    return data;
+  } catch (error: any) {
+    const errorMessage: SecureString = {
+      Value: 'Error in DBSaveFeedback: ' + (error.Value !== undefined ? error.Value : error),
     };
     console.error(errorMessage);
     throw errorMessage;

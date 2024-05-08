@@ -265,6 +265,29 @@ export interface Error500Flag {
   Error: boolean;
 }
 
+export interface FeedbackModel {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  FeedbackId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  UserId: string;
+  /** @format date */
+  DateCreated: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Feedback: string;
+}
+
 export interface FindBallotHashModel {
   /**
    * @format string
