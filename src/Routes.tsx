@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { ProtectedRoute } from './RoutingHelper';
 import { MainLayout } from './layouts/MainLayout';
 import { About } from './pages/About';
 import { Ballot } from './pages/Ballot';
@@ -23,11 +24,25 @@ export const ROUTES: ReactElement = (
     <Route path='/' element={<MainLayout />}>
       <Route path='' element={<Home />} />
       <Route path='/about' element={<About />} />
-      <Route path='/ballots' element={<Ballots />} />
+      <Route
+        path='/ballots'
+        element={
+          <ProtectedRoute>
+            <Ballots />
+          </ProtectedRoute>
+        }
+      />
       <Route path='/ballot/:electionId' element={<Ballot />} />
       <Route path='/ballotview/:ballotId' element={<BallotView />} />
       <Route path='/elections' element={<Elections />} />
-      <Route path='/feedback' element={<Feedback />} />
+      <Route
+        path='/feedback'
+        element={
+          <ProtectedRoute>
+            <Feedback />
+          </ProtectedRoute>
+        }
+      />
       <Route path='/polls' element={<Polls />} />
       <Route path='/profile' element={<Profile />} />
       <Route path='/thanks' element={<Thanks />} />

@@ -1,4 +1,5 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
+import { ProtectedNavLink } from '@/RoutingHelper';
 import { SecureString } from '@/TrueVote.Api';
 import { jwtSignOut } from '@/services/DataClient';
 import { Localization } from '@/services/Localization';
@@ -83,16 +84,35 @@ export const AppHeader: FC = () => {
     id: string;
     link: string;
     label: string;
+    protected: boolean;
     matched: PathMatch<string> | null;
   }
 
   const links: LinkType[] = [
-    { id: '0', link: '/ballots', label: 'Ballots', matched: useMatch('/ballots') },
-    { id: '1', link: '/elections', label: 'Elections', matched: useMatch('/elections') },
-    { id: '2', link: '/polls', label: 'Polls', matched: useMatch('/polls') },
-    { id: '3', link: '/profile', label: 'Profile', matched: useMatch('/profile') },
-    { id: '4', link: '/results', label: 'Results', matched: useMatch('/results') },
-    { id: '5', link: '/about', label: 'About', matched: useMatch('/about') },
+    { id: '0', link: '/ballots', label: 'Ballots', protected: true, matched: useMatch('/ballots') },
+    {
+      id: '1',
+      link: '/elections',
+      label: 'Elections',
+      protected: false,
+      matched: useMatch('/elections'),
+    },
+    { id: '2', link: '/polls', label: 'Polls', protected: false, matched: useMatch('/polls') },
+    {
+      id: '3',
+      link: '/profile',
+      label: 'Profile',
+      protected: false,
+      matched: useMatch('/profile'),
+    },
+    {
+      id: '4',
+      link: '/results',
+      label: 'Results',
+      protected: false,
+      matched: useMatch('/results'),
+    },
+    { id: '5', link: '/about', label: 'About', protected: false, matched: useMatch('/about') },
   ];
   const [, toggle] = useToggle();
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -105,16 +125,27 @@ export const AppHeader: FC = () => {
     setMenuOpen(false);
   };
 
-  const items: JSX.Element[] = links.map((link: LinkType) => (
-    <NavLink
-      key={link.id}
-      to={link.link}
-      className={classes.link}
-      onClick={(): void => toggle(false)}
-    >
-      {link.label}
-    </NavLink>
-  ));
+  const items: JSX.Element[] = links.map((link: LinkType) =>
+    link.protected ? (
+      <ProtectedNavLink
+        key={link.id}
+        to={link.link}
+        className={classes.link}
+        onClick={(): void => toggle(false)}
+      >
+        {link.label}
+      </ProtectedNavLink>
+    ) : (
+      <NavLink
+        key={link.id}
+        to={link.link}
+        className={classes.link}
+        onClick={(): void => toggle(false)}
+      >
+        {link.label}
+      </NavLink>
+    ),
+  );
 
   return (
     <AppShell.Header>
