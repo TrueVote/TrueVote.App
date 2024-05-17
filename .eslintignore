@@ -1,9 +1,0 @@
-/dist
-/node_modules
-/public
-.eslintrc.js
-/.storybook
-tsconfig.json
-vite.config.ts
-fixApi.ts
-postcss.config.js
