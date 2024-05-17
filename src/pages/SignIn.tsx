@@ -1,4 +1,4 @@
-import { useGlobalContext } from '@/Global';
+import { emptyUserModel, useGlobalContext } from '@/Global';
 import { jwtSignOut, storeJwt } from '@/services/DataClient';
 import {
   emptyNostrProfile,
@@ -22,13 +22,13 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
-import { FC, useState } from 'react';
-import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { FC, useEffect, useState } from 'react';
+import { Link, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
 export const SignIn: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
-  const { updateUserModel } = useGlobalContext();
+  const { userModel, updateUserModel } = useGlobalContext();
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [valid, setValid] = useState(false);
@@ -36,6 +36,7 @@ export const SignIn: FC = () => {
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const location = useLocation();
 
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
@@ -74,9 +75,17 @@ export const SignIn: FC = () => {
       storeNostrKeys(npub, nsec);
       storeJwt(res.Token);
       setVisible((v: boolean) => !v);
-      navigate('/profile');
+      // navigate('/profile');
     }
   };
+
+  useEffect(() => {
+    if (userModel !== emptyUserModel) {
+      const from = location.state?.from?.pathname || '/profile';
+      console.info('SignedIn. Navigating to location history stack', userModel, location, from);
+      navigate(from, { replace: true });
+    }
+  }, [userModel, location, navigate]);
 
   return (
     <Container size='xs' px='xs' className={classes.container}>

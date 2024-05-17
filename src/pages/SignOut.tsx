@@ -1,4 +1,4 @@
-import { useGlobalContext } from '@/Global';
+import { emptyUserModel, useGlobalContext } from '@/Global';
 import { jwtSignOut } from '@/services/DataClient';
 import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { Hero } from '@/ui/Hero';
@@ -10,9 +10,11 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 export const SignOut: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
+  const { updateUserModel } = useGlobalContext();
 
   const signOutClick: any = (): void => {
     updateNostrProfile(emptyNostrProfile);
+    updateUserModel(emptyUserModel);
     nostrSignOut();
     jwtSignOut();
     console.info('Signed out');
