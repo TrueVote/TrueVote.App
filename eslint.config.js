@@ -9,6 +9,9 @@ const typescriptEslintPlugin = require('@typescript-eslint/eslint-plugin');
 module.exports = [
   // Basic ESLint configurations for TypeScript
   {
+    plugins: {
+      '@typescript-eslint': typescriptEslintPlugin,
+    },
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: typescriptEslintParser,
@@ -18,26 +21,22 @@ module.exports = [
         ecmaFeatures: {
           jsx: true,
         },
+        endOfLine: 'auto',
         project: './tsconfig.json',
       },
     },
     rules: {
+      'no-trailing-spaces': 'error',
       'no-unused-vars': 'warn',
       'no-console': ['error', { allow: ['warn', 'error', 'info', 'debug'] }],
-      'no-debugger': 'warn',
-    },
-  },
-
-  // TypeScript-specific configurations
-  {
-    plugins: {
-      '@typescript-eslint': typescriptEslintPlugin,
-    },
-    files: ['**/*.ts', '**/*.tsx'],
-    rules: {
-      '@typescript-eslint/no-unused-vars': ['warn'],
+      'no-debugger': 'error',
+      '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'warn',
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/no-inferrable-types': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/explicit-module-boundary-types': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
     },
   },
 
@@ -92,7 +91,7 @@ module.exports = [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'off',
     },
-    files: ['**/*.tsx'],
+    files: ['**/*.ts', '**/*.tsx'],
   },
 
   // Accessibility specific configurations
@@ -119,6 +118,6 @@ module.exports = [
       'jsx-a11y/role-supports-aria-props': 'warn',
       'jsx-a11y/scope': 'warn',
     },
-    files: ['**/*.tsx'],
+    files: ['**/*.ts', '**/*.tsx'],
   },
 ];

@@ -31,7 +31,7 @@ export const Preferences: any = () => {
   const { userModel, updateUserModel } = useGlobalContext();
   const [isClicked, setIsClicked] = useState(false);
   const [savedPreferences, setSavedPreferences] = useState('');
-  const [email, setEmail] = useState(userModel?.Email || '');
+  const [email, setEmail] = useState(userModel?.Email ?? '');
 
   const [checkedValues, setCheckedValues] = useState<string[]>(
     userModel?.UserPreferences
@@ -45,7 +45,7 @@ export const Preferences: any = () => {
     setCheckedValues(values);
 
     const updatedPreferences = Object.fromEntries(
-      Object.entries(userModel?.UserPreferences || {}).map(([key, _]) => [
+      Object.entries(userModel?.UserPreferences ?? {}).map(([key, _]) => [
         key,
         values.includes(key),
       ]),

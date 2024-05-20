@@ -16,7 +16,7 @@
     "serve": "http-server dist",
     "preview": "vite preview",
     "lint": "eslint",
-    "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
+    "lint:fix": "eslint --fix",
     "format": "prettier --write \"**/*.{ts,tsx}\" --config ./.prettierrc",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
