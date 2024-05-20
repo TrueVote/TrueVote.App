@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { BaseUserModel, SecureString, SignInEventModel, SignInResponse } from '@/TrueVote.Api';
 import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { DBUserSignIn } from './DataClient';
@@ -10,7 +11,7 @@ export const signInWithNostr: (
   retrievedProfile: NostrProfile;
   npub: string;
   res: SignInResponse | undefined;
-}> = async (nsec, handleError) => {
+}> = async (nsec: string, handleError: (error: SecureString) => void) => {
   try {
     const npub: string = npubfromnsec(nsec);
     const retrievedProfile: NostrProfile = await getNostrProfileInfo(npub);

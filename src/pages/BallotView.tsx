@@ -69,7 +69,7 @@ const Ballot: FC = () => {
   }
   const ballotHash: BallotHashModel = ballotList!.BallotHashes![0];
 
-  const sortCandidates: (candidates: CandidateModel[]) => CandidateModel[] = (
+  const sortCandidates: (_: CandidateModel[]) => CandidateModel[] = (
     candidates: CandidateModel[],
   ) => {
     return candidates.sort((a: CandidateModel, b: CandidateModel) => {

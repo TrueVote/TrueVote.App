@@ -27,10 +27,10 @@ module.exports = [
     },
     rules: {
       'no-trailing-spaces': 'error',
-      'no-unused-vars': 'warn',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-console': ['error', { allow: ['warn', 'error', 'info', 'debug'] }],
       'no-debugger': 'error',
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-inferrable-types': 'off',
