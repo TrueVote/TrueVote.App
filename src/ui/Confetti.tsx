@@ -25,7 +25,7 @@ export const ConfettiExplosion: React.FC = () => {
         style={{ ...confettiImageStyle, animationDuration, animationDelay }}
         key={i}
       >
-        <img className={classes.confettiImage__logo} />
+        <img alt='' className={classes.confettiImage__logo} />
       </div>
     );
     confettiImages.push(confettiImage);

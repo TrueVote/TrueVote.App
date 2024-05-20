@@ -41,7 +41,7 @@ export const Preferences: any = () => {
       : [],
   );
 
-  const handleGroupChange = (values: string[]) => {
+  const handleGroupChange = (values: string[]): any => {
     setCheckedValues(values);
 
     const updatedPreferences = Object.fromEntries(

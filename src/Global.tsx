@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { UserModel } from '@/TrueVote.Api';
 import React, { Context, ReactNode, createContext, useContext, useState } from 'react';
 import { Localization } from './services/Localization';

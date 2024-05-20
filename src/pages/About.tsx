@@ -18,11 +18,11 @@ export const About: FC = () => {
       </Text>
       <Space h='md' />
       <Text>
-        TrueVote is not just an app; it's a commitment to the principles of fairness, innovation,
-        and a brighter future for all. With support for multiple languages, we ensure accessibility
-        on a global scale, transcending borders and making participation a universal right. Join us
-        on this journey as we pave the way for a more accessible and accountable electoral landscape
-        for the entire world.
+        TrueVote is not just an app; it&apos;s a commitment to the principles of fairness,
+        innovation, and a brighter future for all. With support for multiple languages, we ensure
+        accessibility on a global scale, transcending borders and making participation a universal
+        right. Join us on this journey as we pave the way for a more accessible and accountable
+        electoral landscape for the entire world.
       </Text>
       <Space h='md' />
       <Space h='md' />

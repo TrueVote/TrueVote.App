@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import settings from '@/settings.json';
 import { nip19, SimplePool, SubCloser } from 'nostr-tools';
 import {
