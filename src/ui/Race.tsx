@@ -88,14 +88,14 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
         name={race.Name}
         label={raceLabel}
         size='sm'
-        description={'Choose One'} // TODO Localize English
+        description='Choose One' // TODO Localize English
       >
-        <Space h='md'></Space>
+        <Space h='md' />
         {race.Candidates?.map((e: CandidateModel) => (
           <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td className={classes.tdCandidate} width={'30px'}>
+                <Table.Td className={classes.tdCandidate} width='30px'>
                   <Radio
                     value={e.Name}
                     key={e.CandidateId}
@@ -104,7 +104,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
                   />
                 </Table.Td>
                 {avatarCount > 0 && (
-                  <Table.Td className={classes.tdCandidate} width={'30px'}>
+                  <Table.Td className={classes.tdCandidate} width='30px'>
                     <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
                   </Table.Td>
                 )}
@@ -131,12 +131,12 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
             : 'Choose Multiple'
         } // TODO Localize English
       >
-        <Space h='md'></Space>
+        <Space h='md' />
         {race.Candidates?.map((e: CandidateModel) => (
           <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td className={classes.tdCandidate} width={'30px'}>
+                <Table.Td className={classes.tdCandidate} width='30px'>
                   <Checkbox
                     value={e.Name}
                     key={e.CandidateId}
@@ -145,7 +145,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
                   />
                 </Table.Td>
                 {avatarCount > 0 && (
-                  <Table.Td className={classes.tdCandidate} width={'30px'}>
+                  <Table.Td className={classes.tdCandidate} width='30px'>
                     <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
                   </Table.Td>
                 )}
@@ -190,13 +190,13 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
         <Text key={race.RaceId} size='sm'>
           {raceLabel}Unsupported Race Type
         </Text>
-        <Space h='md'></Space>
+        <Space h='md' />
         {race.Candidates?.map((e: CandidateModel) => (
           <Table key={e.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
             <Table.Tbody>
               <Table.Tr>
                 {avatarCount > 0 && (
-                  <Table.Td className={classes.tdCandidate} width={'30px'}>
+                  <Table.Td className={classes.tdCandidate} width='30px'>
                     <Avatar className={classes.avatarImage} src={e.CandidateImageUrl} />
                   </Table.Td>
                 )}

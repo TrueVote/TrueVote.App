@@ -43,11 +43,11 @@ const RenderCandidate: React.FC<{
       <Table key={candidate.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
         <Table.Tbody>
           <Table.Tr>
-            <Table.Td className={classes.tdCandidate} width={'30px'}>
+            <Table.Td className={classes.tdCandidate} width='30px'>
               {showNumbers && <Text className={listClasses.rank}>{index + 1}</Text>}
             </Table.Td>
             {avatarCount > 0 && (
-              <Table.Td className={classes.tdCandidate} width={'30px'}>
+              <Table.Td className={classes.tdCandidate} width='30px'>
                 <Avatar className={classes.avatarImage} src={candidate.CandidateImageUrl} />
               </Table.Td>
             )}
@@ -152,7 +152,7 @@ export const RankedChoiceList: React.FC<Props> = ({
             className={selectedDroppableClass}
           >
             <Divider label={<Text>Selected</Text>} size={3} labelPosition='left' color='green' />
-            <Space h='md'></Space>
+            <Space h='md' />
             {selectedState.map((candidate: CandidateModel, index: number) => (
               <Draggable
                 key={candidate.CandidateId}
@@ -186,7 +186,7 @@ export const RankedChoiceList: React.FC<Props> = ({
         {(provided: DroppableProvided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <Divider label={<Text>Not Selected</Text>} size={3} labelPosition='left' color='pink' />
-            <Space h='md'></Space>
+            <Space h='md' />
             {notSelectedState.map((candidate: CandidateModel, index: number) => (
               <Draggable
                 key={candidate.CandidateId}

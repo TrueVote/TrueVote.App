@@ -60,9 +60,9 @@ export const Thanks: FC = () => {
             <Table.Tr>
               <Table.Td colSpan={2} className={classes.tdCenter}>
                 <div className={classes.homeLogoDiv}>
-                  <Image radius='md' className={classes.thanksLogoImage}></Image>
+                  <Image radius='md' className={classes.thanksLogoImage} />
                 </div>
-                <Text className={classes.smallText}></Text>
+                <Text className={classes.smallText} />
               </Table.Td>
             </Table.Tr>
           </Table.Tbody>

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/typedef */
 import { CandidateModel } from '@/TrueVote.Api';
 import _ from 'lodash';
 

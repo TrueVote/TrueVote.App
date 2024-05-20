@@ -80,11 +80,11 @@ const LoadProfile: any = () => {
               </Table.Tr>
             </Table.Tbody>
           </Table>
-          <Space h='md'></Space>
+          <Space h='md' />
           <ElectionCode />
-          <Space h='md'></Space>
+          <Space h='md' />
           <Preferences />
-          <Space h='md'></Space>
+          <Space h='md' />
           <Button
             radius='md'
             color='blue'
@@ -97,7 +97,7 @@ const LoadProfile: any = () => {
       ) : (
         <>
           <Stack className={classes.profileButtons}>
-            <Text size={'md'}>Sign In if you have an exising Nostr account</Text>
+            <Text size='md'>Sign In if you have an exising Nostr account</Text>
             <Button
               leftSection={<IconLogin />}
               className={classes.profileButton}
@@ -108,7 +108,7 @@ const LoadProfile: any = () => {
             >
               Sign In
             </Button>
-            <Text size={'md'}>To get started with a new Nostr account for TrueVote, Register</Text>
+            <Text size='md'>To get started with a new Nostr account for TrueVote, Register</Text>
             <Button
               leftSection={<IconUserPlus />}
               className={classes.profileButton}

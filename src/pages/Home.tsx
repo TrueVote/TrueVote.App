@@ -38,7 +38,7 @@ export const Home: FC = () => {
             <Table.Td className={classes.tdCenter}>
               <div className={classes.voterImageDiv}>
                 <Link to='/elections'>
-                  <Image radius='md' className={classes.voterImage}></Image>
+                  <Image radius='md' className={classes.voterImage} />
                 </Link>
               </div>
               <Text className={(classes.smallText, classes.tight)}>
@@ -50,7 +50,7 @@ export const Home: FC = () => {
             <Table.Td className={classes.tdCenter}>
               <div className={classes.voterImageDiv}>
                 <Link to='/results'>
-                  <Image radius='md' className={classes.chartsImage}></Image>
+                  <Image radius='md' className={classes.chartsImage} />
                 </Link>
               </div>
               <Text className={(classes.smallText, classes.tight)}>
@@ -61,9 +61,9 @@ export const Home: FC = () => {
           <Table.Tr>
             <Table.Td className={classes.tdCenter}>
               <div className={classes.homeLogoDiv}>
-                <Image radius='md' className={classes.homeLogoImage}></Image>
+                <Image radius='md' className={classes.homeLogoImage} />
               </div>
-              <Text className={classes.smallText}></Text>
+              <Text className={classes.smallText} />
             </Table.Td>
           </Table.Tr>
         </Table.Tbody>

@@ -113,7 +113,7 @@ export const SignIn: FC = () => {
             </Link>
             .
           </Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <PasswordInput
             description='Your secret key'
             placeholder='Nostr nsec1 key'
@@ -126,7 +126,7 @@ export const SignIn: FC = () => {
           <Button radius='md' color='green' variant='light' disabled={!valid} onClick={signInClick}>
             Sign In
           </Button>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>
             Or, sign in with a browser extension, such as{' '}
             <Link to='https://getalby.com' className={classes.linkActive}>
@@ -138,9 +138,9 @@ export const SignIn: FC = () => {
         </>
       ) : (
         <>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text className={classes.textAlert}>Already Signed In</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text className={classes.profileText}>
             <b>Signed In Public Key:</b>
             <HoverCard shadow='md'>
@@ -152,9 +152,9 @@ export const SignIn: FC = () => {
               </HoverCard.Dropdown>
             </HoverCard>
           </Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>Click below for sign out page.</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Button
             radius='md'
             color='green'

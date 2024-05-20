@@ -88,7 +88,7 @@ const Ballot: FC = () => {
   };
   const races: any = ballot.Election?.Races?.map((r: RaceModel) => {
     return (
-      <SimpleGrid spacing={'xs'} cols={1} key={r.RaceId}>
+      <SimpleGrid spacing='xs' cols={1} key={r.RaceId}>
         <Text key={r.RaceId} component='span' className={classes.raceNameTitle}>
           <span className={classes.raceNameTitle}>{r.Name} - </span>
           <span className={classes.raceName}>{r.RaceTypeName}</span>
@@ -99,21 +99,21 @@ const Ballot: FC = () => {
                 <div key={c.CandidateId} className={classes.checkboxAndRank}>
                   <Checkbox
                     key={c.CandidateId}
-                    size={'sm'}
+                    size='sm'
                     color='green'
-                    radius={'xl'}
+                    radius='xl'
                     labelPosition='left'
                     label={formatCandidateName(c)}
                     className={classes.checkboxLabel}
                     defaultChecked
                   />
-                  <Text size={'xs'} component='span' className={classes.rankedIndex}>
+                  <Text size='xs' component='span' className={classes.rankedIndex}>
                     <span className={classes.rankedIndex}>{Number(c.SelectedMetadata) + 1}</span>
                   </Text>
                 </div>
               ) : (
                 <Text
-                  size={'xs'}
+                  size='xs'
                   key={c.CandidateId}
                   component='span'
                   className={classes.raceNameUnselected}
@@ -126,9 +126,9 @@ const Ballot: FC = () => {
               c.Selected === true ? (
                 <Checkbox
                   key={c.CandidateId}
-                  size={'sm'}
+                  size='sm'
                   color='green'
-                  radius={'xl'}
+                  radius='xl'
                   labelPosition='left'
                   label={formatCandidateName(c)}
                   className={classes.checkboxLabel}
@@ -136,7 +136,7 @@ const Ballot: FC = () => {
                 />
               ) : (
                 <Text
-                  size={'xs'}
+                  size='xs'
                   key={c.CandidateId}
                   component='span'
                   className={classes.raceNameUnselected}
@@ -184,7 +184,7 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={classes.boxGap}></Box>
+      <Box className={classes.boxGap} />
       <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
         <Title className={classes.titleSpaces} size='h4'>
           Ballot
@@ -205,7 +205,7 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={classes.boxGap}></Box>
+      <Box className={classes.boxGap} />
       <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
         <Title className={classes.titleSpaces} size='h4'>
           Ballot Hash
@@ -254,7 +254,7 @@ const Ballot: FC = () => {
           </Card.Section>
         </Group>
       </Card>
-      <Box className={classes.boxGap}></Box>
+      <Box className={classes.boxGap} />
       <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
         <Title className={classes.titleSpaces} size='h4'>
           Raw Data

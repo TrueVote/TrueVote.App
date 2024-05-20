@@ -57,9 +57,9 @@ export const Feedback: FC = () => {
         </>
       ) : (
         <>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>We welcome all feedback. Please add your thoughts below.</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Textarea
             autosize
             minRows={4}
@@ -68,7 +68,7 @@ export const Feedback: FC = () => {
             placeholder='Feedback'
             value={feedback}
             onChange={(event) => setFeedback(event.currentTarget.value)}
-          ></Textarea>
+          />
           <Group>
             <Button
               variant='light'

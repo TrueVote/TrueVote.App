@@ -73,7 +73,7 @@ export const Register: FC = () => {
 
   const signInElements: React.ReactNode = (
     <>
-      <Space h='md'></Space>
+      <Space h='md' />
       <Text>
         If you already have a nostr key,{' '}
         <Link to='/signin' className={classes.linkActive}>
@@ -101,9 +101,9 @@ export const Register: FC = () => {
       </Modal>
       {nostrProfile !== null && String(nostrProfile?.npub).length > 0 ? (
         <>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>Already Signed In</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text className={classes.profileText}>
             <b>Signed In Public Key:</b>{' '}
             <HoverCard shadow='md'>
@@ -115,9 +115,9 @@ export const Register: FC = () => {
               </HoverCard.Dropdown>
             </HoverCard>
           </Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>Click below for sign out page.</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Button
             radius='md'
             color='green'
@@ -129,7 +129,7 @@ export const Register: FC = () => {
         </>
       ) : npub !== null && nsec !== null ? (
         <>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text className={classes.profileText}>
             <b>Npub (Public) Key:</b> {npub}
           </Text>
@@ -149,13 +149,13 @@ export const Register: FC = () => {
               )}
             </ActionIcon>
           </Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Checkbox
             checked={nsecCheckbox}
             onChange={(event: any): void => updateNsecCheckbox(event.currentTarget.checked)}
             label='I have copied my private Nsec key and stored it somewhere safe. I understand that if I lose this key I will lose access to my user account.'
-          ></Checkbox>
-          <Space h='md'></Space>
+          />
+          <Space h='md' />
           <Button
             radius='md'
             color='green'
@@ -170,7 +170,7 @@ export const Register: FC = () => {
       ) : (
         <>
           <Text>If you do not have a nostr key, click below to generate one</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Button radius='md' color='green' variant='light' onClick={getKeyPair}>
             Generate Key
           </Button>

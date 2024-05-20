@@ -97,7 +97,7 @@ export const Preferences: any = () => {
       className={classes.accordion}
     >
       <Accordion.Item key='Preferences' value='Preferences'>
-        <Accordion.Control icon={'⚙️'}>User Preferences</Accordion.Control>
+        <Accordion.Control icon='⚙️'>User Preferences</Accordion.Control>
         <Accordion.Panel>
           <Table
             verticalSpacing='xs'
@@ -115,7 +115,7 @@ export const Preferences: any = () => {
                     placeholder='Email Address'
                     value={email}
                     onChange={(event) => setEmail(event.currentTarget.value)}
-                  ></TextInput>
+                  />
                 </Table.Td>
               </Table.Tr>
               <Table.Tr>
@@ -162,7 +162,7 @@ export const Preferences: any = () => {
                       size='sm'
                       description='Select notification types'
                     >
-                      <Space h='md'></Space>
+                      <Space h='md' />
                       <Checkbox
                         value='NotificationNewElections'
                         label='New Elections'
@@ -197,7 +197,7 @@ export const Preferences: any = () => {
               </Table.Tr>
             </Table.Tbody>
           </Table>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Table className={classes.tableAuto} withRowBorders={false}>
             <Table.Tbody>
               <Table.Tr>

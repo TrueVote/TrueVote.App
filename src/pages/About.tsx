@@ -16,7 +16,7 @@ export const About: FC = () => {
         experience. Committed to fostering trust and inclusivity, we empower individuals worldwide
         to actively participate in shaping their communities.
       </Text>
-      <Space h='md'></Space>
+      <Space h='md' />
       <Text>
         TrueVote is not just an app; it's a commitment to the principles of fairness, innovation,
         and a brighter future for all. With support for multiple languages, we ensure accessibility
@@ -24,15 +24,15 @@ export const About: FC = () => {
         on this journey as we pave the way for a more accessible and accountable electoral landscape
         for the entire world.
       </Text>
-      <Space h='md'></Space>
-      <Space h='md'></Space>
+      <Space h='md' />
+      <Space h='md' />
       <Group>
         <Anchor href='//truevote.org' className={classes.linkNoPadding} target='_blank'>
-          <Text size={'md'}>Visit us at TrueVote.org to learn more about our mission.</Text>
+          <Text size='md'>Visit us at TrueVote.org to learn more about our mission.</Text>
         </Anchor>
       </Group>
       <Group>
-        <ProtectedLink to={`/feedback`} className={classes.buttonText}>
+        <ProtectedLink to='/feedback' className={classes.buttonText}>
           <Button variant='light' color='blue' mt='md' radius='md'>
             Submit Feedback
           </Button>
