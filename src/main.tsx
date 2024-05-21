@@ -8,7 +8,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('/service-worker.js')
       .then((registration: any): any => {
-        console.log('Service Worker registered with scope:', registration.scope);
+        console.info('Service Worker registered with scope:', registration.scope);
       })
       .catch((e: any): any => {
         console.warn('Service Worker registration failed:', e);
