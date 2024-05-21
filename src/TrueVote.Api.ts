@@ -424,10 +424,10 @@ export interface RaceModel {
    */
   RaceTypeName: string;
   /**
-   * @format string
+   * @format int32
    * @maxLength 2048
    */
-  RaceTypeMetadata?: string | null;
+  NumberOfChoices?: number | null;
   /** @format date */
   DateCreated: string;
   Candidates?: CandidateModel[] | null;
