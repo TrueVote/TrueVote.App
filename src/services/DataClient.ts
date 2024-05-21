@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/typedef */
 import { EnvConfig } from '@/EnvConfig';
 import {
   BallotHashModel,

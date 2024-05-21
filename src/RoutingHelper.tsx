@@ -36,12 +36,12 @@ interface ProtectedNavLinkProps {
   onClick: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
-const useProtectedLink = () => {
+const useProtectedLink = (): any => {
   const { userModel } = useGlobalContext();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLinkClick = (to: string) => {
+  const handleLinkClick = (to: string): void => {
     if (userModel === emptyUserModel) {
       navigate('/signin', { state: { from: location }, replace: true });
     } else {
@@ -58,12 +58,12 @@ interface ProtectedNavLinkProps {
   className?: string;
 }
 
-const useProtectedNavLink = () => {
+const useProtectedNavLink = (): any => {
   const { userModel } = useGlobalContext();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLinkClick = (to: string) => {
+  const handleLinkClick = (to: string): void => {
     if (userModel === emptyUserModel) {
       navigate('/signin', { state: { from: location }, replace: true });
     } else {

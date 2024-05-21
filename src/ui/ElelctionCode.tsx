@@ -47,12 +47,12 @@ export const ElectionCode: FC = () => {
       className={classes.accordion}
     >
       <Accordion.Item key='ElectionCodes' value='ElectionCodes'>
-        <Accordion.Control icon={'🗳️'}>Election Codes</Accordion.Control>
+        <Accordion.Control icon='🗳️'>Election Codes</Accordion.Control>
         <Accordion.Panel>
           <Table verticalSpacing='xs' striped withTableBorder className={classes.table}>
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td className={classes.tdRight} width={'110px'}>
+                <Table.Td className={classes.tdRight} width='110px'>
                   Access Code:
                 </Table.Td>
                 <Table.Td className={classes.tdLeft}>
@@ -61,7 +61,7 @@ export const ElectionCode: FC = () => {
                     placeholder='Election Access Code'
                     value={accessCode}
                     onChange={(event: any): void => setAccessCode(event.currentTarget.value)}
-                  ></TextInput>
+                  />
                 </Table.Td>
                 <Table.Td className={(classes.tdRight, classes.tdTight)}>
                   <ActionIcon
@@ -93,7 +93,7 @@ export const ElectionCode: FC = () => {
                   </Table.Tr>
                 </Table.Tbody>
               </Table>
-              <Space h='md'></Space>
+              <Space h='md' />
             </>
           )}
         </Accordion.Panel>

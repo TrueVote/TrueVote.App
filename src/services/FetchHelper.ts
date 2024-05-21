@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/typedef */
 import { SecureString } from '@/TrueVote.Api';
 import { storeJwt } from './DataClient';
 import { getNostrNsecFromStorage } from './NostrHelper';

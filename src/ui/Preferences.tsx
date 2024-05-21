@@ -31,7 +31,7 @@ export const Preferences: any = () => {
   const { userModel, updateUserModel } = useGlobalContext();
   const [isClicked, setIsClicked] = useState(false);
   const [savedPreferences, setSavedPreferences] = useState('');
-  const [email, setEmail] = useState(userModel?.Email || '');
+  const [email, setEmail] = useState(userModel?.Email ?? '');
 
   const [checkedValues, setCheckedValues] = useState<string[]>(
     userModel?.UserPreferences
@@ -41,11 +41,11 @@ export const Preferences: any = () => {
       : [],
   );
 
-  const handleGroupChange = (values: string[]) => {
+  const handleGroupChange = (values: string[]): any => {
     setCheckedValues(values);
 
     const updatedPreferences = Object.fromEntries(
-      Object.entries(userModel?.UserPreferences || {}).map(([key, _]) => [
+      Object.entries(userModel?.UserPreferences ?? {}).map(([key, _]) => [
         key,
         values.includes(key),
       ]),
@@ -97,7 +97,7 @@ export const Preferences: any = () => {
       className={classes.accordion}
     >
       <Accordion.Item key='Preferences' value='Preferences'>
-        <Accordion.Control icon={'⚙️'}>User Preferences</Accordion.Control>
+        <Accordion.Control icon='⚙️'>User Preferences</Accordion.Control>
         <Accordion.Panel>
           <Table
             verticalSpacing='xs'
@@ -115,7 +115,7 @@ export const Preferences: any = () => {
                     placeholder='Email Address'
                     value={email}
                     onChange={(event) => setEmail(event.currentTarget.value)}
-                  ></TextInput>
+                  />
                 </Table.Td>
               </Table.Tr>
               <Table.Tr>
@@ -162,7 +162,7 @@ export const Preferences: any = () => {
                       size='sm'
                       description='Select notification types'
                     >
-                      <Space h='md'></Space>
+                      <Space h='md' />
                       <Checkbox
                         value='NotificationNewElections'
                         label='New Elections'
@@ -197,7 +197,7 @@ export const Preferences: any = () => {
               </Table.Tr>
             </Table.Tbody>
           </Table>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Table className={classes.tableAuto} withRowBorders={false}>
             <Table.Tbody>
               <Table.Tr>

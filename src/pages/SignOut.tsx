@@ -28,7 +28,7 @@ export const SignOut: FC = () => {
       </Stack>
       {nostrProfile !== null && String(nostrProfile?.npub).length > 0 ? (
         <>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text className={classes.profileText}>
             <b>Signed In Public Key:</b>{' '}
             <HoverCard shadow='md'>
@@ -40,20 +40,20 @@ export const SignOut: FC = () => {
               </HoverCard.Dropdown>
             </HoverCard>
           </Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>Click below to sign out.</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Button radius='md' color='green' variant='light' onClick={signOutClick}>
             Sign Out
           </Button>
         </>
       ) : (
         <>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>Not Signed In</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>Click below to for sign in page.</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Button
             radius='md'
             color='green'
@@ -62,9 +62,9 @@ export const SignOut: FC = () => {
           >
             Sign In
           </Button>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Text>Click below to force sign out.</Text>
-          <Space h='md'></Space>
+          <Space h='md' />
           <Button radius='md' color='green' variant='light' onClick={signOutClick}>
             Sign Out
           </Button>

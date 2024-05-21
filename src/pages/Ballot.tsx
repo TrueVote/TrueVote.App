@@ -139,7 +139,7 @@ const Election: FC = () => {
         <Text size='sm' c='dimmed'>
           {election.Description}
         </Text>
-        <Box className={classes.boxGap}></Box>
+        <Box className={classes.boxGap} />
         <Card.Section>
           <Flex
             className={classes.flexGap}

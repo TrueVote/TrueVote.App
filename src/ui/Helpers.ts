@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/typedef */
 import { CandidateModel } from '@/TrueVote.Api';
 import _ from 'lodash';
 
@@ -43,12 +41,12 @@ export const delay: any = async (ms: number): Promise<void> => {
 };
 
 // Function to convert Uint8Array to a regular array
-export const uint8ArrayToArray: (uint8Array: Uint8Array) => number[] = (uint8Array: Uint8Array) => {
+export const uint8ArrayToArray: (_: Uint8Array) => number[] = (uint8Array: Uint8Array) => {
   return Array.from(uint8Array);
 };
 
 // Function to convert string to Uint8Array
-export const stringToUint8Array: (str: string) => Uint8Array = (str: string) => {
+export const stringToUint8Array: (_: string) => Uint8Array = (str: string) => {
   const encoder = new TextEncoder();
   return encoder.encode(str);
 };

@@ -10,7 +10,7 @@ export const AppFooter: FC = () => {
     <AppShell.Footer>
       <Container fluid className={classes.footer}>
         <Anchor href='//truevote.org' className={classes.link} target='_blank'>
-          <Text size={'xs'}>
+          <Text size='xs'>
             {localization?.getLocalizedString('COPYRIGHT')} © 2023 TrueVote, Inc.
           </Text>
         </Anchor>
@@ -19,7 +19,7 @@ export const AppFooter: FC = () => {
           className={classes.link}
           target='_blank'
         >
-          <Text size={'xs'}>{localization?.getLocalizedString('VERSION')} 1.0</Text>
+          <Text size='xs'>{localization?.getLocalizedString('VERSION')} 1.0</Text>
         </Anchor>
       </Container>
     </AppShell.Footer>
