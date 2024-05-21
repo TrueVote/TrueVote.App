@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "vite --host --port 5173",
-    "build": "yarn build-version && tsc && vite build",
+    "build": "yarn lint && build-version && tsc && vite build",
     "serve": "http-server dist",
     "preview": "vite preview",
     "lint": "eslint",
