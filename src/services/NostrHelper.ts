@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import settings from '@/settings.json';
-import { nip19, SimplePool, SubCloser } from 'nostr-tools';
+import { nip19, SimplePool } from 'nostr-tools';
+import { SubCloser } from 'nostr-tools/lib/types/abstract-pool';
 import {
   finalizeEvent,
   generateSecretKey,
