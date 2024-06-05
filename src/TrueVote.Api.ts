@@ -425,9 +425,16 @@ export interface RaceModel {
   RaceTypeName: string;
   /**
    * @format int32
-   * @maxLength 2048
+   * @min 0
+   * @max 2147483647
    */
-  NumberOfChoices?: number | null;
+  MaxNumberOfChoices?: number | null;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MinNumberOfChoices?: number | null;
   /** @format date */
   DateCreated: string;
   Candidates?: CandidateModel[] | null;

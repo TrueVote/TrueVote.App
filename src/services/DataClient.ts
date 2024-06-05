@@ -54,7 +54,8 @@ export const DBGetElectionById = (
           Name
           RaceId
           RaceType
-          NumberOfChoices
+          MinNumberOfChoices
+          MaxNumberOfChoices
           RaceTypeName
           Candidates {
             CandidateId

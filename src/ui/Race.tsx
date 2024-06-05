@@ -15,17 +15,17 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
   );
 
   // If it's a multi-select race type, then determine how many multi-selects or ranked choice
-  let numberOfChoices: number = 0;
-  if (race.NumberOfChoices !== null && race.NumberOfChoices !== undefined) {
-    numberOfChoices = Number(race.NumberOfChoices);
+  let maxNumberOfChoices: number = 0;
+  if (race.MaxNumberOfChoices !== null && race.MaxNumberOfChoices !== undefined) {
+    maxNumberOfChoices = Number(race.MaxNumberOfChoices);
   }
 
   // Save state for Group level handleChange() to make sure user can't select more candidates than allowed
   const [values, setValues] = useState<string[]>([]);
 
   const handleChange: any = (selected: string[]): any => {
-    if (numberOfChoices > 0) {
-      setValues(selected.slice(0, numberOfChoices));
+    if (maxNumberOfChoices > 0) {
+      setValues(selected.slice(0, maxNumberOfChoices));
       console.info('handleChange()', selected);
     }
   };
@@ -42,9 +42,9 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
       });
     } else if (
       race.RaceType.toString() === RaceTypes.ChooseMany &&
-      race.NumberOfChoices !== null &&
-      race.NumberOfChoices !== undefined &&
-      race.NumberOfChoices > 0
+      race.MaxNumberOfChoices !== null &&
+      race.MaxNumberOfChoices !== undefined &&
+      race.MaxNumberOfChoices > 0
     ) {
       // It's choose many. See if the metadata property was set for "how many"
       // If the user is selecting > than the total number, don't let them do it
@@ -55,8 +55,8 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
 
       const candidatesSelectedCount: number = candidatesSelected.true | 0;
       console.info('Candidates Selected Count ', candidatesSelectedCount);
-      if (candidatesSelectedCount === Number(race.NumberOfChoices)) {
-        console.info('User trying to select more than ' + race.NumberOfChoices + ' candidates');
+      if (candidatesSelectedCount === Number(race.MaxNumberOfChoices)) {
+        console.info('User trying to select more than ' + race.MaxNumberOfChoices + ' candidates');
         race.Candidates?.map((cm: CandidateModel) => {
           if (cc.CandidateId === cm.CandidateId) {
             console.info('Setting choice to false for candidate: ', cm.Name);
@@ -69,9 +69,9 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
       }
     } else if (
       race.RaceType.toString() === RaceTypes.RankedChoice &&
-      race.NumberOfChoices !== null &&
-      race.NumberOfChoices !== undefined &&
-      race.NumberOfChoices > 0
+      race.MaxNumberOfChoices !== null &&
+      race.MaxNumberOfChoices !== undefined &&
+      race.MaxNumberOfChoices > 0
     ) {
       console.info('Ranked');
     }
@@ -128,10 +128,10 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
         label={raceLabel}
         size='sm'
         description={
-          race.NumberOfChoices !== null &&
-          race.NumberOfChoices !== undefined &&
-          race.NumberOfChoices > 0
-            ? 'Choose up to ' + race.NumberOfChoices
+          race.MaxNumberOfChoices !== null &&
+          race.MaxNumberOfChoices !== undefined &&
+          race.MaxNumberOfChoices > 0
+            ? 'Choose up to ' + race.MaxNumberOfChoices
             : 'Choose Multiple'
         } // TODO Localize English
       >
@@ -172,11 +172,11 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
           label={raceLabel}
           size='sm'
           description={
-            race.NumberOfChoices !== null &&
-            race.NumberOfChoices !== undefined &&
-            race.NumberOfChoices > 0
+            race.MaxNumberOfChoices !== null &&
+            race.MaxNumberOfChoices !== undefined &&
+            race.MaxNumberOfChoices > 0
               ? 'Ranked Choice - up to ' +
-                race.NumberOfChoices +
+                race.MaxNumberOfChoices +
                 ' selections in order of preference'
               : 'Ranked Choice'
           } // TODO Localize English
@@ -185,7 +185,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
           <RankedChoiceList
             candidates={race.Candidates}
             avatarCount={avatarCount}
-            maxChoices={Number(race.NumberOfChoices)}
+            maxChoices={Number(race.MaxNumberOfChoices)}
           />
         </Checkbox.Group>
       );
