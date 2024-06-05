@@ -23,14 +23,14 @@ const bdiff = (a: any, b: any): any =>
     [],
   );
 
-export const objectDifference = (a: any, b: any): any => {
+export const objectDifference = <T extends object>(a: T, b: T): string[] => {
   const u = bdiff(a, b),
     v = bdiff(b, a);
   return u
-    .filter((x: any) => !v.includes(x))
+    .filter((x: string) => !v.includes(x))
     .map((x: string) => ' < ' + x)
-    .concat(u.filter((x: any) => v.includes(x)).map((x: string) => ' | ' + x))
-    .concat(v.filter((x: any) => !u.includes(x)).map((x: string) => ' > ' + x));
+    .concat(u.filter((x: string) => v.includes(x)).map((x: string) => ' | ' + x))
+    .concat(v.filter((x: string) => !u.includes(x)).map((x: string) => ' > ' + x));
 };
 
 // Fake function to simulate a delay

@@ -3,15 +3,14 @@ import '@mantine/core/styles.css';
 import { Helmet, HelmetData } from 'react-helmet-async';
 import classes from './Hero.module.css';
 
-const helmetData: any = new HelmetData({});
+const helmetData: HelmetData = new HelmetData({});
 
-export const Hero: any = ({
-  title,
-  subTitle,
-}: {
+interface HeroProps {
   title: React.ReactNode;
   subTitle?: React.ReactNode;
-}) => {
+}
+
+export const Hero: React.FC<HeroProps> = ({ title, subTitle }) => {
   return (
     <>
       <Helmet helmetData={helmetData}>
