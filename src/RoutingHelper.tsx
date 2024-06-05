@@ -29,7 +29,6 @@ interface ProtectedLinkProps {
 }
 
 interface ProtectedNavLinkProps {
-  key: string;
   to: string;
   children: React.ReactNode;
   className?: string;
@@ -89,7 +88,6 @@ export const ProtectedLink: React.FC<ProtectedLinkProps> = ({
 };
 
 export const ProtectedNavLink: React.FC<ProtectedNavLinkProps> = ({
-  key,
   to,
   children,
   className = '',
@@ -106,7 +104,6 @@ export const ProtectedNavLink: React.FC<ProtectedNavLinkProps> = ({
 
   return (
     <NavLink
-      key={key}
       to={to}
       className={className}
       onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
