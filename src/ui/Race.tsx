@@ -31,11 +31,12 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
   };
 
   const setVal: any = (cc: CandidateModel, val: string) => {
-    console.info('setVal()', cc, val);
+    console.debug('setVal()', cc, val, race);
 
     // If this Race is a "choose one", need to loop through all the candidates and
     // unselect them in the data model.
     if (race.RaceType.toString() === RaceTypes.ChooseOne) {
+      console.debug('Race - Choose One');
       race.Candidates?.map((cm: CandidateModel) => {
         console.info('Setting choice to false for candidate: ', cm.Name);
         cm.Selected = JSON.parse('false');
@@ -46,6 +47,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
       race.MaxNumberOfChoices !== undefined &&
       race.MaxNumberOfChoices > 0
     ) {
+      console.debug('Race - Choose Many');
       // It's choose many. See if the metadata property was set for "how many"
       // If the user is selecting > than the total number, don't let them do it
       const candidatesSelected: any = _.countBy(
@@ -73,7 +75,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
       race.MaxNumberOfChoices !== undefined &&
       race.MaxNumberOfChoices > 0
     ) {
-      console.info('Ranked');
+      console.debug('Race - Ranked');
     }
 
     // Finally, set the candidate selected state to user selection
