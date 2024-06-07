@@ -232,11 +232,11 @@ export const DBSubmitBallot = async (
     })
       .then((res: Response) => {
         console.info('Response: /ballot/submitballot', res);
-        if (res.status === 409) {
+        if (res.status !== 201) {
           const j = res.json();
 
-          console.error('409 Error', j);
-          return Promise.reject<SubmitBallotModelResponse>(j);
+          console.error(res.status + ' Error', j);
+          return Promise.reject<Response>(res.statusText);
         }
         return res.json();
       })
