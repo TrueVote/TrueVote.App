@@ -21,9 +21,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build-api:local": "curl --insecure --output TrueVote.Api.swagger.json https://localhost:7253/swagger/v1/swagger.json && npx swagger-typescript-api --no-client --path ./TrueVote.Api.swagger.json --output ./src --name TrueVote.Api.ts",
-    "build-api:prod": "npx swagger-typescript-api --no-client --path https://api.truevote.org/api/swagger.json --output ./src --name TrueVote.Api.ts",
+    "build-api:prod": "npx swagger-typescript-api --no-client --path https://api.truevote.org/swagger/v1/swagger.json --output ./src --name TrueVote.Api.ts",
     "refresh-api:local": "yarn build-api:local && yarn fix-api",
-    "refresh-api:prod": "yarn build-api:local && yarn fix-api",
+    "refresh-api:prod": "yarn build-api:prod && yarn fix-api",
     "fix-api": "ts-node -P tsconfig.commonjs.json ./fixApi.ts",
     "build-version": "bash ./scripts/build-version.sh",
     "update-packages": "ncu -u"
