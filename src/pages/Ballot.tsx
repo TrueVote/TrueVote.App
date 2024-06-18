@@ -6,7 +6,7 @@ import {
 } from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
-import { objectDifference } from '@/ui/Helpers';
+import { formatErrorObject, objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -105,7 +105,7 @@ const Election: FC = () => {
       .catch((e: any) => {
         console.error('Error from ballot submission', e);
         setVisible((v: any) => !v);
-        errorModal(e);
+        errorModal(formatErrorObject(e));
       });
   };
 
@@ -124,7 +124,7 @@ const Election: FC = () => {
           onClose={(): void => setOpened(false)}
           opened={opened}
         >
-          <Text>Error: {errorMessage}</Text>
+          <Text style={{ whiteSpace: 'pre-wrap' }}>Error: {errorMessage}</Text>
         </Modal>
         <HeaderImage election={election} />
         <Text size='xl'>{election.Name}</Text>

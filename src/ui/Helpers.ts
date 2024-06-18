@@ -50,3 +50,22 @@ export const stringToUint8Array: (_: string) => Uint8Array = (str: string) => {
   const encoder = new TextEncoder();
   return encoder.encode(str);
 };
+
+// Function to format an error object into a string
+export const formatErrorObject = (e: any): string => {
+  let errorMessage = `${e.title}\n\n`;
+  if (e.errors) {
+    const errors = Object.entries(e.errors);
+    if (errors.length > 0) {
+      for (const [, value] of errors) {
+        if (Array.isArray(value)) {
+          const arrayErrors = value.map((error) => `${error}`);
+          errorMessage += arrayErrors.join('\n\n') + '\n\n';
+        } else {
+          errorMessage += `${value}\n\n`;
+        }
+      }
+    }
+  }
+  return errorMessage.trim();
+};

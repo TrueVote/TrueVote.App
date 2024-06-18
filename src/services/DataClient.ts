@@ -233,10 +233,10 @@ export const DBSubmitBallot = async (
       .then((res: Response) => {
         console.info('Response: /ballot/submitballot', res);
         if (res.status !== 201) {
-          const j = res.json();
-
-          console.error(res.status + ' Error', j);
-          return Promise.reject<Response>(res.statusText);
+          return res.json().then((errorData) => {
+            console.error(res.status + ' Error', errorData);
+            throw errorData; // Throw the error data object
+          });
         }
         return res.json();
       })
@@ -245,7 +245,7 @@ export const DBSubmitBallot = async (
         return Promise.resolve<SubmitBallotModelResponse>(data);
       })
       .catch((e: any) => {
-        return Promise.reject<any>(e);
+        return Promise.reject<any>(e); // Reject with the error object
       }),
   );
 };
