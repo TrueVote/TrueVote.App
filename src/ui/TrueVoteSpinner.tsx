@@ -1,4 +1,4 @@
-export const TrueVoteSpinner = (): any => (
+export const TrueVoteSpinner = (): JSX.Element => (
   <svg width='154' height='154' viewBox='0 0 38 38' xmlns='http://www.w3.org/2000/svg'>
     <g fill='none' fillRule='evenodd'>
       <g transform='translate(1 1)' strokeWidth='2'>

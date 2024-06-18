@@ -23,14 +23,14 @@ const bdiff = (a: any, b: any): any =>
     [],
   );
 
-export const objectDifference = (a: any, b: any): any => {
+export const objectDifference = <T extends object>(a: T, b: T): string[] => {
   const u = bdiff(a, b),
     v = bdiff(b, a);
   return u
-    .filter((x: any) => !v.includes(x))
+    .filter((x: string) => !v.includes(x))
     .map((x: string) => ' < ' + x)
-    .concat(u.filter((x: any) => v.includes(x)).map((x: string) => ' | ' + x))
-    .concat(v.filter((x: any) => !u.includes(x)).map((x: string) => ' > ' + x));
+    .concat(u.filter((x: string) => v.includes(x)).map((x: string) => ' | ' + x))
+    .concat(v.filter((x: string) => !u.includes(x)).map((x: string) => ' > ' + x));
 };
 
 // Fake function to simulate a delay
@@ -49,4 +49,28 @@ export const uint8ArrayToArray: (_: Uint8Array) => number[] = (uint8Array: Uint8
 export const stringToUint8Array: (_: string) => Uint8Array = (str: string) => {
   const encoder = new TextEncoder();
   return encoder.encode(str);
+};
+
+// Function to format an error object into a string
+export const formatErrorObject = (e: any): string => {
+  console.info('formatErrorObject', e);
+  if (e.title === undefined) {
+    return e.Value;
+  } else {
+    let errorMessage = `${e.title}\n\n`;
+    if (e.errors) {
+      const errors = Object.entries(e.errors);
+      if (errors.length > 0) {
+        for (const [, value] of errors) {
+          if (Array.isArray(value)) {
+            const arrayErrors = value.map((error) => `${error}`);
+            errorMessage += arrayErrors.join('\n\n') + '\n\n';
+          } else {
+            errorMessage += `${value}\n\n`;
+          }
+        }
+      }
+    }
+    return errorMessage.trim();
+  }
 };

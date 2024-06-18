@@ -189,7 +189,7 @@ export interface CandidateModel {
   CandidateImageUrl?: string | null;
   /** @format date */
   DateCreated: string;
-  Selected?: boolean;
+  Selected?: boolean | null;
   /**
    * @format string
    * @maxLength 1024
@@ -424,10 +424,17 @@ export interface RaceModel {
    */
   RaceTypeName: string;
   /**
-   * @format string
-   * @maxLength 2048
+   * @format int32
+   * @min 0
+   * @max 2147483647
    */
-  RaceTypeMetadata?: string | null;
+  MaxNumberOfChoices?: number | null;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MinNumberOfChoices?: number | null;
   /** @format date */
   DateCreated: string;
   Candidates?: CandidateModel[] | null;

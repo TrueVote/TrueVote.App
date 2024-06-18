@@ -6,7 +6,7 @@ import {
 } from '@/TrueVote.Api';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
-import { objectDifference } from '@/ui/Helpers';
+import { formatErrorObject, objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -29,12 +29,34 @@ import { FC, useState } from 'react';
 import { NavigateFunction, Params, useNavigate, useParams } from 'react-router-dom';
 
 export const Ballot: FC = () => {
-  return <Election />;
-};
-
-const Election: FC = () => {
   const params: Params<string> = useParams();
   const navigate: NavigateFunction = useNavigate();
+
+  const { loading, error, data } = DBGetElectionById(params.electionId);
+
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
+
+  if (error) {
+    console.error(error);
+    return <>`Error ${error.message}`</>;
+  }
+  console.info(data);
+
+  const election: ElectionModel = data!.GetElectionById[0];
+  const electionBallot: ElectionModel = _.cloneDeep(election);
+
+  return <Election election={election} electionBallot={electionBallot} navigate={navigate} />;
+};
+
+interface ElectionProps {
+  election: ElectionModel;
+  electionBallot: ElectionModel;
+  navigate: NavigateFunction;
+}
+
+const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => {
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -44,21 +66,7 @@ const Election: FC = () => {
     setOpened((v: any) => !v);
   };
 
-  const { loading, error, data } = DBGetElectionById(params.electionId);
-  if (loading) {
-    return <TrueVoteLoader />;
-  }
-  if (error) {
-    console.error(error);
-    return <>`Error ${error.message}`</>;
-  }
-  console.info(data);
-
-  const election: ElectionModel = data!.GetElectionById[0];
-
-  const modifiedElection: ElectionModel = _.cloneDeep(election);
-
-  const races: RaceModel[] = modifiedElection.Races?.map((e: RaceModel) => (
+  const races: RaceModel[] = electionBallot.Races?.map((e: RaceModel) => (
     <Race race={e} key={e.RaceId} />
   )) as unknown as RaceModel[];
 
@@ -88,13 +96,13 @@ const Election: FC = () => {
 
   const submitBallot: any = async () => {
     console.info('Election', election);
-    console.info('modifiedElection', modifiedElection);
-    console.info('Diff', objectDifference(election, modifiedElection));
+    console.info('electionBallot', electionBallot);
+    console.info('Diff', objectDifference(election, electionBallot));
 
     setVisible((v: any) => !v);
 
     const submitBallotModel: SubmitBallotModel = {} as SubmitBallotModel;
-    submitBallotModel.Election = modifiedElection;
+    submitBallotModel.Election = electionBallot;
 
     DBSubmitBallot(submitBallotModel)
       .then((res: SubmitBallotModelResponse) => {
@@ -105,7 +113,7 @@ const Election: FC = () => {
       .catch((e: any) => {
         console.error('Error from ballot submission', e);
         setVisible((v: any) => !v);
-        errorModal(e);
+        errorModal(formatErrorObject(e));
       });
   };
 
@@ -124,7 +132,7 @@ const Election: FC = () => {
           onClose={(): void => setOpened(false)}
           opened={opened}
         >
-          <Text>Error: {errorMessage}</Text>
+          <Text style={{ whiteSpace: 'pre-wrap' }}>Error: {errorMessage}</Text>
         </Modal>
         <HeaderImage election={election} />
         <Text size='xl'>{election.Name}</Text>
