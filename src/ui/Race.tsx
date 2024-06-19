@@ -30,6 +30,38 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
     }
   };
 
+  const minChoiceDescriptionFormatted: string =
+    race.MinNumberOfChoices !== null &&
+    race.MinNumberOfChoices !== undefined &&
+    race.MinNumberOfChoices > 0
+      ? 'from ' + race.MinNumberOfChoices + ' '
+      : 'up ';
+
+  const choiceDescriptionFormatted: string =
+    race.MaxNumberOfChoices !== null &&
+    race.MaxNumberOfChoices !== undefined &&
+    race.MaxNumberOfChoices > 0
+      ? 'Choose ' + minChoiceDescriptionFormatted + 'to ' + race.MaxNumberOfChoices
+      : 'Choose Multiple';
+
+  const rankedChoiceDescriptionFormatted: string =
+    race.MaxNumberOfChoices !== null &&
+    race.MaxNumberOfChoices !== undefined &&
+    race.MaxNumberOfChoices > 0
+      ? 'Ranked Choice - Choose ' +
+        minChoiceDescriptionFormatted +
+        ' to ' +
+        race.MaxNumberOfChoices +
+        ' selections in order of preference'
+      : 'Ranked Choice';
+
+  const chooseOneDescriptionFormatted: string =
+    race.MinNumberOfChoices !== null &&
+    race.MinNumberOfChoices !== undefined &&
+    race.MinNumberOfChoices > 0
+      ? 'Must Choose 1'
+      : 'Choose 1';
+
   const setVal: any = (cc: CandidateModel, val: string) => {
     console.debug('setVal()', cc, val, race);
 
@@ -92,7 +124,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
         name={race.Name}
         label={raceLabel}
         size='sm'
-        description='Choose One' // TODO Localize English
+        description={chooseOneDescriptionFormatted}
       >
         <Space h='md' />
         {race.Candidates?.map((e: CandidateModel) => (
@@ -129,13 +161,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
         key={race.RaceId}
         label={raceLabel}
         size='sm'
-        description={
-          race.MaxNumberOfChoices !== null &&
-          race.MaxNumberOfChoices !== undefined &&
-          race.MaxNumberOfChoices > 0
-            ? 'Choose up to ' + race.MaxNumberOfChoices
-            : 'Choose Multiple'
-        } // TODO Localize English
+        description={choiceDescriptionFormatted}
       >
         <Space h='md' />
         {race.Candidates?.map((e: CandidateModel) => (
@@ -173,15 +199,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
           key={race.RaceId}
           label={raceLabel}
           size='sm'
-          description={
-            race.MaxNumberOfChoices !== null &&
-            race.MaxNumberOfChoices !== undefined &&
-            race.MaxNumberOfChoices > 0
-              ? 'Ranked Choice - up to ' +
-                race.MaxNumberOfChoices +
-                ' selections in order of preference'
-              : 'Ranked Choice'
-          } // TODO Localize English
+          description={rankedChoiceDescriptionFormatted}
         >
           <Space h='md' />
           <RankedChoiceList
