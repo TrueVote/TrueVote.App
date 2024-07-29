@@ -13,6 +13,7 @@ module.exports = [
       '@typescript-eslint': typescriptEslintPlugin,
     },
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['scripts/*'],
     languageOptions: {
       parser: typescriptEslintParser,
       parserOptions: {
@@ -53,6 +54,7 @@ module.exports = [
       },
     },
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['scripts/*'],
     rules: {
       'react/jsx-uses-react': 'off', // React 17+ no longer needs this
       'react/react-in-jsx-scope': 'off', // React 17+ no longer needs this
@@ -92,6 +94,7 @@ module.exports = [
       'react-hooks/exhaustive-deps': 'off',
     },
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['scripts/*'],
   },
 
   // Accessibility specific configurations
@@ -119,5 +122,6 @@ module.exports = [
       'jsx-a11y/scope': 'warn',
     },
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['scripts/*'],
   },
 ];

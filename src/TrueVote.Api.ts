@@ -189,7 +189,7 @@ export interface CandidateModel {
   CandidateImageUrl?: string | null;
   /** @format date */
   DateCreated: string;
-  Selected?: boolean | null;
+  Selected: boolean;
   /**
    * @format string
    * @maxLength 1024
