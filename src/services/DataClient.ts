@@ -53,10 +53,11 @@ export const DBGetElectionById = (
         Races {
           Name
           RaceId
+          DateCreated
           RaceType
+          RaceTypeName
           MinNumberOfChoices
           MaxNumberOfChoices
-          RaceTypeName
           Candidates {
             CandidateId
             DateCreated
@@ -117,6 +118,7 @@ export const DBAllBallots = (): QueryResult<{
             Races {
               Name
               RaceId
+              DateCreated
               RaceType
               RaceTypeName
               Candidates {
@@ -181,6 +183,7 @@ export const DBGetBallotById = (
             Races {
               Name
               RaceId
+              DateCreated
               RaceType
               RaceTypeName
               Candidates {

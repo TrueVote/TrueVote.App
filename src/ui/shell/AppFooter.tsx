@@ -11,7 +11,7 @@ export const AppFooter: FC = () => {
       <Container fluid className={classes.footer}>
         <Anchor href='//truevote.org' className={classes.link} target='_blank'>
           <Text size='xs'>
-            {localization?.getLocalizedString('COPYRIGHT')} © 2023 TrueVote, Inc.
+            {localization?.getLocalizedString('COPYRIGHT')} © 2024 TrueVote, Inc.
           </Text>
         </Anchor>
         <Anchor
