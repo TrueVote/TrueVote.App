@@ -89,10 +89,22 @@ export interface BaseCandidateModel {
   Name: string;
   /**
    * @format string
-   * @minLength 1
    * @maxLength 2048
    */
-  PartyAffiliation: string;
+  PartyAffiliation?: string | null;
+  /**
+   * @format string
+   * @maxLength 1024
+   */
+  CandidateImageUrl?: string | null;
+  /** @format date */
+  DateCreated: string;
+  Selected: boolean;
+  /**
+   * @format string
+   * @maxLength 1024
+   */
+  SelectedMetadata?: string | null;
 }
 
 export interface BaseElectionModel {
@@ -118,7 +130,7 @@ export interface BaseElectionModel {
   StartDate: string;
   /** @format date */
   EndDate: string;
-  Races: RaceModel[];
+  Races: BaseRaceModel[];
 }
 
 export interface BaseRaceModel {
@@ -129,6 +141,27 @@ export interface BaseRaceModel {
    */
   Name: string;
   RaceType: RaceTypes;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceTypeName: string;
+  /** @format date */
+  DateCreated: string;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MaxNumberOfChoices?: number | null;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MinNumberOfChoices?: number | null;
+  BaseCandidates: BaseCandidateModel[];
 }
 
 export interface BaseUserModel {
@@ -170,12 +203,6 @@ export interface CandidateModel {
    * @minLength 1
    * @maxLength 2048
    */
-  CandidateId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
   Name: string;
   /**
    * @format string
@@ -195,6 +222,12 @@ export interface CandidateModel {
    * @maxLength 1024
    */
   SelectedMetadata?: string | null;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CandidateId: string;
 }
 
 export interface CandidateModelList {
@@ -223,17 +256,6 @@ export interface ElectionModel {
    * @minLength 1
    * @maxLength 2048
    */
-  ElectionId: string;
-  /**
-   * @format string
-   * @maxLength 2048
-   */
-  ParentElectionId?: string | null;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
   Name: string;
   /**
    * @format string
@@ -244,13 +266,24 @@ export interface ElectionModel {
   /**
    * @format string
    * @minLength 1
-   * @maxLength 32768
+   * @maxLength 1024
    */
   HeaderImageUrl: string;
   /** @format date */
   StartDate: string;
   /** @format date */
   EndDate: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /**
+   * @format string
+   * @maxLength 2048
+   */
+  ParentElectionId?: string | null;
   /** @format date */
   DateCreated: string;
   Races: RaceModel[];
@@ -409,12 +442,6 @@ export interface RaceModel {
    * @minLength 1
    * @maxLength 2048
    */
-  RaceId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
   Name: string;
   RaceType: RaceTypes;
   /**
@@ -423,6 +450,14 @@ export interface RaceModel {
    * @maxLength 2048
    */
   RaceTypeName: string;
+  /** @format date */
+  DateCreated: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceId: string;
   /**
    * @format int32
    * @min 0
@@ -435,9 +470,7 @@ export interface RaceModel {
    * @max 2147483647
    */
   MinNumberOfChoices?: number | null;
-  /** @format date */
-  DateCreated: string;
-  Candidates?: CandidateModel[] | null;
+  Candidates: CandidateModel[];
 }
 
 export interface RaceModelList {
