@@ -19,6 +19,7 @@ interface Props {
   candidates: CandidateModel[] | null;
   avatarCount: number;
   maxChoices: number;
+  onSelectionChange: () => void;
 }
 
 const RenderCandidate: React.FC<{
@@ -65,6 +66,7 @@ export const RankedChoiceList: React.FC<Props> = ({
   candidates,
   avatarCount,
   maxChoices,
+  onSelectionChange,
 }: Props) => {
   const initialNotSelectedCandidates: CandidateModel[] = candidates ? [...candidates] : [];
   const [selectedState, selectedHandlers] = useListState<CandidateModel>([]);
@@ -93,6 +95,7 @@ export const RankedChoiceList: React.FC<Props> = ({
 
   useEffect(() => {
     reSelect();
+    onSelectionChange();
   });
 
   return (
