@@ -185,6 +185,12 @@
   font-size: var(--mantine-h4-font-size);
 }
 
+.ballotButton {
+  &[disabled] {
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  }
+}
+
 .boxGap {
   height: 15px;
 }

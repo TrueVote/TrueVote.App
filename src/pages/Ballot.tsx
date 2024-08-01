@@ -194,6 +194,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
           fullWidth
           mt='md'
           radius='md'
+          className={classes.ballotButton}
           disabled={!isSubmitEnabled}
           onClick={(): void => submitBallot()}
         >
