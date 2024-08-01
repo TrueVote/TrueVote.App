@@ -3,7 +3,9 @@ import classes from '@/ui/shell/AppStyles.module.css';
 import {
   DragDropContext,
   Draggable,
+  DraggableLocation,
   DraggableProvided,
+  DraggableStateSnapshot,
   Droppable,
   DroppableProvided,
 } from '@hello-pangea/dnd';
@@ -20,6 +22,7 @@ interface Props {
   avatarCount: number;
   maxChoices: number;
   onSelectionChange: () => void;
+  resetTrigger: number;
 }
 
 const RenderCandidate: React.FC<{
@@ -67,43 +70,65 @@ export const RankedChoiceList: React.FC<Props> = ({
   avatarCount,
   maxChoices,
   onSelectionChange,
+  resetTrigger,
 }: Props) => {
-  const initialNotSelectedCandidates: CandidateModel[] = candidates ? [...candidates] : [];
   const [selectedState, selectedHandlers] = useListState<CandidateModel>([]);
-  const [notSelectedState, notSelectedHandlers] = useListState<CandidateModel>(
-    initialNotSelectedCandidates,
-  );
+  const [notSelectedState, notSelectedHandlers] = useListState<CandidateModel>([]);
   const [isMaxSelected, setIsMaxSelected] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const selectedDroppableClass: string = cx({
     [listClasses.selectedDroppable]: isMaxSelected,
   });
 
-  const reSelect: any = () => {
-    // Loop through all the selected candidates and reset the order and selected state
-    selectedState.map((c: CandidateModel, index: number) => {
+  const reSelect = (): void => {
+    selectedState.forEach((c: CandidateModel, index: number) => {
       c.Selected = true;
       c.SelectedMetadata = index.toString();
     });
 
-    // Loop through all the unselected candidates and reset the order and selected state
-    notSelectedState.map((c: CandidateModel) => {
+    notSelectedState.forEach((c: CandidateModel) => {
       c.Selected = false;
       c.SelectedMetadata = '';
     });
   };
 
   useEffect(() => {
+    if (!isInitialized) {
+      const initialSelected = candidates?.filter((c) => c.Selected) ?? [];
+      const initialNotSelected = candidates?.filter((c) => !c.Selected) ?? [];
+      selectedHandlers.setState(initialSelected);
+      notSelectedHandlers.setState(initialNotSelected);
+      setIsInitialized(true);
+    }
+  }, [candidates, isInitialized]);
+
+  useEffect(() => {
+    if (resetTrigger > 0) {
+      selectedHandlers.setState([]);
+      notSelectedHandlers.setState(candidates ?? []);
+      reSelect();
+      onSelectionChange();
+    }
+  }, [resetTrigger]);
+
+  useEffect(() => {
     reSelect();
     onSelectionChange();
-  });
+  }, [selectedState, notSelectedState]);
 
   return (
     <DragDropContext
       onDragStart={() => {
         setIsMaxSelected(selectedState.length >= maxChoices);
       }}
-      onDragEnd={({ destination, source }: any) => {
+      onDragEnd={({
+        destination,
+        source,
+      }: {
+        destination: DraggableLocation | null;
+        source: DraggableLocation;
+      }) => {
         setIsMaxSelected(false);
 
         if (!destination) return;
@@ -162,10 +187,10 @@ export const RankedChoiceList: React.FC<Props> = ({
                 index={index}
                 draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
               >
-                {(provided: any) => (
+                {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                   <div
                     className={cx(listClasses.item, {
-                      [listClasses.itemDragging]: provided.isDragging,
+                      [listClasses.itemDragging]: snapshot.isDragging,
                     })}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -196,10 +221,10 @@ export const RankedChoiceList: React.FC<Props> = ({
                 index={index}
                 draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
               >
-                {(provided: any) => (
+                {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                   <div
                     className={cx(listClasses.item, {
-                      [listClasses.itemDragging]: provided.isDragging,
+                      [listClasses.itemDragging]: snapshot.isDragging,
                     })}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
