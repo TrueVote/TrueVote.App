@@ -7,7 +7,15 @@ import { useState } from 'react';
 import { formatCandidateName } from './Helpers';
 import { RankedChoiceList } from './RankedChoiceList';
 
-const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: number }) => {
+const RaceGroup: any = ({
+  race,
+  avatarCount,
+  onSelectionChange,
+}: {
+  race: RaceModel;
+  avatarCount: number;
+  onSelectionChange: () => void;
+}) => {
   const raceLabel: React.ReactNode = (
     <Title key={race.RaceId} order={4}>
       {race.Name}
@@ -114,6 +122,8 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
     // This will likely always be 'true' for 'choose one' and 'toggle' for 'choose many'
     console.info('Setting choice to ' + val + ' for candidate: ', cc.Name);
     cc.Selected = JSON.parse(val);
+
+    onSelectionChange();
   };
 
   // TODO DRY this out
@@ -206,6 +216,7 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
             candidates={race.Candidates}
             avatarCount={avatarCount}
             maxChoices={Number(race.MaxNumberOfChoices)}
+            onSelectionChange={onSelectionChange}
           />
         </Checkbox.Group>
       );
@@ -238,7 +249,15 @@ const RaceGroup: any = ({ race, avatarCount }: { race: RaceModel; avatarCount: n
   }
 };
 
-export const Race: any = ({ race, election }: { race: RaceModel; election: ElectionModel }) => {
+export const Race: any = ({
+  race,
+  election,
+  onSelectionChange,
+}: {
+  race: RaceModel;
+  election: ElectionModel;
+  onSelectionChange: () => void;
+}) => {
   // If the Race has no avatars amongst all the candidates, then this counter will be used above to
   // hide the avatar elements completely.
   const candidatesWithImages: any = _.countBy(
@@ -250,7 +269,13 @@ export const Race: any = ({ race, election }: { race: RaceModel; election: Elect
 
   return (
     <Card key={race.RaceId} className={classes.cardWide} shadow='sm' p='xs' radius='lg' withBorder>
-      <RaceGroup key={race.RaceId} race={race} election={election} avatarCount={avatarCount} />
+      <RaceGroup
+        key={race.RaceId}
+        race={race}
+        election={election}
+        avatarCount={avatarCount}
+        onSelectionChange={onSelectionChange}
+      />
     </Card>
   );
 };

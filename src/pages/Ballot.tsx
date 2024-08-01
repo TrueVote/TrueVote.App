@@ -25,7 +25,7 @@ import {
 } from '@mantine/core';
 import _ from 'lodash';
 import moment from 'moment';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { NavigateFunction, Params, useNavigate, useParams } from 'react-router-dom';
 
 export const Ballot: FC = () => {
@@ -66,8 +66,35 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
     setOpened((v: any) => !v);
   };
 
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+
+  const isRaceValid = (race: RaceModel): boolean => {
+    if (!race.Candidates) return false;
+
+    const selectedCount = race.Candidates.filter((c) => c.Selected === true).length;
+    const minChoices = race.MinNumberOfChoices ?? 0;
+    const maxChoices = race.MaxNumberOfChoices ?? 0;
+
+    const valid = selectedCount >= minChoices && selectedCount <= maxChoices;
+    console.debug('isRaceValid()', 'Name', race.Name, selectedCount, minChoices, maxChoices, valid);
+
+    return valid;
+  };
+
+  const areAllRacesValid = (races: RaceModel[]): boolean => {
+    return races.every(isRaceValid);
+  };
+
+  const updateSubmitButtonState = (): void => {
+    setIsSubmitEnabled(areAllRacesValid(electionBallot.Races));
+  };
+
+  useEffect(() => {
+    updateSubmitButtonState();
+  }, [electionBallot.Races]);
+
   const races: RaceModel[] = electionBallot.Races?.map((e: RaceModel) => (
-    <Race race={e} key={e.RaceId} />
+    <Race race={e} key={e.RaceId} onSelectionChange={updateSubmitButtonState} />
   )) as unknown as RaceModel[];
 
   const HeaderImage: any = ({ election }: { election: ElectionModel }) => {
@@ -167,6 +194,8 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
           fullWidth
           mt='md'
           radius='md'
+          className={classes.ballotButton}
+          disabled={!isSubmitEnabled}
           onClick={(): void => submitBallot()}
         >
           Submit Ballot
