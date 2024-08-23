@@ -399,7 +399,7 @@ export const DBSaveUser = async (user: UserModel): Promise<UserModel> => {
 };
 
 export const DBSaveFeedback = async (feedback: FeedbackModel): Promise<SecureString> => {
-  console.info('DBSaveFeedback->user', feedback);
+  console.info('DBSaveFeedback->feedback', feedback);
 
   try {
     const body: string = JSON.stringify(feedback);
