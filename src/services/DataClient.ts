@@ -2,6 +2,7 @@ import { EnvConfig } from '@/EnvConfig';
 import {
   BallotHashModel,
   BallotModel,
+  CheckCodeRequest,
   ElectionModel,
   FeedbackModel,
   SecureString,
@@ -429,6 +430,46 @@ export const DBSaveFeedback = async (feedback: FeedbackModel): Promise<SecureStr
   } catch (error: any) {
     const errorMessage: SecureString = {
       Value: 'Error in DBSaveFeedback: ' + (error.Value !== undefined ? error.Value : error),
+    };
+    console.error(errorMessage);
+    throw errorMessage;
+  }
+};
+
+export const DBCheckAccessCode = async (
+  checkCodeRequest: CheckCodeRequest,
+): Promise<ElectionModel> => {
+  console.info('DBCheckAccessCode->AccessCode', checkCodeRequest.AccessCode);
+
+  try {
+    const queryParams = new URLSearchParams();
+    queryParams.append('UserId', checkCodeRequest.UserId);
+    queryParams.append('AccessCode', checkCodeRequest.AccessCode);
+    console.info('Body: /election/checkaccesscode', queryParams.toString());
+
+    const response = await FetchHelper.fetchWithToken(
+      getJwt(),
+      EnvConfig.apiRoot + '/api/election/checkaccesscode?' + queryParams.toString(),
+      {
+        method: 'GET',
+        headers: setHeaders(),
+      },
+    );
+
+    console.info('Response: /election/checkaccesscode', response);
+
+    if (response.status !== 200) {
+      const errorMessage: SecureString = { Value: await response.statusText };
+      console.error('Error in response of DBCheckAccessCode', response.status, errorMessage);
+      throw errorMessage;
+    }
+
+    const data: ElectionModel = await response.json();
+    console.info('Data: /election/checkaccesscode', data);
+    return data;
+  } catch (error: any) {
+    const errorMessage: SecureString = {
+      Value: 'Error in DBCheckAccessCode: ' + (error.Value !== undefined ? error.Value : error),
     };
     console.error(errorMessage);
     throw errorMessage;

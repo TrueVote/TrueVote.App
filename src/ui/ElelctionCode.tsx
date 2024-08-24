@@ -1,5 +1,6 @@
-import { ElectionModel } from '@/TrueVote.Api';
-import { DBAllElections } from '@/services/DataClient';
+import { useGlobalContext } from '@/Global';
+import { CheckCodeRequest, ElectionModel, SecureString } from '@/TrueVote.Api';
+import { DBAllElections, DBCheckAccessCode } from '@/services/DataClient';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   Accordion,
@@ -31,12 +32,31 @@ export const ElectionCode: FC = () => {
   const [accessCode, setAccessCode] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const [codeEntered, setCodeEntered] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const { userModel } = useGlobalContext();
 
-  const applyCode: any = (): any => {
+  const checkCode: any = async () => {
+    console.info('checkCode', accessCode);
+
     setIsClicked(true);
-    setTimeout(() => setCodeEntered(true), 800);
-    console.info('Access Code', accessCode);
-    setTimeout(() => setIsClicked(false), 1000);
+    setErrorMessage('');
+
+    const checkCodeRequest: CheckCodeRequest = {
+      UserId: userModel && userModel.UserId ? userModel.UserId : '',
+      AccessCode: accessCode,
+    };
+
+    DBCheckAccessCode(checkCodeRequest)
+      .then((res: ElectionModel) => {
+        console.info('DBCheckAccessCode', res);
+        setTimeout(() => setIsClicked(false), 3000);
+        setTimeout(() => setCodeEntered(true), 800);
+      })
+      .catch((e: SecureString) => {
+        console.error('Error from DBCheckAccessCode', e);
+        setErrorMessage(e.Value);
+        setTimeout(() => setIsClicked(false), 3000);
+      });
   };
 
   return (
@@ -68,13 +88,20 @@ export const ElectionCode: FC = () => {
                     color='green'
                     radius='xl'
                     aria-label='ElectionAccessCode'
-                    onClick={(): void => applyCode()}
+                    onClick={(): void => checkCode()}
                     variant={isClicked ? 'filled' : 'outline'}
                   >
                     <IconCheck style={{ width: '70%', height: '70%' }} stroke={1.5} />
                   </ActionIcon>
                 </Table.Td>
               </Table.Tr>
+              {errorMessage && (
+                <Table.Tr>
+                  <Table.Td colSpan={3} className={classes.tdCenter}>
+                    <Text>{errorMessage}</Text>
+                  </Table.Td>
+                </Table.Tr>
+              )}
             </Table.Tbody>
           </Table>
           {codeEntered && (
