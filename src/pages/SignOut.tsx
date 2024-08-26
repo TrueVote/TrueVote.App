@@ -11,10 +11,12 @@ export const SignOut: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const { updateUserModel } = useGlobalContext();
+  const { updateAccessCodes } = useGlobalContext();
 
   const signOutClick: any = (): void => {
     updateNostrProfile(emptyNostrProfile);
     updateUserModel(emptyUserModel);
+    updateAccessCodes([]);
     nostrSignOut();
     jwtSignOut();
     console.info('Signed out');

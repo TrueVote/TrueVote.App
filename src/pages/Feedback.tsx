@@ -16,7 +16,7 @@ export const Feedback: FC = () => {
   const [done, setDone] = useState(false);
 
   const submitFeedback: any = async () => {
-    console.info('Feedback', feedback);
+    console.info('submitFeedback', feedback);
 
     setIsClicked(true);
     setVisible((v: boolean) => !v);
