@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { UserModel } from '@/TrueVote.Api';
-import React, { Context, ReactNode, createContext, useContext, useState } from 'react';
+import React, { Context, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { Localization } from './services/Localization';
 import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
 
@@ -23,9 +23,13 @@ interface GlobalContextType {
   nostrProfile: NostrProfile | undefined;
   userModel: UserModel | undefined;
   localization: Localization | undefined;
+  accessCodes: string[] | undefined;
   updateNostrProfile: (np: NostrProfile) => void;
   updateUserModel: (ui: UserModel) => void;
   updateLocalization: (loc: Localization) => void;
+  updateAccessCodes: (ac: string[]) => void;
+  addAccessCode: (ac: string) => void;
+  removeAccessCode: (ac: string) => void;
 }
 
 const GlobalContext: Context<GlobalContextType | undefined> = createContext<
@@ -42,6 +46,14 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
   const [userModel, setUserModel] = useState<UserModel>(emptyUserModel);
   const [localization, setLocalization] = useState<Localization>();
+  const [accessCodes, setAccessCodes] = useState<string[]>(() => {
+    const savedCodes = localStorage.getItem('accessCodes');
+    return savedCodes ? JSON.parse(savedCodes) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('accessCodes', JSON.stringify(accessCodes));
+  }, [accessCodes]);
 
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
@@ -55,6 +67,28 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
     setLocalization(loc);
   };
 
+  const updateAccessCodes: (ac: string[]) => void = (ac: string[]) => {
+    setAccessCodes(ac);
+  };
+
+  const addAccessCode = (ac: string): void => {
+    setAccessCodes((prevCodes) => {
+      if (!prevCodes.includes(ac)) {
+        console.info('addAccessCode()', prevCodes, ac);
+        return [...prevCodes, ac];
+      }
+      return prevCodes;
+    });
+  };
+
+  const removeAccessCode = (ac: string): void => {
+    setAccessCodes((prevCodes) => {
+      const updatedCodes = prevCodes.filter((code) => code !== ac);
+      console.info('removeAccessCode()', prevCodes, ac);
+      return updatedCodes;
+    });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -64,6 +98,10 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
         updateUserModel,
         localization,
         updateLocalization,
+        accessCodes,
+        updateAccessCodes,
+        addAccessCode,
+        removeAccessCode,
       }}
     >
       {children}

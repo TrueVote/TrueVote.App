@@ -29,6 +29,7 @@ export const SignIn: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const { userModel, updateUserModel } = useGlobalContext();
+  const { updateAccessCodes } = useGlobalContext();
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [valid, setValid] = useState(false);
@@ -63,6 +64,7 @@ export const SignIn: FC = () => {
   };
 
   const signInClick: any = async () => {
+    updateAccessCodes([]);
     setVisible((v: any) => !v);
 
     console.info('Nostr Key:', nsec);
