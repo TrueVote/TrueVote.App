@@ -51,21 +51,29 @@ export const Ballot: FC = () => {
   const election: ElectionModel = data!.GetElectionById[0];
   const electionBallot: ElectionModel = _.cloneDeep(election);
 
-  return <Election election={election} electionBallot={electionBallot} navigate={navigate} />;
+  return (
+    <Election
+      election={election}
+      electionBallot={electionBallot}
+      navigate={navigate}
+      accessCodeProp={params.accessCode ? params.accessCode : ''}
+    />
+  );
 };
 
 interface ElectionProps {
   election: ElectionModel;
   electionBallot: ElectionModel;
   navigate: NavigateFunction;
+  accessCodeProp: string;
 }
 
-const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => {
+const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, accessCodeProp }) => {
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const listCheckIcon = <IconListCheck style={{ width: rem(16), height: rem(16) }} />;
-  const [accessCode, setAccessCode] = useState('');
+  const [accessCode, setAccessCode] = useState(accessCodeProp);
   const { nostrProfile } = useGlobalContext();
 
   const errorModal: any = (e: any) => {
