@@ -104,7 +104,10 @@ export const ElectionCode: FC = () => {
       </Accordion.Control>
       <Accordion.Panel>
         <Text>{e.Description}</Text>
-        <Link to={`/ballot/${e.ElectionId}`} className={classes.buttonText}>
+        <Link
+          to={`/ballot/${e.ElectionId}/${accessCodes ? accessCodes[i] : ''}`}
+          className={classes.buttonText}
+        >
           <Button
             fullWidth
             radius='md'

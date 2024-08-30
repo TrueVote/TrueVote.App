@@ -228,30 +228,37 @@ export const DBSubmitBallot = async (
   const body: string = JSON.stringify(submitBallotModel);
   console.info('Body: /ballot/submitballot', body);
 
-  return await Promise.resolve(
-    FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/ballot/submitballot', {
+  return await FetchHelper.fetchWithToken(
+    getJwt(),
+    EnvConfig.apiRoot + '/api/ballot/submitballot',
+    {
       method: 'POST',
       body: body,
       headers: setHeaders(),
-    })
-      .then((res: Response) => {
-        console.info('Response: /ballot/submitballot', res);
-        if (res.status !== 201) {
-          return res.json().then((errorData) => {
-            console.error(res.status + ' Error', errorData);
-            throw errorData; // Throw the error data object
-          });
+    },
+  )
+    .then(async (res: Response) => {
+      console.info('Response: /ballot/submitballot', res);
+      if (res.status !== 201) {
+        let errorData;
+        try {
+          errorData = await res.json();
+        } catch {
+          errorData = { message: res.statusText };
         }
-        return res.json();
-      })
-      .then((data: SubmitBallotModelResponse) => {
-        console.info('Data: /ballot/submitballot', data);
-        return Promise.resolve<SubmitBallotModelResponse>(data);
-      })
-      .catch((e: any) => {
-        return Promise.reject<any>(e); // Reject with the error object
-      }),
-  );
+        console.error(res.status + ' Error', errorData);
+        throw errorData;
+      }
+      return res.json();
+    })
+    .then((data: SubmitBallotModelResponse) => {
+      console.info('Data: /ballot/submitballot', data);
+      return data;
+    })
+    .catch((e: any) => {
+      console.error('Catch Error: /ballot/submitballot', e);
+      throw e;
+    });
 };
 
 export const APIStatus = async (): Promise<StatusModel> => {
