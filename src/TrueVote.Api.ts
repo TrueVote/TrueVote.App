@@ -641,6 +641,12 @@ export interface StatusModel {
 
 export interface SubmitBallotModel {
   Election: ElectionModel;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 16
+   */
+  AccessCode: string;
 }
 
 export interface SubmitBallotModelResponse {

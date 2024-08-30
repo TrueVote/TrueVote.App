@@ -54,23 +54,19 @@ export const stringToUint8Array: (_: string) => Uint8Array = (str: string) => {
 // Function to format an error object into a string
 export const formatErrorObject = (e: any): string => {
   console.info('formatErrorObject', e);
-  if (e.title === undefined) {
-    return e.Value;
-  } else {
-    let errorMessage = `${e.title}\n\n`;
-    if (e.errors) {
-      const errors = Object.entries(e.errors);
-      if (errors.length > 0) {
-        for (const [, value] of errors) {
-          if (Array.isArray(value)) {
-            const arrayErrors = value.map((error) => `${error}`);
-            errorMessage += arrayErrors.join('\n\n') + '\n\n';
-          } else {
-            errorMessage += `${value}\n\n`;
-          }
-        }
-      }
-    }
-    return errorMessage.trim();
+
+  if (e.message) return e.message;
+  if (e.Value) return e.Value;
+  if (!e.title) return 'Unknown error';
+
+  const errorParts = [e.title];
+
+  if (e.errors) {
+    const errorMessages = Object.values(e.errors).flatMap((value) =>
+      Array.isArray(value) ? value : [value],
+    );
+    errorParts.push(...errorMessages);
   }
+
+  return errorParts.join('\n\n').trim();
 };

@@ -1,3 +1,4 @@
+import { useGlobalContext } from '@/Global';
 import {
   ElectionModel,
   RaceModel,
@@ -20,9 +21,12 @@ import {
   Group,
   Image,
   Modal,
+  rem,
   Text,
+  TextInput,
   Title,
 } from '@mantine/core';
+import { IconListCheck } from '@tabler/icons-react';
 import _ from 'lodash';
 import moment from 'moment';
 import { FC, useEffect, useState } from 'react';
@@ -60,6 +64,9 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
   const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const listCheckIcon = <IconListCheck style={{ width: rem(16), height: rem(16) }} />;
+  const [accessCode, setAccessCode] = useState('');
+  const { nostrProfile } = useGlobalContext();
 
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
@@ -82,7 +89,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
   };
 
   const areAllRacesValid = (races: RaceModel[]): boolean => {
-    return races.every(isRaceValid);
+    return accessCode.length > 0 && races.every(isRaceValid);
   };
 
   const updateSubmitButtonState = (): void => {
@@ -91,7 +98,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
 
   useEffect(() => {
     updateSubmitButtonState();
-  }, [electionBallot.Races]);
+  }, [electionBallot.Races, accessCode]);
 
   const races: RaceModel[] = electionBallot.Races?.map((e: RaceModel) => (
     <Race race={e} key={e.RaceId} onSelectionChange={updateSubmitButtonState} />
@@ -126,10 +133,21 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
     console.info('electionBallot', electionBallot);
     console.info('Diff', objectDifference(election, electionBallot));
 
+    if (nostrProfile === null || String(nostrProfile?.npub).length === 0) {
+      errorModal('You must be logged in to submit a ballot.');
+      return;
+    }
+
+    if (accessCode.length === 0) {
+      errorModal('Election Access Code cannot be blank.');
+      return;
+    }
+
     setVisible((v: any) => !v);
 
     const submitBallotModel: SubmitBallotModel = {} as SubmitBallotModel;
     submitBallotModel.Election = electionBallot;
+    submitBallotModel.AccessCode = accessCode;
 
     DBSubmitBallot(submitBallotModel)
       .then((res: SubmitBallotModelResponse) => {
@@ -174,6 +192,21 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate }) => 
         <Text size='sm' c='dimmed'>
           {election.Description}
         </Text>
+        <Box className={classes.boxGap} />
+        <Card.Section>
+          <Card className={classes.cardWide} shadow='sm' p='xs' radius='lg' withBorder>
+            <div className={classes.flexShell}>
+              <TextInput
+                leftSection={listCheckIcon}
+                maxLength={16}
+                placeholder='Election Access Code'
+                value={accessCode}
+                width='100px'
+                onChange={(event) => setAccessCode(event.currentTarget.value)}
+              />
+            </div>
+          </Card>
+        </Card.Section>
         <Box className={classes.boxGap} />
         <Card.Section>
           <Flex
