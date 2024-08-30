@@ -32,7 +32,7 @@ export const ROUTES: ReactElement = (
           </ProtectedRoute>
         }
       />
-      <Route path='/ballot/:electionId' element={<Ballot />} />
+      <Route path='/ballot/:electionId/:accessCode?' element={<Ballot />} />
       <Route path='/ballotview/:ballotId' element={<BallotView />} />
       <Route path='/elections' element={<Elections />} />
       <Route
