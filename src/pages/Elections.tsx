@@ -1,5 +1,5 @@
 import { ElectionModel } from '@/TrueVote.Api';
-import { DBAllElections } from '@/services/DataClient';
+import { DBAllElections } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';

@@ -1,7 +1,7 @@
 import { SecureString } from '@/TrueVote.Api';
-import { storeJwt } from './DataClient';
 import { getNostrNsecFromStorage } from './NostrHelper';
 import { signInWithNostr } from './PagerHelper';
+import { storeJwt } from './RESTDataClient';
 
 export class FetchHelper {
   public static handleError(e: SecureString): void {

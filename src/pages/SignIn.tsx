@@ -1,5 +1,4 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
-import { jwtSignOut, storeJwt } from '@/services/DataClient';
 import {
   emptyNostrProfile,
   nostrKeyKeyHandler,
@@ -7,6 +6,7 @@ import {
   storeNostrKeys,
 } from '@/services/NostrHelper';
 import { signInWithNostr } from '@/services/PagerHelper';
+import { jwtSignOut, storeJwt } from '@/services/RESTDataClient';
 import { SecureString } from '@/TrueVote.Api';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';

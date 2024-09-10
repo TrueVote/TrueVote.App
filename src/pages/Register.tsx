@@ -1,5 +1,4 @@
 import { useGlobalContext } from '@/Global';
-import { jwtSignOut } from '@/services/DataClient';
 import {
   emptyNostrProfile,
   generateKeyPair,
@@ -8,6 +7,7 @@ import {
   nostrSignOut,
   storeNostrKeys,
 } from '@/services/NostrHelper';
+import { jwtSignOut } from '@/services/RESTDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';

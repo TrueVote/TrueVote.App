@@ -1,7 +1,7 @@
 import { useGlobalContext } from '@/Global';
 import { BallotList } from '@/TrueVote.Api';
 import { BallotBinder, BallotBinderStorage } from '@/services/BallotBinder';
-import { DBGetBallotById } from '@/services/DataClient';
+import { DBGetBallotById } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';

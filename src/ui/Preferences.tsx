@@ -1,6 +1,6 @@
 import { useGlobalContext } from '@/Global';
 import { SecureString, UserModel } from '@/TrueVote.Api';
-import { DBSaveUser } from '@/services/DataClient';
+import { DBSaveUser } from '@/services/RESTDataClient';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   Accordion,

@@ -1,6 +1,6 @@
 import { useGlobalContext } from '@/Global';
 import { FeedbackModel, SecureString } from '@/TrueVote.Api';
-import { DBSaveFeedback } from '@/services/DataClient';
+import { DBSaveFeedback } from '@/services/RESTDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';

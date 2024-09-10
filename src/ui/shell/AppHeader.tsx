@@ -1,10 +1,10 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
 import { ProtectedNavLink } from '@/RoutingHelper';
 import { SecureString } from '@/TrueVote.Api';
-import { jwtSignOut } from '@/services/DataClient';
 import { Localization } from '@/services/Localization';
 import { emptyNostrProfile, getNostrNsecFromStorage, nostrSignOut } from '@/services/NostrHelper';
 import { signInWithNostr } from '@/services/PagerHelper';
+import { jwtSignOut } from '@/services/RESTDataClient';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { useApolloClient } from '@apollo/client';
 import {

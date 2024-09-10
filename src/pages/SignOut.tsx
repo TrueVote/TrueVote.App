@@ -1,6 +1,6 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
-import { jwtSignOut } from '@/services/DataClient';
 import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
+import { jwtSignOut } from '@/services/RESTDataClient';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, HoverCard, Space, Stack, Text } from '@mantine/core';

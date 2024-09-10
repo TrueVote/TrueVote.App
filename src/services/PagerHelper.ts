@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { BaseUserModel, SecureString, SignInEventModel, SignInResponse } from '@/TrueVote.Api';
 import { NostrKind } from '@/TrueVote.Api.ManualModels';
-import { DBUserSignIn } from './DataClient';
 import { NostrProfile, getNostrProfileInfo, npubfromnsec, signEvent } from './NostrHelper';
+import { DBUserSignIn } from './RESTDataClient';
 
 export const signInWithNostr: (
   nsec: string,

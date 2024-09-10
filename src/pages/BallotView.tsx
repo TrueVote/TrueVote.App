@@ -7,7 +7,7 @@ import {
   RaceModel,
 } from '@/TrueVote.Api';
 import { RaceTypes } from '@/TrueVote.Api.ManualModels';
-import { DBGetBallotById } from '@/services/DataClient';
+import { DBGetBallotById } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatCandidateName } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
