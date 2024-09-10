@@ -14,7 +14,7 @@ export class BallotBinderStorage {
   private saveBallotBinders(ballotBinders: BallotBinder[]): void {
     const serialized = JSON.stringify(ballotBinders, (key, value) => {
       if (key === 'DateCreated' || key === 'DateUpdated') {
-        return (value as Date).toISOString();
+        return value instanceof Date ? value.toISOString() : value;
       }
       return value;
     });
@@ -27,7 +27,7 @@ export class BallotBinderStorage {
 
     return JSON.parse(serialized, (key, value) => {
       if (key === 'DateCreated' || key === 'DateUpdated') {
-        return new Date(value);
+        return value ? new Date(value) : null;
       }
       return value;
     });

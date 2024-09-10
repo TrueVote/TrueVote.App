@@ -1,3 +1,4 @@
+import { useGlobalContext } from '@/Global';
 import {
   BallotHashModel,
   BallotList,
@@ -28,20 +29,34 @@ import {
 } from '@mantine/core';
 import _ from 'lodash';
 import moment from 'moment';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
 
 export const BallotView: FC = () => {
-  return <Ballot />;
-};
-
-const Ballot: FC = () => {
   const { colorScheme } = useMantineColorScheme();
+  const { apolloClient } = useGlobalContext();
   const params: Params<string> = useParams();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [ballotList, setBallotList] = useState<BallotList>();
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
 
-  const { loading, error, data } = DBGetBallotById(params.ballotId);
+  useEffect(() => {
+    const fetchBallot = async (): Promise<void> => {
+      try {
+        const fetchedBallot: BallotList = await DBGetBallotById(apolloClient, params.ballotId);
+
+        setBallotList(fetchedBallot);
+        setLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+        setLoading(false);
+      }
+    };
+    fetchBallot();
+  }, []);
+
   if (loading) {
     return <TrueVoteLoader />;
   }
@@ -49,9 +64,8 @@ const Ballot: FC = () => {
     console.error(error);
     return <>`Error ${error.message}`</>;
   }
-  console.info(data);
+  console.info(ballotList);
 
-  const ballotList: BallotList = data!.GetBallotById;
   if (ballotList === null || ballotList === undefined) {
     return (
       <Container size='xs' px='xs' className={classes.container}>
