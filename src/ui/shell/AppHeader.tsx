@@ -6,6 +6,7 @@ import { Localization } from '@/services/Localization';
 import { emptyNostrProfile, getNostrNsecFromStorage, nostrSignOut } from '@/services/NostrHelper';
 import { signInWithNostr } from '@/services/PagerHelper';
 import classes from '@/ui/shell/AppStyles.module.css';
+import { useApolloClient } from '@apollo/client';
 import {
   AppShell,
   Avatar,
@@ -28,8 +29,10 @@ export const AppHeader: FC = () => {
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const { updateUserModel } = useGlobalContext();
   const { localization, updateLocalization } = useGlobalContext();
+  const { updateApolloClient } = useGlobalContext();
 
   const [fetched, setFetched] = useState(false);
+  const apolloClient = useApolloClient();
 
   useEffect(() => {
     if (localization === undefined) {
@@ -39,6 +42,9 @@ export const AppHeader: FC = () => {
     if (nsec === null || String(nsec).length <= 0 || fetched) {
       return;
     }
+
+    // Setup the Apollo client
+    updateApolloClient(apolloClient);
 
     setFetched(true); // Mark as fetched immediately to avoid multiple calls
 
