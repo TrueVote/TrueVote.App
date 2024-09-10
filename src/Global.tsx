@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { UserModel } from '@/TrueVote.Api';
+import { ApolloClient } from '@apollo/client';
 import React, { Context, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { Localization } from './services/Localization';
 import { NostrProfile, emptyNostrProfile } from './services/NostrHelper';
@@ -24,12 +25,14 @@ interface GlobalContextType {
   userModel: UserModel | undefined;
   localization: Localization | undefined;
   accessCodes: string[] | undefined;
+  apolloClient: ApolloClient<object> | undefined;
   updateNostrProfile: (np: NostrProfile) => void;
   updateUserModel: (ui: UserModel) => void;
   updateLocalization: (loc: Localization) => void;
   updateAccessCodes: (ac: string[]) => void;
   addAccessCode: (ac: string) => void;
   removeAccessCode: (ac: string) => void;
+  updateApolloClient: (ac: ApolloClient<object>) => void;
 }
 
 const GlobalContext: Context<GlobalContextType | undefined> = createContext<
@@ -50,6 +53,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
     const savedCodes = localStorage.getItem('accessCodes');
     return savedCodes ? JSON.parse(savedCodes) : [];
   });
+  const [apolloClient, setApolloClient] = useState<ApolloClient<object>>();
 
   useEffect(() => {
     localStorage.setItem('accessCodes', JSON.stringify(accessCodes));
@@ -69,6 +73,10 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
 
   const updateAccessCodes: (ac: string[]) => void = (ac: string[]) => {
     setAccessCodes(ac);
+  };
+
+  const updateApolloClient: (ac: ApolloClient<object>) => void = (ac: ApolloClient<object>) => {
+    setApolloClient(ac);
   };
 
   const addAccessCode = (ac: string): void => {
@@ -102,6 +110,8 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
         updateAccessCodes,
         addAccessCode,
         removeAccessCode,
+        apolloClient,
+        updateApolloClient,
       }}
     >
       {children}

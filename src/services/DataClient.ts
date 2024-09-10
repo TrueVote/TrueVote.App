@@ -1,6 +1,7 @@
 import { EnvConfig } from '@/EnvConfig';
 import {
   BallotHashModel,
+  BallotList,
   BallotModel,
   CheckCodeRequest,
   ElectionModel,
@@ -13,7 +14,7 @@ import {
   SubmitBallotModelResponse,
   UserModel,
 } from '@/TrueVote.Api';
-import { QueryResult, TypedDocumentNode, gql, useQuery } from '@apollo/client';
+import { ApolloClient, QueryResult, TypedDocumentNode, gql, useQuery } from '@apollo/client';
 import { FetchHelper } from './FetchHelper';
 
 const JwtStorageKey: string = 'jwt_token';
@@ -155,69 +156,73 @@ export const DBAllBallots = (): QueryResult<{
   }>(query);
 };
 
-export const DBGetBallotById = (
-  ballotId: string | undefined,
-): QueryResult<{
-  GetBallotById: {
-    Ballots: BallotModel[];
-    BallotHashes: BallotHashModel[];
-  };
-}> => {
-  const query: TypedDocumentNode<{
-    GetBallotById: {
-      Ballots: BallotModel[];
-      BallotHashes: BallotHashModel[];
-    };
-  }> = gql`
-    query ($BallotId: String!) {
-      GetBallotById(BallotId: $BallotId) {
-        Ballots {
-          BallotId
-          DateCreated
-          Election {
-            ElectionId
+const GET_BALLOT_BY_ID_QUERY = gql`
+  query GetBallotById($BallotId: String!) {
+    GetBallotById(BallotId: $BallotId) {
+      Ballots {
+        BallotId
+        DateCreated
+        Election {
+          ElectionId
+          Name
+          Races {
             Name
-            Description
+            RaceId
             DateCreated
-            StartDate
-            EndDate
-            Races {
-              Name
-              RaceId
+            RaceType
+            RaceTypeName
+            Candidates {
+              CandidateId
               DateCreated
-              RaceType
-              RaceTypeName
-              Candidates {
-                CandidateId
-                DateCreated
-                Name
-                PartyAffiliation
-                CandidateImageUrl
-                Selected
-                SelectedMetadata
-              }
+              Name
+              PartyAffiliation
+              CandidateImageUrl
+              Selected
+              SelectedMetadata
             }
           }
         }
-        BallotHashes {
-          BallotId
-          BallotHashId
-          ServerBallotHash
-          ServerBallotHashS
-          DateCreated
-          DateUpdated
-          TimestampId
-        }
+      }
+      BallotHashes {
+        BallotId
+        BallotHashId
+        ServerBallotHash
+        ServerBallotHashS
+        DateCreated
+        DateUpdated
+        TimestampId
       }
     }
-  `;
+  }
+`;
 
-  return useQuery<{
-    GetBallotById: {
-      Ballots: BallotModel[];
-      BallotHashes: BallotHashModel[];
-    };
-  }>(query, { variables: { BallotId: ballotId } });
+export const DBGetBallotById = async (
+  apolloClient: ApolloClient<object> | undefined,
+  ballotId: string | undefined,
+): Promise<BallotList> => {
+  if (!apolloClient) {
+    throw new Error('Apollo client is undefined');
+  }
+
+  if (!ballotId) {
+    throw new Error('BallotId is undefined');
+  }
+
+  try {
+    const { data, errors } = await apolloClient.query({
+      query: GET_BALLOT_BY_ID_QUERY,
+      variables: { BallotId: ballotId },
+    });
+
+    if (errors) {
+      throw new Error(errors.map((e) => e.message).join(', '));
+    }
+
+    return data.GetBallotById;
+  } catch (error) {
+    console.error('Error fetching ballot:', error);
+    throw error;
+  }
 };
 
 export const DBSubmitBallot = async (

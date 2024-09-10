@@ -5,6 +5,7 @@ import {
   SubmitBallotModel,
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
+import { BallotBinderStorage } from '@/services/BallotBinder';
 import { DBGetElectionById, DBSubmitBallot } from '@/services/DataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatErrorObject, objectDifference } from '@/ui/Helpers';
@@ -74,8 +75,8 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
   const [errorMessage, setErrorMessage] = useState('');
   const listCheckIcon = <IconListCheck style={{ width: rem(16), height: rem(16) }} />;
   const [accessCode, setAccessCode] = useState(accessCodeProp);
-  const { nostrProfile } = useGlobalContext();
-
+  const { nostrProfile, userModel } = useGlobalContext();
+  const ballotBinderStorage = new BallotBinderStorage(userModel?.UserId ?? '');
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
     setOpened((v: any) => !v);
@@ -161,6 +162,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
       .then((res: SubmitBallotModelResponse) => {
         console.info('Success from ballot submission', res);
         setVisible((v: any) => !v);
+        ballotBinderStorage.addOrUpdateBallotBinder(accessCode, res.BallotId);
         navigate('/thanks', { state: res });
       })
       .catch((e: any) => {
