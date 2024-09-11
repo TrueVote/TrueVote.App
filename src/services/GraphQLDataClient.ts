@@ -1,121 +1,176 @@
 import { BallotHashModel, BallotList, BallotModel, ElectionModel } from '@/TrueVote.Api';
-import { ApolloClient, QueryResult, TypedDocumentNode, gql, useQuery } from '@apollo/client';
+import { ApolloClient, gql, useApolloClient } from '@apollo/client';
 
-export const DBGetElectionById = (
-  electionId: string | undefined,
-): QueryResult<{ GetElectionById: ElectionModel[] }> => {
-  const query: TypedDocumentNode<{ GetElectionById: ElectionModel[] }> = gql`
-    query ($ElectionId: String!) {
-      GetElectionById(ElectionId: $ElectionId) {
-        ElectionId
+export class ApolloClientFactory {
+  public apolloClient: ApolloClient<object> = useApolloClient();
+
+  constructor() {
+    console.info('~ApolloClientFactory()');
+  }
+}
+
+const GET_ELECTION_BY_ID_QUERY = gql`
+  query GetElectionById($ElectionId: String!) {
+    GetElectionById(ElectionId: $ElectionId) {
+      ElectionId
+      Name
+      Description
+      HeaderImageUrl
+      DateCreated
+      StartDate
+      EndDate
+      Races {
         Name
-        Description
-        HeaderImageUrl
+        RaceId
         DateCreated
-        StartDate
-        EndDate
-        Races {
-          Name
-          RaceId
+        RaceType
+        RaceTypeName
+        MinNumberOfChoices
+        MaxNumberOfChoices
+        Candidates {
+          CandidateId
           DateCreated
-          RaceType
-          RaceTypeName
-          MinNumberOfChoices
-          MaxNumberOfChoices
-          Candidates {
-            CandidateId
-            DateCreated
-            Name
-            PartyAffiliation
-            CandidateImageUrl
-            Selected
-            SelectedMetadata
-          }
+          Name
+          PartyAffiliation
+          CandidateImageUrl
+          Selected
+          SelectedMetadata
         }
       }
     }
-  `;
+  }
+`;
 
-  return useQuery<{ GetElectionById: ElectionModel[] }>(query, {
-    variables: { ElectionId: electionId },
-  });
-};
+export const DBGetElectionById = async (
+  apolloClient: ApolloClient<object> | undefined,
+  electionId: string | undefined,
+): Promise<ElectionModel[]> => {
+  if (!apolloClient) {
+    throw new Error('Apollo client is undefined');
+  }
 
-export const DBAllElections = (): QueryResult<{ GetElection: ElectionModel[] }> => {
-  const query: TypedDocumentNode<{ GetElection: ElectionModel[] }> = gql`
-    query {
-      GetElection {
-        ElectionId
-        Name
-        Description
-        HeaderImageUrl
-        DateCreated
-        StartDate
-        EndDate
-      }
+  if (!electionId) {
+    throw new Error('ElectionId is undefined');
+  }
+
+  try {
+    const { data, errors } = await apolloClient.query({
+      query: GET_ELECTION_BY_ID_QUERY,
+      variables: { ElectionId: electionId },
+    });
+
+    if (errors) {
+      throw new Error(errors.map((e) => e.message).join(', '));
     }
-  `;
 
-  return useQuery<{ GetElection: ElectionModel[] }>(query);
+    return data.GetElectionById;
+  } catch (error) {
+    console.error('Error fetching election:', error);
+    throw error;
+  }
 };
 
-export const DBAllBallots = (): QueryResult<{
-  GetBallot: {
-    Ballots: BallotModel[];
-    BallotHashes: BallotHashModel[];
-  };
-}> => {
-  const query: TypedDocumentNode<{
-    GetBallot: {
-      Ballots: BallotModel[];
-      BallotHashes: BallotHashModel[];
-    };
-  }> = gql`
-    query {
-      GetBallot {
-        Ballots {
-          BallotId
-          DateCreated
-          Election {
-            ElectionId
+const GET_ALL_ELECTIONS_QUERY = gql`
+  query GetAllElections {
+    GetElection {
+      ElectionId
+      Name
+      Description
+      HeaderImageUrl
+      DateCreated
+      StartDate
+      EndDate
+    }
+  }
+`;
+
+export const DBAllElections = async (
+  apolloClient: ApolloClient<object> | undefined,
+): Promise<ElectionModel[]> => {
+  if (!apolloClient) {
+    throw new Error('Apollo client is undefined');
+  }
+
+  try {
+    const { data, errors } = await apolloClient.query({
+      query: GET_ALL_ELECTIONS_QUERY,
+    });
+
+    if (errors) {
+      throw new Error(errors.map((e) => e.message).join(', '));
+    }
+
+    return data.GetElection;
+  } catch (error) {
+    console.error('Error fetching all elections:', error);
+    throw error;
+  }
+};
+
+const GET_ALL_BALLOTS_QUERY = gql`
+  query GetAllBallots {
+    GetBallot {
+      Ballots {
+        BallotId
+        DateCreated
+        Election {
+          ElectionId
+          Name
+          Races {
             Name
-            Races {
-              Name
-              RaceId
+            RaceId
+            DateCreated
+            RaceType
+            RaceTypeName
+            Candidates {
+              CandidateId
               DateCreated
-              RaceType
-              RaceTypeName
-              Candidates {
-                CandidateId
-                DateCreated
-                Name
-                PartyAffiliation
-                CandidateImageUrl
-                Selected
-                SelectedMetadata
-              }
+              Name
+              PartyAffiliation
+              CandidateImageUrl
+              Selected
+              SelectedMetadata
             }
           }
         }
-        BallotHashes {
-          BallotId
-          BallotHashId
-          ServerBallotHash
-          ServerBallotHashS
-          DateCreated
-          DateUpdated
-          TimestampId
-        }
+      }
+      BallotHashes {
+        BallotId
+        BallotHashId
+        ServerBallotHash
+        ServerBallotHashS
+        DateCreated
+        DateUpdated
+        TimestampId
       }
     }
-  `;
+  }
+`;
 
-  return useQuery<{
-    GetBallot: {
-      Ballots: BallotModel[];
-      BallotHashes: BallotHashModel[];
-    };
-  }>(query);
+export const DBAllBallots = async (
+  apolloClient: ApolloClient<object> | undefined,
+): Promise<{
+  Ballots: BallotModel[];
+  BallotHashes: BallotHashModel[];
+}> => {
+  if (!apolloClient) {
+    throw new Error('Apollo client is undefined');
+  }
+
+  try {
+    const { data, errors } = await apolloClient.query({
+      query: GET_ALL_BALLOTS_QUERY,
+    });
+
+    if (errors) {
+      throw new Error(errors.map((e) => e.message).join(', '));
+    }
+
+    return data.GetBallot;
+  } catch (error) {
+    console.error('Error fetching all ballots:', error);
+    throw error;
+  }
 };
 
 const GET_BALLOT_BY_ID_QUERY = gql`

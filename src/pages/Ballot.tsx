@@ -13,6 +13,7 @@ import { formatErrorObject, objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
 import classes from '@/ui/shell/AppStyles.module.css';
+import { useApolloClient } from '@apollo/client';
 import {
   Badge,
   Box,
@@ -37,8 +38,28 @@ import { NavigateFunction, Params, useNavigate, useParams } from 'react-router-d
 export const Ballot: FC = () => {
   const params: Params<string> = useParams();
   const navigate: NavigateFunction = useNavigate();
+  const apolloClient = useApolloClient();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [electionData, setElectionData] = useState<ElectionModel[] | undefined>();
 
-  const { loading, error, data } = DBGetElectionById(params.electionId);
+  useEffect(() => {
+    const fetchElection = async (): Promise<void> => {
+      try {
+        const fetchedElection: ElectionModel[] = await DBGetElectionById(
+          apolloClient,
+          params.electionId,
+        );
+
+        setElectionData(fetchedElection);
+        setLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+        setLoading(false);
+      }
+    };
+    fetchElection();
+  }, []);
 
   if (loading) {
     return <TrueVoteLoader />;
@@ -48,9 +69,16 @@ export const Ballot: FC = () => {
     console.error(error);
     return <>`Error ${error.message}`</>;
   }
-  console.info(data);
+  console.info(electionData);
 
-  const election: ElectionModel = data!.GetElectionById[0];
+  if (electionData === null || electionData === undefined || electionData.length === 0) {
+    return (
+      <Container size='xs' px='xs' className={classes.container}>
+        <Text>Election Not Found</Text>
+      </Container>
+    );
+  }
+  const election: ElectionModel = electionData[0];
   const electionBallot: ElectionModel = _.cloneDeep(election);
 
   return (

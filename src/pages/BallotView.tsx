@@ -1,4 +1,3 @@
-import { useGlobalContext } from '@/Global';
 import {
   BallotHashModel,
   BallotList,
@@ -12,6 +11,7 @@ import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatCandidateName } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
+import { useApolloClient } from '@apollo/client';
 import {
   Box,
   Card,
@@ -35,7 +35,7 @@ import { Params, useParams } from 'react-router-dom';
 
 export const BallotView: FC = () => {
   const { colorScheme } = useMantineColorScheme();
-  const { apolloClient } = useGlobalContext();
+  const apolloClient = useApolloClient();
   const params: Params<string> = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -60,13 +60,14 @@ export const BallotView: FC = () => {
   if (loading) {
     return <TrueVoteLoader />;
   }
+
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;
   }
   console.info(ballotList);
 
-  if (ballotList === null || ballotList === undefined) {
+  if (ballotList === null || ballotList === undefined || ballotList.Ballots.length === 0) {
     return (
       <Container size='xs' px='xs' className={classes.container}>
         <Text>BallotList Not Found</Text>
