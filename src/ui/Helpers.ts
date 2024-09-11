@@ -52,6 +52,7 @@ export const stringToUint8Array: (_: string) => Uint8Array = (str: string) => {
 };
 
 // Function to format an error object into a string
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 export const formatErrorObject = (e: any): string => {
   console.info('formatErrorObject', e);
 
