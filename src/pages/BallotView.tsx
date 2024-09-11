@@ -187,7 +187,7 @@ export const BallotView: FC = () => {
                 <Table.Tr>
                   <Table.Td className={classes.tdRight}>Submitted:</Table.Td>
                   <Table.Td>
-                    {moment(ballot.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
+                    {moment.utc(ballot.DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')}
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
@@ -232,13 +232,13 @@ export const BallotView: FC = () => {
                 <Table.Tr>
                   <Table.Td className={classes.tdRight}>Created:</Table.Td>
                   <Table.Td>
-                    {moment(ballotHash.DateCreated).format('MMMM DD, YYYY, HH:MM:ss')}
+                    {moment.utc(ballotHash.DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')}
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>
                   <Table.Td className={classes.tdRight}>Updated:</Table.Td>
                   <Table.Td>
-                    {moment(ballotHash.DateUpdated).format('MMMM DD, YYYY, HH:MM:ss')}
+                    {moment.utc(ballotHash.DateUpdated).local().format('MMMM DD, YYYY, HH:mm:ss')}
                   </Table.Td>
                 </Table.Tr>
                 <Table.Tr>

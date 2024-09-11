@@ -88,7 +88,7 @@ export const AllBallots: React.FC<{
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
           <Accordion.Control key={i} icon={<IconChecklist size={26} color={getColor('orange')} />}>
-            {moment(e.Ballots[0].DateCreated).format('MMMM DD, YYYY')} -{' '}
+            {moment.utc(e.Ballots[0].DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')} -{' '}
             {e.Ballots[0].Election?.Name}
           </Accordion.Control>
           <Accordion.Panel>

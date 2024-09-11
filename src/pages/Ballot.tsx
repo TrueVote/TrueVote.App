@@ -222,10 +222,10 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
         <Text size='xl'>{election.Name}</Text>
         <Group mt='md' mb='xs'>
           <Badge color='green' variant='light'>
-            Starts: {moment(election.StartDate).format('MMMM DD, YYYY')}
+            Starts: {moment.utc(election.StartDate).local().format('MMMM DD, YYYY, HH:mm:ss')}
           </Badge>
           <Badge color='pink' variant='light'>
-            Ends: {moment(election.EndDate).format('MMMM DD, YYYY')}
+            Ends: {moment.utc(election.EndDate).local().format('MMMM DD, YYYY, HH:mm:ss')}
           </Badge>
         </Group>
         <Text size='sm' c='dimmed'>
