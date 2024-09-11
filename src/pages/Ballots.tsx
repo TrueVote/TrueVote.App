@@ -1,10 +1,11 @@
 import { useGlobalContext } from '@/Global';
 import { BallotList } from '@/TrueVote.Api';
 import { BallotBinder, BallotBinderStorage } from '@/services/BallotBinder';
-import { DBGetBallotById } from '@/services/DataClient';
+import { DBGetBallotById } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
+import { useApolloClient } from '@apollo/client';
 import {
   Accordion,
   Button,
@@ -23,7 +24,8 @@ import { Link } from 'react-router-dom';
 
 export const Ballots: FC = () => {
   const theme: MantineTheme = useMantineTheme();
-  const { userModel, apolloClient } = useGlobalContext();
+  const { userModel } = useGlobalContext();
+  const apolloClient = useApolloClient();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [ballotListArray, setBallotListArray] = useState<BallotList[]>([]);
@@ -71,8 +73,14 @@ export const AllBallots: React.FC<{
   theme: MantineTheme;
   ballots: BallotList[];
 }> = ({ theme, ballots }) => {
+  if (ballots.length == 0 || ballots[0].Ballots.length === 0) {
+    return (
+      <Container size='xs' px='xs' className={classes.container}>
+        <Text>No Ballots Found</Text>
+      </Container>
+    );
+  }
   const { colorScheme } = useMantineColorScheme();
-
   const getColor = (color: string): string => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
 
   const items = ballots.map(

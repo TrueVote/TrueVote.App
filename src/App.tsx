@@ -14,7 +14,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { EnvConfig } from './EnvConfig';
 import { GlobalProvider } from './Global';
 import { ROUTES } from './Routes';
-import { getJwt } from './services/DataClient';
+import { getJwt } from './services/RESTDataClient';
 import { TrueVoteSpinnerLoader } from './ui/CustomLoader';
 
 export const App: FC = () => {

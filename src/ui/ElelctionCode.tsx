@@ -1,6 +1,6 @@
 import { useGlobalContext } from '@/Global';
 import { CheckCodeRequest, ElectionModel, SecureString } from '@/TrueVote.Api';
-import { DBCheckAccessCode } from '@/services/DataClient';
+import { DBCheckAccessCode } from '@/services/RESTDataClient';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   Accordion,

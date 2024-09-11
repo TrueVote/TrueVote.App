@@ -1,5 +1,5 @@
 import { SecureString, StatusModel } from '@/TrueVote.Api';
-import { APIAdd, APIPing, APIStatus } from '@/services/DataClient';
+import { APIAdd, APIPing, APIStatus } from '@/services/RESTDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
