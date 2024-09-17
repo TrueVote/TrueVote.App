@@ -73,6 +73,9 @@ export const AllBallots: React.FC<{
   theme: MantineTheme;
   ballots: BallotList[];
 }> = ({ theme, ballots }) => {
+  const { colorScheme } = useMantineColorScheme();
+  const getColor = (color: string): string => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
+
   if (ballots.length == 0 || ballots[0].Ballots.length === 0) {
     return (
       <Container size='xs' px='xs' className={classes.container}>
@@ -80,8 +83,6 @@ export const AllBallots: React.FC<{
       </Container>
     );
   }
-  const { colorScheme } = useMantineColorScheme();
-  const getColor = (color: string): string => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
 
   const items = ballots.map(
     (e: BallotList, i: number): ReactElement => (
