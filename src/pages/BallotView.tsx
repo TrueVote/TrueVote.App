@@ -225,49 +225,55 @@ export const BallotView: FC = () => {
         <Title className={classes.titleSpaces} size='h4'>
           Ballot Hash
         </Title>
-        <Group grow>
-          <Card.Section>
-            <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
-              <Table.Tbody>
-                <Table.Tr>
-                  <Table.Td className={classes.tdRight}>Created:</Table.Td>
-                  <Table.Td>
-                    {moment.utc(ballotHash.DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')}
-                  </Table.Td>
-                </Table.Tr>
-                <Table.Tr>
-                  <Table.Td className={classes.tdRight}>Updated:</Table.Td>
-                  <Table.Td>
-                    {moment.utc(ballotHash.DateUpdated).local().format('MMMM DD, YYYY, HH:mm:ss')}
-                  </Table.Td>
-                </Table.Tr>
-                <Table.Tr>
-                  <Table.Td className={classes.tdRight}>Hash:</Table.Td>
-                  <Table.Td className={classes.tdLeft}>
-                    <HoverCard shadow='md'>
-                      <HoverCard.Target>
-                        <span className={classes.textChopped}>{ballotHash.ServerBallotHashS}</span>
-                      </HoverCard.Target>
-                      <HoverCard.Dropdown>
-                        <Text size='sm'>{ballotHash.ServerBallotHashS}</Text>
-                      </HoverCard.Dropdown>
-                    </HoverCard>
-                  </Table.Td>
-                </Table.Tr>
-                <Table.Tr>
-                  <Table.Td className={classes.tdRight}>Timestamp Id:</Table.Td>
-                  <Table.Td>
-                    {ballotHash.TimestampId ? (
-                      ballotHash.TimestampId
-                    ) : (
-                      <span className={classes.textAlert}>Pending</span>
-                    )}
-                  </Table.Td>
-                </Table.Tr>
-              </Table.Tbody>
-            </Table>
-          </Card.Section>
-        </Group>
+        {ballotHash === null || ballotHash === undefined ? (
+          <span className={classes.textAlert}>Pending</span>
+        ) : (
+          <Group grow>
+            <Card.Section>
+              <Table verticalSpacing='xs' striped withTableBorder withColumnBorders>
+                <Table.Tbody>
+                  <Table.Tr>
+                    <Table.Td className={classes.tdRight}>Created:</Table.Td>
+                    <Table.Td>
+                      {moment.utc(ballotHash.DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')}
+                    </Table.Td>
+                  </Table.Tr>
+                  <Table.Tr>
+                    <Table.Td className={classes.tdRight}>Updated:</Table.Td>
+                    <Table.Td>
+                      {moment.utc(ballotHash.DateUpdated).local().format('MMMM DD, YYYY, HH:mm:ss')}
+                    </Table.Td>
+                  </Table.Tr>
+                  <Table.Tr>
+                    <Table.Td className={classes.tdRight}>Hash:</Table.Td>
+                    <Table.Td className={classes.tdLeft}>
+                      <HoverCard shadow='md'>
+                        <HoverCard.Target>
+                          <span className={classes.textChopped}>
+                            {ballotHash.ServerBallotHashS}
+                          </span>
+                        </HoverCard.Target>
+                        <HoverCard.Dropdown>
+                          <Text size='sm'>{ballotHash.ServerBallotHashS}</Text>
+                        </HoverCard.Dropdown>
+                      </HoverCard>
+                    </Table.Td>
+                  </Table.Tr>
+                  <Table.Tr>
+                    <Table.Td className={classes.tdRight}>Timestamp Id:</Table.Td>
+                    <Table.Td>
+                      {ballotHash.TimestampId ? (
+                        ballotHash.TimestampId
+                      ) : (
+                        <span className={classes.textAlert}>Pending</span>
+                      )}
+                    </Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+              </Table>
+            </Card.Section>
+          </Group>
+        )}
       </Card>
       <Box className={classes.boxGap} />
       <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
