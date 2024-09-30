@@ -1,13 +1,24 @@
 #!/usr/bin/env ts-node
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { BallotModel } from '../src/TrueVote.Api';
+// import { BallotModel } from '../src/TrueVote.Api';
 
-const generateBallots = (electionId: string, numberOfBallots: number): BallotModel[] => {
-  // Implement your ballot generation logic here
-  // then randomly selecting candidates for each ballot
+const generateBallots = (electionId: string, numberOfBallots: number): number => {
+  // Fetch the election
+
   console.info(`Generating ${numberOfBallots} ballots for election ${electionId}`);
-  return [];
+
+  // Generate N number of EACs for this election
+
+  // Generate N number of Users for this election
+
+  var numBallotsGenerated = 0;
+  // Loop through N number of iterations
+  // For each iteration, generate a BallotModel with randomly selected candidates selected = true
+  // Submit the ballot
+  // Increment the ballot count
+
+  return numBallotsGenerated;
 };
 
 const main = async (): Promise<void> => {
@@ -28,8 +39,9 @@ const main = async (): Promise<void> => {
     .alias('help', 'h')
     .parse();
 
-  const ballots = generateBallots(argv.electionid, argv.numberofballots);
-  console.info(`Generated ${ballots.length} ballots for election ${argv.electionid}`);
+  const ballotCount = generateBallots(argv.electionid, argv.numberofballots);
+
+  console.info(`Generated ${ballotCount} ballots for election ${argv.electionid}`);
 };
 
 main().catch(console.error);
