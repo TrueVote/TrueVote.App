@@ -16,7 +16,7 @@ interface FetchResult {
 const fetchElection = async (electionId: string): Promise<FetchResult> => {
   console.info(`Fetching election with ID: ${electionId}`);
   try {
-    const response = await axios.get(`${API_BASE_URL}/election/${electionId}`);
+    const response = await axios.get(`${API_BASE_URL}/election?ElectionId=${electionId}`);
     console.info(`Received response with status: ${response.status}`);
 
     if (response.status !== 200) {
@@ -26,8 +26,10 @@ const fetchElection = async (electionId: string): Promise<FetchResult> => {
       };
     }
 
-    console.info(`Received election data for: ${response.data.ElectionName}`);
-    return { success: true, data: response.data as ElectionModel };
+    const electionDetails = response.data as ElectionModel;
+
+    console.info(`Received election data for: ${electionDetails.Name}`);
+    return { success: true, data: electionDetails };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404) {
