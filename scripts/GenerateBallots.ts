@@ -13,6 +13,12 @@ interface FetchResult {
   error?: string;
 }
 
+const signIn = async (nsec: string): Promise<string> => {
+  console.info(`Signing in with nsec: ${nsec}`);
+
+  return await 'finished';
+};
+
 const fetchElection = async (electionId: string): Promise<FetchResult> => {
   console.info(`Fetching election with ID: ${electionId}`);
   try {
@@ -83,10 +89,14 @@ const generateAndSubmitBallot = (electionId: string): void => {
 async function generateBallots(
   electionId: string,
   numberOfBallots: number,
-  userId: string,
+  nsec: string,
 ): Promise<void> {
   try {
     // Fetch the election
+    // Sign in and get user ID
+    const userId = await signIn(nsec);
+    console.log('Successfully signed in');
+
     const electionResult = await fetchElection(electionId);
     if (!electionResult.success) {
       console.error(`Failed to fetch election: ${electionResult.error}`);
@@ -101,7 +111,7 @@ async function generateBallots(
       eacs = await generateEACs(electionId, numberOfBallots, userId);
       console.info(`Successfully generated ${eacs.length} EACs for election ${electionId}`);
     } catch (error) {
-      console.error('Failed to generate EACs:', error);
+      console.error('Failed to generate EACs:');
       process.exit(1); // Exit with error code
     }
 
@@ -135,9 +145,8 @@ const main = async (): Promise<void> => {
       type: 'number',
       demandOption: true,
     })
-    .option('userid', {
-      alias: 'u',
-      description: 'User ID',
+    .option('nsec', {
+      description: 'Nostr secret key (nsec)',
       type: 'string',
       demandOption: true,
     })
@@ -145,7 +154,7 @@ const main = async (): Promise<void> => {
     .alias('help', 'h')
     .parse();
 
-  const ballotCount = await generateBallots(argv.electionid, argv.numberofballots, argv.userid);
+  const ballotCount = await generateBallots(argv.electionid, argv.numberofballots, argv.nsec);
 
   console.info(`Generated ${ballotCount} ballots for election ${argv.electionid}`);
 };
