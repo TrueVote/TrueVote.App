@@ -13,6 +13,12 @@ interface FetchResult {
   error?: string;
 }
 
+interface PostResult<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
 const signIn = async (nsec: string): Promise<string> => {
   console.info(`Signing in with nsec: ${nsec}`);
 
@@ -54,7 +60,7 @@ const generateEACs = async (
   electionId: string,
   numberOfBallots: number,
   userId: string,
-): Promise<string[]> => {
+): Promise<PostResult<string[]>> => {
   try {
     const response = await axios.post(`${API_BASE_URL}/election/createaccesscodes`, {
       ElectionId: electionId,
@@ -64,17 +70,28 @@ const generateEACs = async (
     });
 
     if (response.status === 201 && Array.isArray(response.data)) {
-      return response.data;
+      return {
+        success: true,
+        data: response.data,
+      };
     } else {
-      throw new Error('Unexpected response format');
+      return {
+        success: false,
+        error: 'Unexpected response format',
+      };
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      console.error(`Error generating EACs: ${error.response.status}`);
+      return {
+        success: false,
+        error: `Error generating EACs: ${error.response.status}`,
+      };
     } else {
-      console.error('Error generating EACs: Network error');
+      return {
+        success: false,
+        error: 'Error generating EACs: Network error',
+      };
     }
-    throw new Error('Failed to generate EACs');
   }
 };
 
@@ -108,7 +125,8 @@ async function generateBallots(
     // Generate EACs
     let eacs: string[];
     try {
-      eacs = await generateEACs(electionId, numberOfBallots, userId);
+      const result = await generateEACs(electionId, numberOfBallots, userId);
+      eacs = result.data ?? [];
       console.info(`Successfully generated ${eacs.length} EACs for election ${electionId}`);
     } catch (error) {
       console.error('Failed to generate EACs:');
