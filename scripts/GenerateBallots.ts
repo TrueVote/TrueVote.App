@@ -9,7 +9,7 @@ console.info('API_BASE_URL:', API_BASE_URL);
 
 interface FetchResult {
   success: boolean;
-  data?: ElectionModel;
+  data?: any;
   error?: string;
 }
 
@@ -44,8 +44,32 @@ const fetchElection = async (electionId: string): Promise<FetchResult> => {
   }
 };
 
-const generateEACs = (numberOfEACs: number, electionId: string): void => {
-  console.info(`Generating ${numberOfEACs} EACs for election ${electionId}`);
+const generateEACs = async (
+  electionId: string,
+  numberOfBallots: number,
+  userId: string,
+): Promise<string[]> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/election/createaccesscodes`, {
+      ElectionId: electionId,
+      NumberOfAccessCodes: numberOfBallots,
+      RequestDescription: 'Ballot generation',
+      UserId: userId,
+    });
+
+    if (response.status === 201 && Array.isArray(response.data)) {
+      return response.data;
+    } else {
+      throw new Error('Unexpected response format');
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error(`Error generating EACs: ${error.response.status}`);
+    } else {
+      console.error('Error generating EACs: Network error');
+    }
+    throw new Error('Failed to generate EACs');
+  }
 };
 
 const generateUsers = (numberOfUsers: number, electionId: string): void => {
@@ -56,35 +80,46 @@ const generateAndSubmitBallot = (electionId: string): void => {
   console.info(`Generating and submitting a ballot for election ${electionId}`);
 };
 
-const generateBallots = async (electionId: string, numberOfBallots: number): Promise<number> => {
-  var numBallotsGenerated = 0;
+async function generateBallots(
+  electionId: string,
+  numberOfBallots: number,
+  userId: string,
+): Promise<void> {
+  try {
+    // Fetch the election
+    const electionResult = await fetchElection(electionId);
+    if (!electionResult.success) {
+      console.error(`Failed to fetch election: ${electionResult.error}`);
+      return; // Exit the function early
+    }
 
-  // Fetch the election
-  const electionResult = await fetchElection(electionId);
-  if (!electionResult.success) {
-    console.error(`Failed to fetch election: ${electionResult.error}`);
-    return numBallotsGenerated; // Exit the function early
+    console.info(`Generating ${numberOfBallots} ballots for election ${electionId}`);
+
+    // Generate EACs
+    let eacs: string[];
+    try {
+      eacs = await generateEACs(electionId, numberOfBallots, userId);
+      console.info(`Successfully generated ${eacs.length} EACs for election ${electionId}`);
+    } catch (error) {
+      console.error('Failed to generate EACs:', error);
+      process.exit(1); // Exit with error code
+    }
+
+    // Generate N number of Users for this election
+    generateUsers(numberOfBallots, electionId);
+
+    // Loop through N number of iterations
+    for (let i = 0; i < numberOfBallots; i++) {
+      // For each iteration, generate a BallotModel with randomly selected candidates selected = true
+      // Submit the ballot
+      generateAndSubmitBallot(electionId);
+      // Increment the ballot count
+    }
+  } catch (error) {
+    console.error('Error in generateBallots:', error);
+    process.exit(1); // Exit with error code
   }
-
-  console.info(`Generating ${numberOfBallots} ballots for election ${electionId}`);
-
-  // Generate N number of EACs for this election
-  generateEACs(numberOfBallots, electionId);
-
-  // Generate N number of Users for this election
-  generateUsers(numberOfBallots, electionId);
-
-  // Loop through N number of iterations
-  for (let i = 0; i < numberOfBallots; i++) {
-    // For each iteration, generate a BallotModel with randomly selected candidates selected = true
-    // Submit the ballot
-    generateAndSubmitBallot(electionId);
-    // Increment the ballot count
-    numBallotsGenerated++;
-  }
-
-  return numBallotsGenerated;
-};
+}
 
 const main = async (): Promise<void> => {
   const argv = await yargs(hideBin(process.argv))
@@ -100,11 +135,17 @@ const main = async (): Promise<void> => {
       type: 'number',
       demandOption: true,
     })
+    .option('userid', {
+      alias: 'u',
+      description: 'User ID',
+      type: 'string',
+      demandOption: true,
+    })
     .help()
     .alias('help', 'h')
     .parse();
 
-  const ballotCount = await generateBallots(argv.electionid, argv.numberofballots);
+  const ballotCount = await generateBallots(argv.electionid, argv.numberofballots, argv.userid);
 
   console.info(`Generated ${ballotCount} ballots for election ${argv.electionid}`);
 };
