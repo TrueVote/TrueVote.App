@@ -2,7 +2,13 @@
 import axios from 'axios';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { ElectionModel, SecureString, SignInResponse } from '../src/TrueVote.Api';
+import {
+  AccessCodesResponse,
+  ElectionModel,
+  SecureString,
+  SignInEventModel,
+  SignInResponse,
+} from '../src/TrueVote.Api';
 import { signInWithNostr } from './SignInWithNostr';
 
 const API_BASE_URL = process.env.API_BASE_URL || 'https://api.truevote.org';
@@ -20,25 +26,66 @@ interface PostResult<T> {
   error?: string;
 }
 
-const signIn = async (nsec: string): Promise<SignInResponse> => {
+const DBUserSignIn = async (
+  signInEventModel: SignInEventModel,
+): Promise<PostResult<SignInResponse>> => {
+  console.info('signinEventModel', signInEventModel);
+
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/user/signin`, signInEventModel);
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: response.data,
+      };
+    } else {
+      return {
+        success: false,
+        error: 'Unexpected response format',
+      };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return {
+        success: false,
+        error: `Error on signIn: ${error.response.status}`,
+      };
+    } else {
+      return {
+        success: false,
+        error: 'Error signIn: Network error',
+      };
+    }
+  }
+};
+
+const signIn = async (nsec: string): Promise<SignInResponse | undefined> => {
   const handleError: any = (e: SecureString): void => {
     console.error('Nostr sign-in error:', e);
     process.exit(1);
   };
-
   try {
-    const { res } = await signInWithNostr(nsec, handleError);
-    console.info(res);
-    if (res) {
-      console.log('Successfully signed in with Nostr');
-      return res;
+    const signInEventModel = await signInWithNostr(nsec, handleError);
+    console.info(signInEventModel);
+    if (signInEventModel) {
+      console.info('Successfully signed Nostr event');
+      try {
+        const result: FetchResult = await DBUserSignIn(signInEventModel);
+        console.info(result.data);
+        return result.data;
+      } catch (e) {
+        console.error('Exception calling DBUserSignIn', e);
+        handleError(e as SecureString);
+        return undefined;
+      }
     } else {
-      console.error('Failed to sign in with Nostr:');
-      process.exit(1);
+      console.error('Failed to sign Nostr event');
+      return undefined;
     }
   } catch (error) {
     console.error('Unexpected error during Nostr sign-in:', error);
-    process.exit(1);
+    return undefined;
   }
 };
 
@@ -77,7 +124,7 @@ const generateEACs = async (
   electionId: string,
   numberOfBallots: number,
   userId: string,
-): Promise<PostResult<string[]>> => {
+): Promise<PostResult<AccessCodesResponse>> => {
   try {
     const response = await axios.post(`${API_BASE_URL}/election/createaccesscodes`, {
       ElectionId: electionId,
@@ -86,10 +133,12 @@ const generateEACs = async (
       UserId: userId,
     });
 
-    if (response.status === 201 && Array.isArray(response.data)) {
+    if (response.status === 201) {
+      const accessCodeResponse = response.data as AccessCodesResponse;
+
       return {
         success: true,
-        data: response.data,
+        data: accessCodeResponse,
       };
     } else {
       return {
@@ -126,29 +175,33 @@ const generateBallots = async (
   nsec: string,
 ): Promise<number> => {
   try {
-    // Fetch the election
     // Sign in and get user ID
     const signInResponse = await signIn(nsec);
-    console.log('Successfully signed in');
+    if (!signInResponse) {
+      console.error(`Failed to signIn`);
+      return 0;
+    }
+    console.info('Successfully signed in');
 
+    // Fetch the election
     const electionResult = await fetchElection(electionId);
     if (!electionResult.success) {
       console.error(`Failed to fetch election: ${electionResult.error}`);
-      return 0; // Exit the function early
+      return 0;
     }
+    console.info('Successfully fetched election');
 
     console.info(`Generating ${numberOfBallots} ballots for election ${electionId}`);
 
     // Generate EACs
-    let eacs: string[];
-    try {
-      const result = await generateEACs(electionId, numberOfBallots, signInResponse.User.UserId);
-      eacs = result.data ?? [];
-      console.info(`Successfully generated ${eacs.length} EACs for election ${electionId}`);
-    } catch (error) {
-      console.error('Failed to generate EACs:');
-      process.exit(1); // Exit with error code
+    const eacResult = await generateEACs(electionId, numberOfBallots, signInResponse.User.UserId);
+    if (!eacResult.success) {
+      console.error(`Failed to generate EACs: ${eacResult.error}`);
+      return 0;
     }
+    console.info(
+      `Successfully generated ${eacResult.data?.AccessCodes.length} EACs for election ${electionId}`,
+    );
 
     // Generate N number of Users for this election
     await generateUsers(numberOfBallots, electionId);
@@ -165,7 +218,7 @@ const generateBallots = async (
     return ballotCount;
   } catch (error) {
     console.error('Error in generateBallots:', error);
-    process.exit(1); // Exit with error code
+    return 0;
   }
 };
 
