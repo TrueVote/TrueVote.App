@@ -29,7 +29,7 @@ interface PostResult<T> {
 const DBUserSignIn = async (
   signInEventModel: SignInEventModel,
 ): Promise<PostResult<SignInResponse>> => {
-  console.info('signinEventModel', signInEventModel);
+  console.info('DBUserSignIn->signinEventModel', signInEventModel);
 
   try {
     const response = await axios.post(`${API_BASE_URL}/api/user/signin`, signInEventModel);
@@ -61,10 +61,13 @@ const DBUserSignIn = async (
 };
 
 const signIn = async (nsec: string): Promise<SignInResponse | undefined> => {
+  console.info('signIn');
+
   const handleError: any = (e: SecureString): void => {
     console.error('Nostr sign-in error:', e);
     process.exit(1);
   };
+
   try {
     const signInEventModel = await signInWithNostr(nsec, handleError);
     console.info(signInEventModel);
@@ -90,33 +93,31 @@ const signIn = async (nsec: string): Promise<SignInResponse | undefined> => {
 };
 
 const fetchElection = async (electionId: string): Promise<FetchResult> => {
-  console.info(`Fetching election with ID: ${electionId}`);
+  console.info(`Fetching election: ${electionId}`);
   try {
     const response = await axios.get(`${API_BASE_URL}/election?ElectionId=${electionId}`);
-    console.info(`Received response with status: ${response.status}`);
-
     if (response.status !== 200) {
       return {
         success: false,
-        error: `Unexpected status code: ${response.status} for election ID ${electionId}`,
+        error: `Unexpected status code: ${response.status} for election: ${electionId}`,
       };
     }
 
     const electionDetails = response.data as ElectionModel;
 
-    console.info(`Received election data for: ${electionDetails.Name}`);
+    console.info(`Received election data: ${electionDetails.Name}`);
     return { success: true, data: electionDetails };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404) {
-        return { success: false, error: `Election with ID ${electionId} not found` };
+        return { success: false, error: `Election: ${electionId} not found` };
       }
       return {
         success: false,
         error: `Axios error: ${error.message} (Status: ${error.response?.status || 'unknown'})`,
       };
     }
-    return { success: false, error: `Error fetching election with ID ${electionId}: ${error}` };
+    return { success: false, error: `Error fetching election: ${electionId}: ${error}` };
   }
 };
 
@@ -144,6 +145,7 @@ const generateEACs = async (
 
     if (response.status === 201) {
       const accessCodeResponse = response.data as AccessCodesResponse;
+      console.info(`Received EAC data for election: ${accessCodeResponse.ElectionId}`);
 
       return {
         success: true,
@@ -171,11 +173,11 @@ const generateEACs = async (
 };
 
 const generateUsers = (numberOfUsers: number, electionId: string): void => {
-  console.info(`Generating ${numberOfUsers} users for election ${electionId}`);
+  console.info(`Generating ${numberOfUsers} Users for election: ${electionId}`);
 };
 
 const generateAndSubmitBallot = (electionId: string): void => {
-  console.info(`Generating and submitting a ballot for election ${electionId}`);
+  console.info(`Generating and submitting a ballot for election: ${electionId}`);
 };
 
 const generateBallots = async (
@@ -193,6 +195,7 @@ const generateBallots = async (
     console.info('Successfully signed in');
 
     // Fetch the election
+    console.info(`Fetching election: ${electionId}`);
     const electionResult = await fetchElection(electionId);
     if (!electionResult.success) {
       console.error(`Failed to fetch election: ${electionResult.error}`);
@@ -200,9 +203,8 @@ const generateBallots = async (
     }
     console.info('Successfully fetched election');
 
-    console.info(`Generating ${numberOfBallots} ballots for election ${electionId}`);
-
     // Generate EACs
+    console.info(`Generating ${numberOfBallots} EACs for election: ${electionId}`);
     const eacResult = await generateEACs(
       electionId,
       numberOfBallots,
@@ -214,14 +216,18 @@ const generateBallots = async (
       return 0;
     }
     console.info(
-      `Successfully generated ${eacResult.data?.AccessCodes.length} EACs for election ${electionId}`,
+      `Successfully generated ${eacResult.data?.AccessCodes.length} EACs for election: ${electionId}`,
     );
 
     // Generate N number of Users for this election
+    console.info(`Generating ${numberOfBallots} Users for election: ${electionId}`);
     await generateUsers(numberOfBallots, electionId);
+    console.info(`Successfully generated ${numberOfBallots} Users for election: ${electionId}`);
 
     let ballotCount: number = 0;
+
     // Loop through N number of iterations
+    console.info(`Generating ${numberOfBallots} Ballots for election: ${electionId}`);
     for (let i = 0; i < numberOfBallots; i++) {
       // For each iteration, generate a BallotModel with randomly selected candidates selected = true
       // Submit the ballot
@@ -229,6 +235,7 @@ const generateBallots = async (
       // Increment the ballot count
       ballotCount++;
     }
+    console.info(`Successfully generated ${ballotCount} for election: ${electionId}`);
     return ballotCount;
   } catch (error) {
     console.error('Error in generateBallots:', error);
@@ -262,7 +269,7 @@ const main = async (): Promise<void> => {
 
     const ballotCount = await generateBallots(argv.electionid, argv.numberofballots, argv.nsec);
 
-    console.info(`Generated ${ballotCount} ballots for election ${argv.electionid}`);
+    console.info(`Generated ${ballotCount} ballots for election: ${argv.electionid}`);
   } catch (error) {
     console.error('An error occurred:', error);
   } finally {
