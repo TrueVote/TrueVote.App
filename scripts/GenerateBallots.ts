@@ -2,7 +2,8 @@
 import axios from 'axios';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { ElectionModel } from '../src/TrueVote.Api';
+import { ElectionModel, SecureString, SignInResponse } from '../src/TrueVote.Api';
+import { signInWithNostr } from './SignInWithNostr';
 
 const API_BASE_URL = process.env.API_BASE_URL || 'https://api.truevote.org';
 console.info('API_BASE_URL:', API_BASE_URL);
@@ -19,10 +20,26 @@ interface PostResult<T> {
   error?: string;
 }
 
-const signIn = async (nsec: string): Promise<string> => {
-  console.info(`Signing in with nsec: ${nsec}`);
+const signIn = async (nsec: string): Promise<SignInResponse> => {
+  const handleError: any = (e: SecureString): void => {
+    console.error('Nostr sign-in error:', e);
+    process.exit(1);
+  };
 
-  return await 'finished';
+  try {
+    const { res } = await signInWithNostr(nsec, handleError);
+    console.info(res);
+    if (res) {
+      console.log('Successfully signed in with Nostr');
+      return res;
+    } else {
+      console.error('Failed to sign in with Nostr:');
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error('Unexpected error during Nostr sign-in:', error);
+    process.exit(1);
+  }
 };
 
 const fetchElection = async (electionId: string): Promise<FetchResult> => {
@@ -103,21 +120,21 @@ const generateAndSubmitBallot = (electionId: string): void => {
   console.info(`Generating and submitting a ballot for election ${electionId}`);
 };
 
-async function generateBallots(
+const generateBallots = async (
   electionId: string,
   numberOfBallots: number,
   nsec: string,
-): Promise<void> {
+): Promise<number> => {
   try {
     // Fetch the election
     // Sign in and get user ID
-    const userId = await signIn(nsec);
+    const signInResponse = await signIn(nsec);
     console.log('Successfully signed in');
 
     const electionResult = await fetchElection(electionId);
     if (!electionResult.success) {
       console.error(`Failed to fetch election: ${electionResult.error}`);
-      return; // Exit the function early
+      return 0; // Exit the function early
     }
 
     console.info(`Generating ${numberOfBallots} ballots for election ${electionId}`);
@@ -125,7 +142,7 @@ async function generateBallots(
     // Generate EACs
     let eacs: string[];
     try {
-      const result = await generateEACs(electionId, numberOfBallots, userId);
+      const result = await generateEACs(electionId, numberOfBallots, signInResponse.User.UserId);
       eacs = result.data ?? [];
       console.info(`Successfully generated ${eacs.length} EACs for election ${electionId}`);
     } catch (error) {
@@ -134,47 +151,59 @@ async function generateBallots(
     }
 
     // Generate N number of Users for this election
-    generateUsers(numberOfBallots, electionId);
+    await generateUsers(numberOfBallots, electionId);
 
+    let ballotCount: number = 0;
     // Loop through N number of iterations
     for (let i = 0; i < numberOfBallots; i++) {
       // For each iteration, generate a BallotModel with randomly selected candidates selected = true
       // Submit the ballot
-      generateAndSubmitBallot(electionId);
+      await generateAndSubmitBallot(electionId);
       // Increment the ballot count
+      ballotCount++;
     }
+    return ballotCount;
   } catch (error) {
     console.error('Error in generateBallots:', error);
     process.exit(1); // Exit with error code
   }
-}
-
-const main = async (): Promise<void> => {
-  const argv = await yargs(hideBin(process.argv))
-    .option('electionid', {
-      alias: 'e',
-      description: 'Election ID',
-      type: 'string',
-      demandOption: true,
-    })
-    .option('numberofballots', {
-      alias: 'n',
-      description: 'Number of ballots to generate',
-      type: 'number',
-      demandOption: true,
-    })
-    .option('nsec', {
-      description: 'Nostr secret key (nsec)',
-      type: 'string',
-      demandOption: true,
-    })
-    .help()
-    .alias('help', 'h')
-    .parse();
-
-  const ballotCount = await generateBallots(argv.electionid, argv.numberofballots, argv.nsec);
-
-  console.info(`Generated ${ballotCount} ballots for election ${argv.electionid}`);
 };
 
-main().catch(console.error);
+const main = async (): Promise<void> => {
+  try {
+    const argv = await yargs(hideBin(process.argv))
+      .option('electionid', {
+        alias: 'e',
+        description: 'Election ID',
+        type: 'string',
+        demandOption: true,
+      })
+      .option('numberofballots', {
+        alias: 'n',
+        description: 'Number of ballots to generate',
+        type: 'number',
+        demandOption: true,
+      })
+      .option('nsec', {
+        description: 'Nostr secret key (nsec)',
+        type: 'string',
+        demandOption: true,
+      })
+      .help()
+      .alias('help', 'h')
+      .parse();
+
+    const ballotCount = await generateBallots(argv.electionid, argv.numberofballots, argv.nsec);
+
+    console.info(`Generated ${ballotCount} ballots for election ${argv.electionid}`);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  } finally {
+    process.exit(0);
+  }
+};
+
+main().catch((error) => {
+  console.error('Unhandled error in main:', error);
+  process.exit(1);
+});
