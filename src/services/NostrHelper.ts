@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import settings from '@/settings.json';
 import { nip19, SimplePool } from 'nostr-tools';
 import { SubCloser } from 'nostr-tools/lib/types/abstract-pool';
 import {
@@ -23,8 +22,6 @@ const invalidPubKeyError: string = 'Invalid key - public key';
 
 const nostrPrivateKeyStorageKey: string = 'nostr_sk';
 const nostrPublicKeyStorageKey: string = 'nostr_pk';
-const nostrPublicRelays: string[] = settings.nostrPublicRelays;
-const nostrPrivateRelays: string[] = settings.nostrPrivateRelays;
 
 export interface NostrProfile {
   npub: string;
@@ -131,7 +128,11 @@ export const nostrSignOut: any = () => {
   removeNostrPrivateKey();
 };
 
-export const getNostrProfileInfo: any = async (npub: string): Promise<NostrProfile | undefined> => {
+export const getNostrProfileInfo: any = async (
+  npub: string,
+  nostrPublicRelays: string[],
+  nostrPrivateRelays: string[],
+): Promise<NostrProfile | undefined> => {
   const pubKey: any = nip19.decode(npub);
   const nprofile: any = nip19.nprofileEncode({ pubkey: pubKey.data, relays: nostrPrivateRelays });
   const { type, data } = nip19.decode(nprofile);
@@ -300,7 +301,10 @@ const signProfile: any = async (
   return finalEvent;
 };
 
-export const publishEvent: any = async (signedEvent: VerifiedEvent): Promise<any> => {
+const publishEvent: any = async (
+  signedEvent: VerifiedEvent,
+  nostrPublicRelays: string[],
+): Promise<any> => {
   const pool: SimplePool = new SimplePool();
 
   try {
