@@ -124,14 +124,23 @@ const generateEACs = async (
   electionId: string,
   numberOfBallots: number,
   userId: string,
+  token: string,
 ): Promise<PostResult<AccessCodesResponse>> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/election/createaccesscodes`, {
-      ElectionId: electionId,
-      NumberOfAccessCodes: numberOfBallots,
-      RequestDescription: 'Ballot generation',
-      UserId: userId,
-    });
+    const response = await axios.post(
+      `${API_BASE_URL}/election/createaccesscodes`,
+      {
+        ElectionId: electionId,
+        NumberOfAccessCodes: numberOfBallots,
+        RequestDescription: 'Ballot generation',
+        UserId: userId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     if (response.status === 201) {
       const accessCodeResponse = response.data as AccessCodesResponse;
@@ -194,7 +203,12 @@ const generateBallots = async (
     console.info(`Generating ${numberOfBallots} ballots for election ${electionId}`);
 
     // Generate EACs
-    const eacResult = await generateEACs(electionId, numberOfBallots, signInResponse.User.UserId);
+    const eacResult = await generateEACs(
+      electionId,
+      numberOfBallots,
+      signInResponse.User.UserId,
+      signInResponse.Token,
+    );
     if (!eacResult.success) {
       console.error(`Failed to generate EACs: ${eacResult.error}`);
       return 0;
