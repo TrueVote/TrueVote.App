@@ -6,6 +6,7 @@ import { generateKeyPair } from '../src/services/NostrHelper';
 import {
   AccessCodesResponse,
   ElectionModel,
+  RaceModel,
   SecureString,
   SignInEventModel,
   SignInResponse,
@@ -209,8 +210,45 @@ const generateUsers = async (
   return [userIds, userTokens];
 };
 
+// Given an election, loop through each race. For each race, if the MinNumberOfChoices is == 0
+// Then decide to vote in that race with a 75% chance random as yes.
+// If the MinNumberOfChoices is >= 1, then of course we most vote in that race.
+// For each race we are voting in, set random Candidates.Selected = true but no more than MaxNumberOfChoices
 const randomizeBallotChoices = (electionDetails: ElectionModel): ElectionModel => {
-  return electionDetails;
+  const modifiedElection = { ...electionDetails };
+
+  modifiedElection.Races.forEach((race: RaceModel) => {
+    let shouldVote =
+      (race.MinNumberOfChoices && race.MinNumberOfChoices >= 1) || Math.random() < 0.75;
+
+    if (shouldVote) {
+      // Calculate the number of candidates to select, ensuring it does not exceed MaxNumberOfChoices
+      const candidatesToSelect = Math.min(
+        race.MaxNumberOfChoices || 0,
+        Math.max(
+          race.MinNumberOfChoices || 0,
+          Math.floor(Math.random() * (race.MaxNumberOfChoices || 0)), // Ensure this is capped correctly
+        ),
+      );
+
+      const shuffledCandidates = [...race.Candidates].sort(() => Math.random() - 0.5);
+
+      // Ensure we do not select more candidates than MaxNumberOfChoices
+      const actualCandidatesToSelect = Math.min(candidatesToSelect, shuffledCandidates.length);
+
+      // Reset the Selected property to false before selecting new candidates
+      shuffledCandidates.forEach((candidate) => {
+        candidate.Selected = false; // Reset selection
+      });
+
+      // Select the candidates
+      shuffledCandidates.slice(0, actualCandidatesToSelect).forEach((candidate) => {
+        candidate.Selected = true;
+      });
+    }
+  });
+
+  return modifiedElection;
 };
 
 const submitBallot = async (
