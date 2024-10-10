@@ -2,12 +2,15 @@
 import axios from 'axios';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { generateKeyPair } from '../src/services/NostrHelper';
 import {
   AccessCodesResponse,
   ElectionModel,
   SecureString,
   SignInEventModel,
   SignInResponse,
+  SubmitBallotModel,
+  SubmitBallotModelResponse,
 } from '../src/TrueVote.Api';
 import { signInWithNostr } from './SignInWithNostr';
 
@@ -29,7 +32,7 @@ interface PostResult<T> {
 const DBUserSignIn = async (
   signInEventModel: SignInEventModel,
 ): Promise<PostResult<SignInResponse>> => {
-  console.info('DBUserSignIn->signinEventModel', signInEventModel);
+  //console.info('DBUserSignIn->signinEventModel', signInEventModel);
 
   try {
     const response = await axios.post(`${API_BASE_URL}/api/user/signin`, signInEventModel);
@@ -70,12 +73,12 @@ const signIn = async (nsec: string): Promise<SignInResponse | undefined> => {
 
   try {
     const signInEventModel = await signInWithNostr(nsec, handleError);
-    console.info(signInEventModel);
+    // console.info(signInEventModel);
     if (signInEventModel) {
       console.info('Successfully signed Nostr event');
       try {
         const result: FetchResult = await DBUserSignIn(signInEventModel);
-        console.info(result.data);
+        // console.info(result.data);
         return result.data;
       } catch (e) {
         console.error('Exception calling DBUserSignIn', e);
@@ -172,12 +175,129 @@ const generateEACs = async (
   }
 };
 
-const generateUsers = (numberOfUsers: number, electionId: string): void => {
+// For numberOfUsers, generate an new nsec using NostrHelper, signIn with that nsec,
+// which will generate each user. Return an array of UserIds returned back from signIn.
+const generateUsers = async (
+  numberOfUsers: number,
+  electionId: string,
+): Promise<[userIDs: string[], userTokens: string[]]> => {
   console.info(`Generating ${numberOfUsers} Users for election: ${electionId}`);
+
+  const userIds: string[] = [];
+  const userTokens: string[] = [];
+
+  for (let i = 0; i < numberOfUsers; i++) {
+    // Generate a new nsec using NostrHelper
+    const { nsec } = generateKeyPair();
+
+    // Sign in with the generated nsec
+    try {
+      const signInResponse = await signIn(nsec);
+      if (!signInResponse) {
+        console.error(`Failed to signIn generated user`);
+        return [userIds, userTokens];
+      }
+
+      console.info(`Generated user [${i}]: ${signInResponse.User.UserId}`);
+      userIds.push(signInResponse.User.UserId);
+      userTokens.push(signInResponse.Token);
+    } catch (error) {
+      console.error(`Failed to sign in generated user ${i}:`, error);
+    }
+  }
+
+  return [userIds, userTokens];
 };
 
-const generateAndSubmitBallot = (electionId: string): void => {
-  console.info(`Generating and submitting a ballot for election: ${electionId}`);
+const randomizeBallotChoices = (electionDetails: ElectionModel): ElectionModel => {
+  return electionDetails;
+};
+
+const submitBallot = async (
+  submitBallotModel: SubmitBallotModel,
+  token: string,
+): Promise<PostResult<SubmitBallotModelResponse>> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/ballot/submitballot`, submitBallotModel, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 201) {
+      const submitBallotModelResponse = response.data as SubmitBallotModelResponse;
+      console.info(
+        `Received submitBallot data for election: ${submitBallotModel.Election.ElectionId}`,
+      );
+
+      return {
+        success: true,
+        data: submitBallotModelResponse,
+      };
+    } else {
+      return {
+        success: false,
+        error: 'Unexpected response format',
+      };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return {
+        success: false,
+        error: `Error generating ballot: ${error.response.status} details: ${JSON.stringify(error.response.data.errors)}`,
+      };
+    } else {
+      return {
+        success: false,
+        error: 'Error generating ballot: Network error',
+      };
+    }
+  }
+};
+
+const generateAndSubmitBallots = async (
+  numberOfUsers: number,
+  electionDetails: ElectionModel,
+  eacResult: AccessCodesResponse,
+  userTokens: string[],
+): Promise<string[]> => {
+  const ballotIds: string[] = [];
+
+  console.info(numberOfUsers, electionDetails, eacResult, userTokens);
+
+  for (let i = 0; i < numberOfUsers; i++) {
+    // Randomize the 'select = true' for each candidate in each race
+
+    const ballot: ElectionModel = randomizeBallotChoices(electionDetails);
+
+    const submitBallotModel: SubmitBallotModel = {
+      Election: ballot,
+      AccessCode: eacResult.AccessCodes[i].AccessCode,
+    };
+
+    // Submit the ballot
+    try {
+      const submitBallotResponse = await submitBallot(submitBallotModel, userTokens[i]);
+      if (!submitBallotResponse) {
+        console.error(`Failed to submitBallot`);
+        return ballotIds;
+      }
+
+      if (submitBallotResponse.error) {
+        console.error(`Failed to submitBallot response error`, submitBallotResponse.error);
+        return ballotIds;
+      }
+
+      const ballotDetails = submitBallotResponse.data as SubmitBallotModelResponse;
+
+      console.info(`Generated ballot [${i}]: ${ballotDetails.BallotId}`);
+      ballotIds.push(ballotDetails.BallotId);
+    } catch (error) {
+      console.error(`Failed to submit generated ballot: ${i}:`, error);
+    }
+  }
+
+  return ballotIds;
 };
 
 const generateBallots = async (
@@ -221,22 +341,32 @@ const generateBallots = async (
 
     // Generate N number of Users for this election
     console.info(`Generating ${numberOfBallots} Users for election: ${electionId}`);
-    await generateUsers(numberOfBallots, electionId);
-    console.info(`Successfully generated ${numberOfBallots} Users for election: ${electionId}`);
-
-    let ballotCount: number = 0;
-
-    // Loop through N number of iterations
-    console.info(`Generating ${numberOfBallots} Ballots for election: ${electionId}`);
-    for (let i = 0; i < numberOfBallots; i++) {
-      // For each iteration, generate a BallotModel with randomly selected candidates selected = true
-      // Submit the ballot
-      await generateAndSubmitBallot(electionId);
-      // Increment the ballot count
-      ballotCount++;
+    const [userIds, userTokens] = await generateUsers(numberOfBallots, electionId);
+    if (userIds.length < numberOfBallots) {
+      console.error(
+        `Error: Generated: ${userIds.length} Users out of expected: ${numberOfBallots}`,
+      );
+      return 0;
     }
-    console.info(`Successfully generated ${ballotCount} for election: ${electionId}`);
-    return ballotCount;
+    console.info(`Successfully generated: ${userIds.length} Users for election: ${electionId}`);
+
+    // Generate N number of Ballots for this election
+    console.info(`Generating ${numberOfBallots} Ballots for election: ${electionId}`);
+    const ballotIds = await generateAndSubmitBallots(
+      numberOfBallots,
+      electionResult.data as ElectionModel,
+      eacResult.data as AccessCodesResponse,
+      userTokens,
+    );
+    if (ballotIds.length < numberOfBallots) {
+      console.error(
+        `Error: Generated: ${ballotIds.length} Ballots out of expected: ${numberOfBallots}`,
+      );
+      return 0;
+    }
+    console.info(`Successfully generated: ${ballotIds.length} Ballots for election: ${electionId}`);
+
+    return ballotIds.length;
   } catch (error) {
     console.error('Error in generateBallots:', error);
     return 0;
