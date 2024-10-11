@@ -25,6 +25,8 @@
     "refresh-api:local": "yarn build-api:local && yarn fix-api",
     "refresh-api:prod": "yarn build-api:prod && yarn fix-api",
     "fix-api": "ts-node -P tsconfig.commonjs.json ./scripts/fixApi.ts",
+    "ballot-simulator:local": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 API_BASE_URL=https://localhost:7253 ts-node -P tsconfig.commonjs.json ./scripts/BallotSimulator.ts",
+    "ballot-simulator:prod": "ts-node -P tsconfig.commonjs.json ./scripts/BallotSimulator.ts",
     "build-version": "bash ./scripts/build-version.sh",
     "update-packages": "ncu -u"
   },
@@ -35,6 +37,7 @@
     "@mantine/core": "^7.12.2",
     "@mantine/hooks": "^7.12.2",
     "@mantine/notifications": "^7.12.2",
+    "axios": "^1.7.7",
     "graphql": "^16.9.0",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
@@ -59,10 +62,12 @@
     "@types/react": "^18.3.7",
     "@types/react-dom": "^18.3.0",
     "@types/react-helmet": "^6.1.11",
+    "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "cross-env": "^7.0.3",
     "eslint": "^9.10.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
@@ -82,7 +87,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
     "vite": "^5.4.6",
-    "vite-plugin-environment": "^1.1.3"
+    "vite-plugin-environment": "^1.1.3",
+    "yargs": "^17.7.2"
   },
   "packageManager": "yarn@1.22.22"
 }

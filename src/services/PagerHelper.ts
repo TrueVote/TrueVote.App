@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
+import * as settings from '@/settings.json';
 import { BaseUserModel, SecureString, SignInEventModel, SignInResponse } from '@/TrueVote.Api';
 import { NostrKind } from '@/TrueVote.Api.ManualModels';
-import { NostrProfile, getNostrProfileInfo, npubfromnsec, signEvent } from './NostrHelper';
+import { getNostrProfileInfo, NostrProfile, npubfromnsec, signEvent } from './NostrHelper';
 import { DBUserSignIn } from './RESTDataClient';
 
 export const signInWithNostr: (
@@ -14,7 +15,11 @@ export const signInWithNostr: (
 }> = async (nsec: string, handleError: (error: SecureString) => void) => {
   try {
     const npub: string = npubfromnsec(nsec);
-    const retrievedProfile: NostrProfile = await getNostrProfileInfo(npub);
+    const retrievedProfile: NostrProfile = await getNostrProfileInfo(
+      npub,
+      settings.nostrPublicRelays,
+      settings.nostrPrivateRelays,
+    );
 
     if (retrievedProfile && retrievedProfile !== undefined) {
       const dt: number = Math.floor(new Date().getTime() / 1000);
