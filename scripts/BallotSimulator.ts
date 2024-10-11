@@ -225,10 +225,7 @@ const randomizeBallotChoices = (electionDetails: ElectionModel): ElectionModel =
 
       if (!shouldVote) return race;
 
-      const candidatesToSelect = Math.min(
-        maxChoices,
-        Math.max(minChoices, Math.floor(Math.random() * (maxChoices + 1))),
-      );
+      const candidatesToSelect = getWeightedRandomChoices(minChoices, maxChoices);
 
       const shuffledIndices = shuffleArray(race.Candidates.length);
 
@@ -241,6 +238,21 @@ const randomizeBallotChoices = (electionDetails: ElectionModel): ElectionModel =
       };
     }),
   };
+};
+
+const getWeightedRandomChoices = (min: number, max: number): number => {
+  if (min === max) return min;
+
+  const range = max - min + 1;
+  const weightedRandom = Math.random();
+
+  if (weightedRandom < 0.75) {
+    // 75% chance of selecting max
+    return max;
+  } else {
+    // 25% chance of selecting a number between min and max-1
+    return min + Math.floor(Math.random() * (range - 1));
+  }
 };
 
 // Fisher-Yates shuffle algorithm
