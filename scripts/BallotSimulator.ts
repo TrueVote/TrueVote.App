@@ -215,40 +215,42 @@ const generateUsers = async (
 // If the MinNumberOfChoices is >= 1, then of course we most vote in that race.
 // For each race we are voting in, set random Candidates.Selected = true but no more than MaxNumberOfChoices
 const randomizeBallotChoices = (electionDetails: ElectionModel): ElectionModel => {
-  const modifiedElection = { ...electionDetails };
+  return {
+    ...electionDetails,
+    Races: electionDetails.Races.map((race: RaceModel) => {
+      const maxChoices = race.MaxNumberOfChoices || 0;
+      const minChoices = race.MinNumberOfChoices || 0;
 
-  modifiedElection.Races.forEach((race: RaceModel) => {
-    let shouldVote =
-      (race.MinNumberOfChoices && race.MinNumberOfChoices >= 1) || Math.random() < 0.75;
+      const shouldVote = minChoices >= 1 || Math.random() < 0.75;
 
-    if (shouldVote) {
-      // Calculate the number of candidates to select, ensuring it does not exceed MaxNumberOfChoices
+      if (!shouldVote) return race;
+
       const candidatesToSelect = Math.min(
-        race.MaxNumberOfChoices || 0,
-        Math.max(
-          race.MinNumberOfChoices || 0,
-          Math.floor(Math.random() * (race.MaxNumberOfChoices || 0)), // Ensure this is capped correctly
-        ),
+        maxChoices,
+        Math.max(minChoices, Math.floor(Math.random() * (maxChoices + 1))),
       );
 
-      const shuffledCandidates = [...race.Candidates].sort(() => Math.random() - 0.5);
+      const shuffledIndices = shuffleArray(race.Candidates.length);
 
-      // Ensure we do not select more candidates than MaxNumberOfChoices
-      const actualCandidatesToSelect = Math.min(candidatesToSelect, shuffledCandidates.length);
+      return {
+        ...race,
+        Candidates: race.Candidates.map((candidate, index) => ({
+          ...candidate,
+          Selected: shuffledIndices.indexOf(index) < candidatesToSelect,
+        })),
+      };
+    }),
+  };
+};
 
-      // Reset the Selected property to false before selecting new candidates
-      shuffledCandidates.forEach((candidate) => {
-        candidate.Selected = false; // Reset selection
-      });
-
-      // Select the candidates
-      shuffledCandidates.slice(0, actualCandidatesToSelect).forEach((candidate) => {
-        candidate.Selected = true;
-      });
-    }
-  });
-
-  return modifiedElection;
+// Fisher-Yates shuffle algorithm
+const shuffleArray = (length: number): number[] => {
+  const array = Array.from({ length }, (_, i) => i);
+  for (let i = length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 };
 
 const submitBallot = async (
