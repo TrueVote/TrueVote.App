@@ -9,12 +9,13 @@ import {
   Button,
   Container,
   MantineTheme,
+  Space,
   Text,
   rem,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { IconCheckbox, IconChecklist, IconChevronRight } from '@tabler/icons-react';
+import { IconCheckbox, IconChecklist, IconChevronRight, IconSum } from '@tabler/icons-react';
 import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -89,6 +90,18 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
                 rightSection={<IconCheckbox style={{ width: rem(16), height: rem(16) }} />}
               >
                 <span className={classes.buttonText}>Vote</span>
+              </Button>
+            </Link>
+            <Space h='md' />
+            <Link to={`/results/${e.ElectionId}`} className={classes.buttonText}>
+              <Button
+                fullWidth
+                radius='md'
+                color='orange'
+                variant='light'
+                rightSection={<IconSum style={{ width: rem(16), height: rem(16) }} />}
+              >
+                <span className={classes.buttonText}>Results</span>
               </Button>
             </Link>
           </Accordion.Panel>

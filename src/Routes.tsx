@@ -46,7 +46,7 @@ export const ROUTES: ReactElement = (
       <Route path='/polls' element={<Polls />} />
       <Route path='/profile' element={<Profile />} />
       <Route path='/thanks' element={<Thanks />} />
-      <Route path='/results' element={<Results />} />
+      <Route path='/results/:electionId' element={<Results />} />
       <Route path='/status' element={<Status />} />
       <Route path='/signin' element={<SignIn />} />
       <Route path='/signout' element={<SignOut />} />
