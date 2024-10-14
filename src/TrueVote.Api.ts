@@ -153,6 +153,12 @@ export interface BallotModel {
    * @maxLength 2048
    */
   BallotId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
   Election: ElectionModel;
   /** @format date */
   DateCreated: string;
@@ -232,13 +238,13 @@ export interface BaseRaceModel {
    * @min 0
    * @max 2147483647
    */
-  MaxNumberOfChoices?: number | null;
+  MaxNumberOfChoices: number;
   /**
    * @format int32
    * @min 0
    * @max 2147483647
    */
-  MinNumberOfChoices?: number | null;
+  MinNumberOfChoices: number;
   BaseCandidates: BaseCandidateModel[];
 }
 
