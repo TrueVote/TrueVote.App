@@ -10,6 +10,7 @@ import {
   Container,
   Group,
   ScrollArea,
+  Stack,
   Text,
   Title,
   useMantineColorScheme,
@@ -22,11 +23,11 @@ import { Cell, Pie, PieChart } from 'recharts';
 // eslint-disable-next-line no-unused-vars
 const useChartColors = (): ((index: number) => string) => {
   const COLORS = [
-    '#0088FE',
-    '#00C49F',
-    '#FFBB28',
-    '#FF8042',
-    '#FF6B6B',
+    '#6277b7',
+    '#21b371',
+    '#d97757',
+    '#1c2336',
+    '#fddb33',
     '#6A0DAD',
     '#1E90FF',
     '#32CD32',
@@ -64,6 +65,7 @@ const renderCustomizedLabel = ({
   percent,
   name,
   value,
+  partyAffiliation,
 }: {
   cx: number;
   cy: number;
@@ -73,6 +75,7 @@ const renderCustomizedLabel = ({
   percent: number;
   name: string;
   value: number;
+  partyAffiliation: string;
 }): JSX.Element => {
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -117,7 +120,10 @@ const renderCustomizedLabel = ({
           {line}
         </tspan>
       ))}
-      <tspan x={x + xOffset} dy='22' fontSize='14px'>
+      <tspan x={x + xOffset} dy='22' fontSize='12px' fontStyle='italic'>
+        {partyAffiliation}
+      </tspan>
+      <tspan x={x + xOffset} dy='20' fontSize='14px'>
         {voteText}
       </tspan>
       <tspan x={x + xOffset} dy='20' fontSize='14px'>
@@ -126,7 +132,6 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
-
 export const Results: FC = () => {
   const { colorScheme } = useMantineColorScheme();
   const apolloClient = useApolloClient();
@@ -141,12 +146,29 @@ export const Results: FC = () => {
 
   // Pre-process the data once electionResults are available
   const processedRaces = useMemo(() => {
-    if (!electionResults) return [];
-    return electionResults.Races.map((race) => ({
-      ...race,
-      groupedCandidates: groupSmallSlices(race.CandidateResults, 0.05),
-    }));
-  }, [electionResults]);
+    if (!electionResults || !electionDetails) return [];
+    return electionResults.Races.map((race) => {
+      const raceDetails = electionDetails.Races.find((r) => r.RaceId === race.RaceId);
+      const groupedCandidates = groupSmallSlices(race.CandidateResults, 0.05);
+      const totalVotes = race.CandidateResults.reduce(
+        (sum, candidate) => sum + candidate.TotalVotes,
+        0,
+      );
+      return {
+        ...race,
+        totalVotes,
+        groupedCandidates: groupedCandidates.map((c) => {
+          const candidateDetails = raceDetails?.Candidates.find(
+            (cd) => cd.CandidateId === c.CandidateId,
+          );
+          return {
+            ...c,
+            PartyAffiliation: candidateDetails?.PartyAffiliation ?? '',
+          };
+        }),
+      };
+    });
+  }, [electionResults, electionDetails]);
 
   useEffect(() => {
     const fetchResults = async (): Promise<void> => {
@@ -205,34 +227,37 @@ export const Results: FC = () => {
     <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Results' />
       <Text size='xl'>{electionDetails?.Name}</Text>
-      <Text>Ballots Submitted: {electionResults.TotalBallots}</Text>
-      {processedRaces.map((r) => (
-        <div key={r.RaceId}>
-          <Title className={classes.titleSpaces} size='h4'>
-            {r.RaceName}
-          </Title>
-          <PieChart width={380} height={380}>
-            <Pie
-              data={r.groupedCandidates.map((c) => ({
-                name: c.CandidateName,
-                value: c.TotalVotes,
-              }))}
-              cx='50%'
-              cy='50%'
-              labelLine={false}
-              label={renderCustomizedLabel}
-              outerRadius={190}
-              fill='#8884d8'
-              dataKey='value'
-            >
-              {r.groupedCandidates.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={colorIndex(index)} />
-              ))}
-            </Pie>
-          </PieChart>
-        </div>
-      ))}
+      <Text size='l'>Total Ballots Submitted: {electionResults.TotalBallots}</Text>
       <Box className={classes.boxGap} />
+      <Stack gap='md'>
+        {processedRaces.map((r) => (
+          <Card shadow='sm' p='lg' radius='md' padding='xl' withBorder key={r.RaceId}>
+            <Title className={classes.titleSpaces} size='h4'>
+              {r.RaceName}: {r.totalVotes} Vote{r.totalVotes !== 1 ? 's' : ''}{' '}
+            </Title>
+            <PieChart width={380} height={380}>
+              <Pie
+                data={r.groupedCandidates.map((c) => ({
+                  name: c.CandidateName,
+                  value: c.TotalVotes,
+                  partyAffiliation: c.PartyAffiliation,
+                }))}
+                cx='50%'
+                cy='50%'
+                labelLine={false}
+                label={renderCustomizedLabel}
+                outerRadius={190}
+                fill='#8884d8'
+                dataKey='value'
+              >
+                {r.groupedCandidates.map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={colorIndex(index)} />
+                ))}
+              </Pie>
+            </PieChart>
+          </Card>
+        ))}
+      </Stack>
       <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
         <Title className={classes.titleSpaces} size='h4'>
           Raw Data
