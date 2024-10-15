@@ -1,5 +1,5 @@
-import { CandidateResult, ElectionResults } from '@/TrueVote.Api';
-import { DBGetElectionResultsById } from '@/services/GraphQLDataClient';
+import { CandidateResult, ElectionModel, ElectionResults } from '@/TrueVote.Api';
+import { DBGetElectionById, DBGetElectionResultsById } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -102,7 +102,7 @@ const renderCustomizedLabel = ({
 
   const nameLines = wrapText(name, 10); // More aggressive wrapping
   const percentText = `${(percent * 100).toFixed(0)}%`;
-  const voteText = `${value} vote${value !== 1 ? 's' : ''}`;
+  const voteText = `${value} Vote${value !== 1 ? 's' : ''}`;
 
   return (
     <text x={x + xOffset} y={y} fill='white' textAnchor={textAnchor} dominantBaseline='central'>
@@ -126,6 +126,7 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
+
 export const Results: FC = () => {
   const { colorScheme } = useMantineColorScheme();
   const apolloClient = useApolloClient();
@@ -133,6 +134,7 @@ export const Results: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [electionResults, setElectionResult] = useState<ElectionResults | undefined>();
+  const [electionDetails, setElectionDetails] = useState<ElectionModel | undefined>();
   const getColor: () => 'monokai' | 'rjv-default' = () =>
     colorScheme === 'dark' ? 'monokai' : 'rjv-default';
   const colorIndex = useChartColors();
@@ -164,6 +166,24 @@ export const Results: FC = () => {
     fetchResults();
   }, [apolloClient, params.electionId]);
 
+  useEffect(() => {
+    const fetchElectionDetails = async (): Promise<void> => {
+      try {
+        const fetchedElectionDetails: ElectionModel[] = await DBGetElectionById(
+          apolloClient,
+          params.electionId!,
+        );
+
+        setElectionDetails(fetchedElectionDetails[0]);
+        setLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+        setLoading(false);
+      }
+    };
+    fetchElectionDetails();
+  }, [apolloClient, params.electionId]);
+
   if (loading) {
     return <TrueVoteLoader />;
   }
@@ -184,13 +204,14 @@ export const Results: FC = () => {
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Results' />
+      <Text size='xl'>{electionDetails?.Name}</Text>
       <Text>Ballots Submitted: {electionResults.TotalBallots}</Text>
       {processedRaces.map((r) => (
         <div key={r.RaceId}>
           <Title className={classes.titleSpaces} size='h4'>
             {r.RaceName}
           </Title>
-          <PieChart width={500} height={500}>
+          <PieChart width={380} height={380}>
             <Pie
               data={r.groupedCandidates.map((c) => ({
                 name: c.CandidateName,
@@ -200,7 +221,7 @@ export const Results: FC = () => {
               cy='50%'
               labelLine={false}
               label={renderCustomizedLabel}
-              outerRadius={250}
+              outerRadius={190}
               fill='#8884d8'
               dataKey='value'
             >
