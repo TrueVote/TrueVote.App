@@ -47,7 +47,8 @@
     "react-helmet-async": "^2.0.5",
     "react-json-view": "^1.21.3",
     "react-router-dom": "^6.27.0",
-    "react-sortable-hoc": "^2.0.0"
+    "react-sortable-hoc": "^2.0.0",
+    "recharts": "^2.13.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.3.5",
