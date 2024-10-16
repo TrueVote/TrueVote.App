@@ -153,6 +153,12 @@ export interface BallotModel {
    * @maxLength 2048
    */
   BallotId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
   Election: ElectionModel;
   /** @format date */
   DateCreated: string;
@@ -232,13 +238,13 @@ export interface BaseRaceModel {
    * @min 0
    * @max 2147483647
    */
-  MaxNumberOfChoices?: number | null;
+  MaxNumberOfChoices: number;
   /**
    * @format int32
    * @min 0
    * @max 2147483647
    */
-  MinNumberOfChoices?: number | null;
+  MinNumberOfChoices: number;
   BaseCandidates: BaseCandidateModel[];
 }
 
@@ -313,6 +319,27 @@ export interface CandidateModelList {
   Candidates: CandidateModel[];
 }
 
+export interface CandidateResult {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CandidateId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CandidateName: string;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  TotalVotes: number;
+}
+
 export interface CheckCodeRequest {
   /**
    * @format string
@@ -385,6 +412,22 @@ export interface ElectionModel {
 export interface ElectionModelList {
   /** @maxItems 2048 */
   Elections: ElectionModel[];
+}
+
+export interface ElectionResults {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  TotalBallots: number;
+  Races: RaceResult[];
 }
 
 export interface Error500Flag {
@@ -569,6 +612,22 @@ export interface RaceModel {
 export interface RaceModelList {
   /** @maxItems 2048 */
   Races: RaceModel[];
+}
+
+export interface RaceResult {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceName: string;
+  CandidateResults: CandidateResult[];
 }
 
 /** @format int32 */

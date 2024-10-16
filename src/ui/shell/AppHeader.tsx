@@ -104,14 +104,7 @@ export const AppHeader: FC = () => {
       protected: false,
       matched: useMatch('/profile'),
     },
-    {
-      id: '4',
-      link: '/results',
-      label: 'Results',
-      protected: false,
-      matched: useMatch('/results'),
-    },
-    { id: '5', link: '/about', label: 'About', protected: false, matched: useMatch('/about') },
+    { id: '4', link: '/about', label: 'About', protected: false, matched: useMatch('/about') },
   ];
   const [, toggle] = useToggle();
   const [isMenuOpen, setMenuOpen] = useState(false);
