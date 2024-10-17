@@ -3,7 +3,7 @@ import {
   electionDetailsByIdQuery,
   electionResultsByIdQuery,
   electionResultsByIdSubscription,
-} from '@/services/GraphQLDataClient';
+} from '@/services/GraphQLSchemas';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';

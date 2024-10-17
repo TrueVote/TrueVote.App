@@ -6,7 +6,7 @@ import {
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
 import { BallotBinderStorage } from '@/services/BallotBinder';
-import { electionDetailsByIdQuery } from '@/services/GraphQLDataClient';
+import { electionDetailsByIdQuery } from '@/services/GraphQLSchemas';
 import { DBSubmitBallot } from '@/services/RESTDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatErrorObject, objectDifference } from '@/ui/Helpers';
