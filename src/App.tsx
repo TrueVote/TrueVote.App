@@ -30,6 +30,11 @@ export const App: FC = () => {
     uri: apiRoot + `/api/graphql/`,
   });
 
+  const wssLink: string =
+    !apiRoot || apiRoot === '' || apiRoot === undefined // Probably running locally
+      ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/graphql/`
+      : `${apiRoot?.replace(/^https?/, 'wss')}/api/graphql/`;
+
   // get the authentication token from local storage if it exists
   const token: string | null = getJwt();
 
@@ -47,10 +52,7 @@ export const App: FC = () => {
   // Set up the WebSocket link
   const wsLink = new GraphQLWsLink(
     createClient({
-      url:
-        apiRoot || apiRoot === '' || apiRoot === undefined // Probably running locally
-          ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/graphql/`
-          : `${apiRoot?.replace(/^https?/, 'wss')}/api/graphql/`,
+      url: wssLink,
       connectionParams: () => ({
         authorization: token ? `Bearer ${token}` : '',
       }),
