@@ -6,14 +6,14 @@ import {
   SubmitBallotModelResponse,
 } from '@/TrueVote.Api';
 import { BallotBinderStorage } from '@/services/BallotBinder';
-import { DBGetElectionById } from '@/services/GraphQLDataClient';
+import { electionDetailsByIdQuery } from '@/services/GraphQLDataClient';
 import { DBSubmitBallot } from '@/services/RESTDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatErrorObject, objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   Badge,
   Box,
@@ -38,47 +38,49 @@ import { NavigateFunction, Params, useNavigate, useParams } from 'react-router-d
 export const Ballot: FC = () => {
   const params: Params<string> = useParams();
   const navigate: NavigateFunction = useNavigate();
-  const apolloClient = useApolloClient();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [electionData, setElectionData] = useState<ElectionModel[] | undefined>();
+  const [electionDetails, setElectionDetails] = useState<ElectionModel | undefined>();
+  const { electionId } = useParams<{ electionId: string }>();
 
+  const {
+    loading: detailsLoading,
+    error: detailsError,
+    data: detailsData,
+  } = useQuery(electionDetailsByIdQuery, {
+    variables: { ElectionId: electionId },
+    skip: !electionId,
+    onCompleted: (data) => {
+      console.info('Election details query completed:', data);
+    },
+    onError: (error) => {
+      console.error('Election details query error:', error);
+    },
+  });
+
+  // Update state when query data is received
   useEffect(() => {
-    const fetchElection = async (): Promise<void> => {
-      try {
-        const fetchedElection: ElectionModel[] = await DBGetElectionById(
-          apolloClient,
-          params.electionId,
-        );
+    if (detailsData?.GetElectionById) {
+      console.info('Updating election details from query');
+      setElectionDetails(detailsData.GetElectionById[0]);
+    }
+  }, [detailsData]);
 
-        setElectionData(fetchedElection);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-        setLoading(false);
-      }
-    };
-    fetchElection();
-  }, []);
-
-  if (loading) {
+  if (detailsLoading) {
     return <TrueVoteLoader />;
   }
 
-  if (error) {
-    console.error(error);
-    return <>`Error ${error.message}`</>;
+  if (detailsError) {
+    console.error(detailsError);
+    return <>`Error ${detailsError.message}`</>;
   }
-  console.info(electionData);
 
-  if (electionData === null || electionData === undefined || electionData.length === 0) {
+  if (!electionDetails) {
     return (
       <Container size='xs' px='xs' className={classes.container}>
         <Text>Election Not Found</Text>
       </Container>
     );
   }
-  const election: ElectionModel = electionData[0];
+  const election: ElectionModel = electionDetails;
   const electionBallot: ElectionModel = _.cloneDeep(election);
 
   return (

@@ -1,65 +1,70 @@
 import { useGlobalContext } from '@/Global';
 import { BallotList } from '@/TrueVote.Api';
 import { BallotBinder, BallotBinderStorage } from '@/services/BallotBinder';
-import { DBGetBallotById } from '@/services/GraphQLDataClient';
+import { ballotDetailsByIdQuery } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { useApolloClient } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import {
   Accordion,
   Button,
   Container,
   MantineTheme,
+  rem,
   Table,
   Text,
-  rem,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
 import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
-import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
+import { FC, Fragment, ReactElement, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export const Ballots: FC = () => {
   const theme: MantineTheme = useMantineTheme();
   const { userModel } = useGlobalContext();
-  const apolloClient = useApolloClient();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
   const [ballotListArray, setBallotListArray] = useState<BallotList[]>([]);
-  const ballotBinderStorage: BallotBinderStorage = new BallotBinderStorage(userModel?.UserId ?? '');
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [getBallotDetails, { error }] = useLazyQuery(ballotDetailsByIdQuery);
+
+  const fetchBallotListArray = useCallback(async () => {
+    if (!userModel?.UserId) return;
+
+    const ballotBinderStorage = new BallotBinderStorage(userModel.UserId);
+    const ballotBinders: BallotBinder[] = ballotBinderStorage.getAllBallotBinders();
+
+    try {
+      const fetchedBallotListArray: BallotList[] = await Promise.all(
+        ballotBinders.map(async (binder: BallotBinder) => {
+          const { data } = await getBallotDetails({
+            variables: { BallotId: binder.BallotId },
+          });
+          return data.GetBallotById;
+        }),
+      );
+      setBallotListArray(fetchedBallotListArray);
+    } catch (err) {
+      console.error('Error fetching ballot details:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [userModel?.UserId, getBallotDetails]);
 
   useEffect(() => {
-    const fetchBallotListArray = async (): Promise<void> => {
-      const ballotBinders: BallotBinder[] = ballotBinderStorage.getAllBallotBinders();
-      try {
-        const fetchedBallotListArray: BallotList[] = await Promise.all(
-          ballotBinders.map(async (binder: BallotBinder) => {
-            const ballotList: BallotList = await DBGetBallotById(apolloClient, binder.BallotId);
-            return ballotList;
-          }),
-        );
-
-        setBallotListArray(fetchedBallotListArray);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-        setLoading(false);
-      }
-    };
     fetchBallotListArray();
-  }, []);
+  }, [fetchBallotListArray]);
 
-  if (loading) {
+  if (isLoading) {
     return <TrueVoteLoader />;
   }
+
   if (error) {
     console.error(error);
     return <>`Error ${error.message}`</>;
   }
-  console.info(ballotListArray);
 
   return (
     <Container size='xs' px='xs' className={classes.container}>

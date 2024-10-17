@@ -1,17 +1,17 @@
 import { ElectionModel } from '@/TrueVote.Api';
-import { DBAllElections } from '@/services/GraphQLDataClient';
+import { allElectionsQuery } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   Accordion,
   Button,
   Container,
   MantineTheme,
+  rem,
   Space,
   Text,
-  rem,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
@@ -33,44 +33,50 @@ export const Elections: FC = () => {
 const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
   const { colorScheme } = useMantineColorScheme();
   const getColor: any = (color: string) => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
-  const apolloClient = useApolloClient();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [electionData, setElectionData] = useState<ElectionModel[] | undefined>();
+  const [electionsDetails, setElectionsDetails] = useState<ElectionModel[] | undefined>();
 
+  const {
+    loading: electionsLoading,
+    error: electionsError,
+    data: electionsData,
+  } = useQuery(allElectionsQuery, {
+    onCompleted: (data) => {
+      console.info('Elections query completed:', data);
+    },
+    onError: (error) => {
+      console.error('Elections query error:', error);
+    },
+  });
+
+  // Update state when query data is received
   useEffect(() => {
-    const fetchElections = async (): Promise<void> => {
-      try {
-        const fetchedElections: ElectionModel[] = await DBAllElections(apolloClient);
+    if (electionsData?.GetElection) {
+      console.info('Updating elections from query');
+      setElectionsDetails(electionsData.GetElection);
+    }
+  }, [electionsData]);
 
-        setElectionData(fetchedElections);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-        setLoading(false);
-      }
-    };
-    fetchElections();
-  }, []);
-
-  if (loading) {
+  if (electionsLoading) {
     return <TrueVoteLoader />;
   }
 
-  if (error) {
-    console.error(error);
-    return <>`Error ${error.message}`</>;
+  if (electionsError) {
+    console.error(electionsError);
+    return <>`Error ${electionsError.message}`</>;
   }
-  console.info(electionData);
 
-  if (electionData === null || electionData === undefined || electionData.length === 0) {
+  if (
+    electionsDetails === null ||
+    electionsDetails === undefined ||
+    electionsDetails.length === 0
+  ) {
     return (
       <Container size='xs' px='xs' className={classes.container}>
         <Text>No Elections Found</Text>
       </Container>
     );
   }
-  const elections: ElectionModel[] = electionData;
+  const elections: ElectionModel[] = electionsDetails;
 
   const items: any = elections.map(
     (e: ElectionModel, i: number): ReactElement => (

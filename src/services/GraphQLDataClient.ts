@@ -1,21 +1,6 @@
-import {
-  BallotHashModel,
-  BallotList,
-  BallotModel,
-  ElectionModel,
-  ElectionResults,
-} from '@/TrueVote.Api';
-import { ApolloClient, gql, useApolloClient } from '@apollo/client';
+import { gql } from '@apollo/client';
 
-export class ApolloClientFactory {
-  public apolloClient: ApolloClient<object> = useApolloClient();
-
-  constructor() {
-    console.info('~ApolloClientFactory()');
-  }
-}
-
-const GET_ELECTION_BY_ID_QUERY = gql`
+export const electionDetailsByIdQuery = gql`
   query GetElectionById($ElectionId: String!) {
     GetElectionById(ElectionId: $ElectionId) {
       ElectionId
@@ -47,36 +32,7 @@ const GET_ELECTION_BY_ID_QUERY = gql`
   }
 `;
 
-export const DBGetElectionById = async (
-  apolloClient: ApolloClient<object> | undefined,
-  electionId: string | undefined,
-): Promise<ElectionModel[]> => {
-  if (!apolloClient) {
-    throw new Error('Apollo client is undefined');
-  }
-
-  if (!electionId) {
-    throw new Error('ElectionId is undefined');
-  }
-
-  try {
-    const { data, errors } = await apolloClient.query({
-      query: GET_ELECTION_BY_ID_QUERY,
-      variables: { ElectionId: electionId },
-    });
-
-    if (errors) {
-      throw new Error(errors.map((e) => e.message).join(', '));
-    }
-
-    return data.GetElectionById;
-  } catch (error) {
-    console.error('Error fetching election:', error);
-    throw error;
-  }
-};
-
-const GET_ALL_ELECTIONS_QUERY = gql`
+export const allElectionsQuery = gql`
   query GetAllElections {
     GetElection {
       ElectionId
@@ -90,30 +46,7 @@ const GET_ALL_ELECTIONS_QUERY = gql`
   }
 `;
 
-export const DBAllElections = async (
-  apolloClient: ApolloClient<object> | undefined,
-): Promise<ElectionModel[]> => {
-  if (!apolloClient) {
-    throw new Error('Apollo client is undefined');
-  }
-
-  try {
-    const { data, errors } = await apolloClient.query({
-      query: GET_ALL_ELECTIONS_QUERY,
-    });
-
-    if (errors) {
-      throw new Error(errors.map((e) => e.message).join(', '));
-    }
-
-    return data.GetElection;
-  } catch (error) {
-    console.error('Error fetching all elections:', error);
-    throw error;
-  }
-};
-
-const GET_ALL_BALLOTS_QUERY = gql`
+export const allBallotsQuery = gql`
   query GetAllBallots {
     GetBallot {
       Ballots {
@@ -153,33 +86,7 @@ const GET_ALL_BALLOTS_QUERY = gql`
   }
 `;
 
-export const DBAllBallots = async (
-  apolloClient: ApolloClient<object> | undefined,
-): Promise<{
-  Ballots: BallotModel[];
-  BallotHashes: BallotHashModel[];
-}> => {
-  if (!apolloClient) {
-    throw new Error('Apollo client is undefined');
-  }
-
-  try {
-    const { data, errors } = await apolloClient.query({
-      query: GET_ALL_BALLOTS_QUERY,
-    });
-
-    if (errors) {
-      throw new Error(errors.map((e) => e.message).join(', '));
-    }
-
-    return data.GetBallot;
-  } catch (error) {
-    console.error('Error fetching all ballots:', error);
-    throw error;
-  }
-};
-
-const GET_BALLOT_BY_ID_QUERY = gql`
+export const ballotDetailsByIdQuery = gql`
   query GetBallotById($BallotId: String!) {
     GetBallotById(BallotId: $BallotId) {
       Ballots {
@@ -219,36 +126,7 @@ const GET_BALLOT_BY_ID_QUERY = gql`
   }
 `;
 
-export const DBGetBallotById = async (
-  apolloClient: ApolloClient<object> | undefined,
-  ballotId: string | undefined,
-): Promise<BallotList> => {
-  if (!apolloClient) {
-    throw new Error('Apollo client is undefined');
-  }
-
-  if (!ballotId) {
-    throw new Error('BallotId is undefined');
-  }
-
-  try {
-    const { data, errors } = await apolloClient.query({
-      query: GET_BALLOT_BY_ID_QUERY,
-      variables: { BallotId: ballotId },
-    });
-
-    if (errors) {
-      throw new Error(errors.map((e) => e.message).join(', '));
-    }
-
-    return data.GetBallotById;
-  } catch (error) {
-    console.error('Error fetching ballot:', error);
-    throw error;
-  }
-};
-
-export const ELECTION_RESULTS_BY_ID_QUERY = gql`
+export const electionResultsByIdQuery = gql`
   query GetElectionResultsById($ElectionId: String!) {
     GetElectionResultsByElectionId(ElectionId: $ElectionId) {
       ElectionId
@@ -266,7 +144,7 @@ export const ELECTION_RESULTS_BY_ID_QUERY = gql`
   }
 `;
 
-export const ELECTION_RESULTS_BY_ID_SUBSCRIPTION = gql`
+export const electionResultsByIdSubscription = gql`
   subscription ElectionResultsUpdated($electionId: String!) {
     ElectionResultsUpdated(electionId: $electionId) {
       ElectionId
@@ -283,31 +161,3 @@ export const ELECTION_RESULTS_BY_ID_SUBSCRIPTION = gql`
     }
   }
 `;
-export const DBGetElectionResultsById = async (
-  apolloClient: ApolloClient<object> | undefined,
-  electionId: string | undefined,
-): Promise<ElectionResults> => {
-  if (!apolloClient) {
-    throw new Error('Apollo client is undefined');
-  }
-
-  if (!electionId) {
-    throw new Error('ElectionId is undefined');
-  }
-
-  try {
-    const { data, errors } = await apolloClient.query({
-      query: ELECTION_RESULTS_BY_ID_QUERY,
-      variables: { ElectionId: electionId },
-    });
-
-    if (errors) {
-      throw new Error(errors.map((e) => e.message).join(', '));
-    }
-
-    return data.GetElectionResultsByElectionId;
-  } catch (error) {
-    console.error('Error fetching election results:', error);
-    throw error;
-  }
-};

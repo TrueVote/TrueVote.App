@@ -6,12 +6,12 @@ import {
   RaceModel,
 } from '@/TrueVote.Api';
 import { RaceTypes } from '@/TrueVote.Api.ManualModels';
-import { DBGetBallotById } from '@/services/GraphQLDataClient';
+import { ballotDetailsByIdQuery } from '@/services/GraphQLDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { formatCandidateName } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   Box,
   Card,
@@ -31,41 +31,45 @@ import _ from 'lodash';
 import moment from 'moment';
 import { FC, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
-import { Params, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export const BallotView: FC = () => {
   const { colorScheme } = useMantineColorScheme();
-  const apolloClient = useApolloClient();
-  const params: Params<string> = useParams();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { ballotId } = useParams<{ ballotId: string }>();
   const [ballotList, setBallotList] = useState<BallotList>();
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
 
+  const {
+    loading: detailsLoading,
+    error: detailsError,
+    data: detailsData,
+  } = useQuery(ballotDetailsByIdQuery, {
+    variables: { BallotId: ballotId },
+    skip: !ballotId,
+    onCompleted: (data) => {
+      console.info('Ballot details query completed:', data);
+    },
+    onError: (error) => {
+      console.error('Ballot details query error:', error);
+    },
+  });
+
+  // Update state when query data is received
   useEffect(() => {
-    const fetchBallot = async (): Promise<void> => {
-      try {
-        const fetchedBallot: BallotList = await DBGetBallotById(apolloClient, params.ballotId);
+    if (detailsData?.GetBallotById) {
+      console.info('Updating ballot details from query');
+      setBallotList(detailsData.GetBallotById);
+    }
+  }, [detailsData]);
 
-        setBallotList(fetchedBallot);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-        setLoading(false);
-      }
-    };
-    fetchBallot();
-  }, []);
-
-  if (loading) {
+  if (detailsLoading) {
     return <TrueVoteLoader />;
   }
 
-  if (error) {
-    console.error(error);
-    return <>`Error ${error.message}`</>;
+  if (detailsError) {
+    console.error(detailsError);
+    return <>`Error ${detailsError.message}`</>;
   }
-  console.info(ballotList);
 
   if (ballotList === null || ballotList === undefined || ballotList.Ballots.length === 0) {
     return (
