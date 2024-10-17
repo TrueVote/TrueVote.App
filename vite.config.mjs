@@ -28,6 +28,9 @@ export default defineConfig({
           proxy.on('proxyRes', (proxyRes, req, _res) => {
             console.info('Proxy Receive:', proxyRes.statusCode, req.url);
           });
+          proxy.on('upgrade', (req, socket, head) => {
+            console.info('WebSocket Upgrade:', req.url);
+          });
         },
       },
     },

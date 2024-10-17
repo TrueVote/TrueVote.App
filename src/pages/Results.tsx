@@ -1,9 +1,13 @@
 import { CandidateResult, ElectionModel, ElectionResults } from '@/TrueVote.Api';
-import { DBGetElectionById, DBGetElectionResultsById } from '@/services/GraphQLDataClient';
+import {
+  electionDetailsByIdQuery,
+  electionResultsByIdQuery,
+  electionResultsByIdSubscription,
+} from '@/services/GraphQLSchemas';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { useApolloClient } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import {
   Box,
   Card,
@@ -132,19 +136,85 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
+
 export const Results: FC = () => {
   const { colorScheme } = useMantineColorScheme();
-  const apolloClient = useApolloClient();
   const params: Params<string> = useParams();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [electionResults, setElectionResult] = useState<ElectionResults | undefined>();
+  const { electionId } = useParams<{ electionId: string }>();
+  const [electionResults, setElectionResults] = useState<ElectionResults | undefined>();
   const [electionDetails, setElectionDetails] = useState<ElectionModel | undefined>();
   const getColor: () => 'monokai' | 'rjv-default' = () =>
     colorScheme === 'dark' ? 'monokai' : 'rjv-default';
   const colorIndex = useChartColors();
 
-  // Pre-process the data once electionResults are available
+  // Fetch election details
+  const {
+    loading: detailsLoading,
+    error: detailsError,
+    data: detailsData,
+  } = useQuery(electionDetailsByIdQuery, {
+    variables: { ElectionId: electionId },
+    skip: !electionId,
+    onCompleted: (data) => {
+      console.info('Election details query completed:', data);
+    },
+    onError: (error) => {
+      console.error('Election details query error:', error);
+    },
+  });
+
+  // Update state when query data is received
+  useEffect(() => {
+    if (detailsData?.GetElectionById) {
+      console.info('Updating election details from query');
+      setElectionDetails(detailsData.GetElectionById[0]);
+    }
+  }, [detailsData]);
+
+  // Query for initial results data
+  const {
+    loading: resultsLoading,
+    error: resultsError,
+    data: resultsData,
+  } = useQuery(electionResultsByIdQuery, {
+    variables: { ElectionId: electionId },
+    skip: !electionId,
+    onCompleted: (data) => {
+      console.info('Election results query completed:', data);
+    },
+    onError: (error) => {
+      console.error('Election results query error:', error);
+    },
+  });
+
+  // Subscribe to results updates
+  const { data: subscriptionData } = useSubscription(electionResultsByIdSubscription, {
+    variables: { electionId: params.electionId },
+    skip: !params.electionId,
+    onData: ({ data }) => {
+      console.info('Election results subscription data received:', data);
+    },
+    onError: (error) => {
+      console.error('Election results subscription error:', error);
+    },
+  });
+
+  // Update state when query data is received
+  useEffect(() => {
+    if (resultsData?.GetElectionResultsByElectionId) {
+      console.info('Updating election results from query');
+      setElectionResults(resultsData.GetElectionResultsByElectionId);
+    }
+  }, [resultsData]);
+
+  // Update state when subscription data is received
+  useEffect(() => {
+    if (subscriptionData?.ElectionResultsUpdated) {
+      console.info('Updating election results from subscription');
+      setElectionResults(subscriptionData.ElectionResultsUpdated);
+    }
+  }, [subscriptionData]);
+
   const processedRaces = useMemo(() => {
     if (!electionResults || !electionDetails) return [];
     return electionResults.Races.map((race) => {
@@ -170,58 +240,11 @@ export const Results: FC = () => {
     });
   }, [electionResults, electionDetails]);
 
-  useEffect(() => {
-    const fetchResults = async (): Promise<void> => {
-      try {
-        const fetchedResults: ElectionResults = await DBGetElectionResultsById(
-          apolloClient,
-          params.electionId!,
-        );
+  if (resultsLoading || detailsLoading) return <TrueVoteLoader />;
 
-        setElectionResult(fetchedResults);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-        setLoading(false);
-      }
-    };
-    fetchResults();
-  }, [apolloClient, params.electionId]);
-
-  useEffect(() => {
-    const fetchElectionDetails = async (): Promise<void> => {
-      try {
-        const fetchedElectionDetails: ElectionModel[] = await DBGetElectionById(
-          apolloClient,
-          params.electionId!,
-        );
-
-        setElectionDetails(fetchedElectionDetails[0]);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-        setLoading(false);
-      }
-    };
-    fetchElectionDetails();
-  }, [apolloClient, params.electionId]);
-
-  if (loading) {
-    return <TrueVoteLoader />;
-  }
-
-  if (error) {
-    console.error(error);
-    return <>`Error ${error.message}`</>;
-  }
-
-  if (electionResults === undefined) {
-    return (
-      <Container size='xs' px='xs' className={classes.container}>
-        <Text>Election Results Not Found</Text>
-      </Container>
-    );
-  }
+  if (resultsError) return <Text>Error loading election results: {resultsError.message}</Text>;
+  if (detailsError) return <Text>Error loading election details: {detailsError.message}</Text>;
+  if (!electionResults || !electionDetails) return <Text>Election Data Not Found</Text>;
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
