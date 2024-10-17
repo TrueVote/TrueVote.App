@@ -248,8 +248,8 @@ export const DBGetBallotById = async (
   }
 };
 
-const GET_ELECTION_RESULTS_BY_ID_QUERY = gql`
-  query ($ElectionId: String!) {
+export const ELECTION_RESULTS_BY_ID_QUERY = gql`
+  query GetElectionResultsById($ElectionId: String!) {
     GetElectionResultsByElectionId(ElectionId: $ElectionId) {
       ElectionId
       TotalBallots
@@ -266,6 +266,23 @@ const GET_ELECTION_RESULTS_BY_ID_QUERY = gql`
   }
 `;
 
+export const ELECTION_RESULTS_BY_ID_SUBSCRIPTION = gql`
+  subscription ElectionResultsUpdated($electionId: String!) {
+    ElectionResultsUpdated(electionId: $electionId) {
+      ElectionId
+      TotalBallots
+      Races {
+        RaceId
+        RaceName
+        CandidateResults {
+          CandidateId
+          CandidateName
+          TotalVotes
+        }
+      }
+    }
+  }
+`;
 export const DBGetElectionResultsById = async (
   apolloClient: ApolloClient<object> | undefined,
   electionId: string | undefined,
@@ -280,7 +297,7 @@ export const DBGetElectionResultsById = async (
 
   try {
     const { data, errors } = await apolloClient.query({
-      query: GET_ELECTION_RESULTS_BY_ID_QUERY,
+      query: ELECTION_RESULTS_BY_ID_QUERY,
       variables: { ElectionId: electionId },
     });
 
