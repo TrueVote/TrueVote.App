@@ -88,7 +88,13 @@ export const AppHeader: FC = () => {
   }
 
   const links: LinkType[] = [
-    { id: '0', link: '/ballots', label: 'Ballots', protected: true, matched: useMatch('/ballots') },
+    {
+      id: '0',
+      link: '/ballots',
+      label: 'My Ballots',
+      protected: true,
+      matched: useMatch('/ballots'),
+    },
     {
       id: '1',
       link: '/elections',

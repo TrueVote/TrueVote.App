@@ -226,6 +226,7 @@ export const Results: FC = () => {
       );
       return {
         ...race,
+        raceDetails,
         totalVotes,
         groupedCandidates: groupedCandidates.map((c) => {
           const candidateDetails = raceDetails?.Candidates.find(
@@ -256,7 +257,8 @@ export const Results: FC = () => {
         {processedRaces.map((r) => (
           <Card shadow='sm' p='lg' radius='md' padding='xl' withBorder key={r.RaceId}>
             <Title className={classes.titleSpaces} size='h4'>
-              {r.RaceName}: {r.totalVotes} Vote{r.totalVotes !== 1 ? 's' : ''}{' '}
+              {r.RaceName}: {r.totalVotes} Vote{r.totalVotes !== 1 ? 's, ' : ', '}
+              {r.raceDetails?.RaceTypeName}
             </Title>
             <PieChart width={380} height={380}>
               <Pie

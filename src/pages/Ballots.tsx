@@ -17,7 +17,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { IconChecklist, IconChevronRight, IconZoomIn } from '@tabler/icons-react';
+import { IconChevronRight, IconMailSpark, IconZoomIn } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -68,7 +68,7 @@ export const Ballots: FC = () => {
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
-      <Hero title='Ballots' />
+      <Hero title='My Ballots' />
       <AllBallots theme={theme} ballots={ballotListArray} />
     </Container>
   );
@@ -85,6 +85,9 @@ export const AllBallots: React.FC<{
     return (
       <Container size='xs' px='xs' className={classes.container}>
         <Text>No Ballots Found</Text>
+        <Link to='/elections' className={classes.buttonText}>
+          Vote in an Election!
+        </Link>
       </Container>
     );
   }
@@ -93,7 +96,7 @@ export const AllBallots: React.FC<{
     (e: BallotList, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
-          <Accordion.Control key={i} icon={<IconChecklist size={26} color={getColor('orange')} />}>
+          <Accordion.Control key={i} icon={<IconMailSpark size={26} color={getColor('orange')} />}>
             {moment.utc(e.Ballots[0].DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')} -{' '}
             {e.Ballots[0].Election?.Name}
           </Accordion.Control>

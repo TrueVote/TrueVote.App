@@ -92,6 +92,7 @@ export const ballotDetailsByIdQuery = gql`
       Ballots {
         BallotId
         DateCreated
+        ElectionId
         Election {
           ElectionId
           Name
