@@ -2,9 +2,9 @@ import {
   ApolloClient,
   ApolloLink,
   ApolloProvider,
+  createHttpLink,
   InMemoryCache,
   NormalizedCacheObject,
-  createHttpLink,
   split,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
@@ -58,7 +58,7 @@ export const App: FC = () => {
       }),
       on: {
         connected: () => console.warn('WebSocket connected'),
-        error: (error) => console.error('WebSocket error:', error),
+        error: (error: any) => console.error('WebSocket error:', error),
         closed: () => console.warn('WebSocket closed'),
       },
     }),
