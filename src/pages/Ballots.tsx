@@ -17,7 +17,12 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { IconChevronRight, IconMailSpark, IconZoomIn } from '@tabler/icons-react';
+import {
+  IconChevronRight,
+  IconMailExclamation,
+  IconMailSpark,
+  IconZoomIn,
+} from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -81,7 +86,7 @@ export const AllBallots: React.FC<{
   const { colorScheme } = useMantineColorScheme();
   const getColor = (color: string): string => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
 
-  if (ballots.length == 0 || ballots[0].Ballots.length === 0) {
+  if (ballots.length == 0) {
     return (
       <Container size='xs' px='xs' className={classes.container}>
         <Text>No Ballots Found</Text>
@@ -96,48 +101,67 @@ export const AllBallots: React.FC<{
     (e: BallotList, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
-          <Accordion.Control key={i} icon={<IconMailSpark size={26} color={getColor('orange')} />}>
-            {moment.utc(e.Ballots[0].DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')} -{' '}
-            {e.Ballots[0].Election?.Name}
-          </Accordion.Control>
-          <Accordion.Panel>
-            <Table
-              key={e.Ballots[0].BallotId}
-              withRowBorders={false}
-              withColumnBorders={false}
-              withTableBorder={false}
+          {e.Ballots.length === 0 ? (
+            <Accordion.Control
+              key={i}
+              icon={<IconMailExclamation size={26} color={getColor('red')} />}
             >
-              <Table.Tbody>
-                <Table.Tr>
-                  <Table.Td className={(classes.smallText, classes.tdRight)} c={getColor('orange')}>
-                    Ballot Id:
-                  </Table.Td>
-                  <Table.Td className={(classes.smallText, classes.tdLeft)}>
-                    <Text>{e.Ballots[0].BallotId}</Text>
-                  </Table.Td>
-                </Table.Tr>
-                <Table.Tr>
-                  <Table.Td colSpan={2}>
-                    {' '}
-                    <Link
-                      to={`/ballotview/${e.Ballots[0].BallotId}`}
-                      className={classes.buttonText}
+              Ballot data missing
+            </Accordion.Control>
+          ) : (
+            <Accordion.Control
+              key={i}
+              icon={<IconMailSpark size={26} color={getColor('orange')} />}
+            >
+              {moment.utc(e.Ballots[0].DateCreated).local().format('MMMM DD, YYYY, HH:mm:ss')} -{' '}
+              {e.Ballots[0].Election?.Name}
+            </Accordion.Control>
+          )}
+          {e.Ballots.length > 0 ? (
+            <Accordion.Panel>
+              <Table
+                key={e.Ballots[0].BallotId}
+                withRowBorders={false}
+                withColumnBorders={false}
+                withTableBorder={false}
+              >
+                <Table.Tbody>
+                  <Table.Tr>
+                    <Table.Td
+                      className={(classes.smallText, classes.tdRight)}
+                      c={getColor('orange')}
                     >
-                      <Button
-                        fullWidth
-                        radius='md'
-                        color='green'
-                        variant='light'
-                        rightSection={<IconZoomIn style={{ width: rem(16), height: rem(16) }} />}
+                      Ballot Id:
+                    </Table.Td>
+                    <Table.Td className={(classes.smallText, classes.tdLeft)}>
+                      <Text>{e.Ballots[0].BallotId}</Text>
+                    </Table.Td>
+                  </Table.Tr>
+                  <Table.Tr>
+                    <Table.Td colSpan={2}>
+                      {' '}
+                      <Link
+                        to={`/ballotview/${e.Ballots[0].BallotId}`}
+                        className={classes.buttonText}
                       >
-                        <span className={classes.buttonText}>Details</span>
-                      </Button>
-                    </Link>
-                  </Table.Td>
-                </Table.Tr>
-              </Table.Tbody>
-            </Table>
-          </Accordion.Panel>
+                        <Button
+                          fullWidth
+                          radius='md'
+                          color='green'
+                          variant='light'
+                          rightSection={<IconZoomIn style={{ width: rem(16), height: rem(16) }} />}
+                        >
+                          <span className={classes.buttonText}>Details</span>
+                        </Button>
+                      </Link>
+                    </Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+              </Table>
+            </Accordion.Panel>
+          ) : (
+            <></>
+          )}
         </Accordion.Item>
       </Fragment>
     ),
