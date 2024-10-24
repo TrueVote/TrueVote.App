@@ -1,10 +1,9 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
 import { ProtectedNavLink } from '@/RoutingHelper';
-import { SecureString } from '@/TrueVote.Api';
 import { Localization } from '@/services/Localization';
 import { emptyNostrProfile, getNostrNsecFromStorage, nostrSignOut } from '@/services/NostrHelper';
-import { signInWithNostr } from '@/services/PagerHelper';
 import { jwtSignOut } from '@/services/RESTDataClient';
+import { SecureString } from '@/TrueVote.Api';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   AppShell,
@@ -20,6 +19,7 @@ import {
 import { useToggle } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
 import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
+import { signInWithNostr } from '../../pages/SignIn';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeSwitcher } from '../ThemeSwitcher';
 
@@ -88,7 +88,13 @@ export const AppHeader: FC = () => {
   }
 
   const links: LinkType[] = [
-    { id: '0', link: '/ballots', label: 'Ballots', protected: true, matched: useMatch('/ballots') },
+    {
+      id: '0',
+      link: '/ballots',
+      label: 'My Ballots',
+      protected: true,
+      matched: useMatch('/ballots'),
+    },
     {
       id: '1',
       link: '/elections',

@@ -14,12 +14,14 @@ import classes from '@/ui/shell/AppStyles.module.css';
 import { useQuery } from '@apollo/client';
 import {
   Box,
+  Button,
   Card,
   Checkbox,
   Container,
   Flex,
   Group,
   HoverCard,
+  rem,
   ScrollArea,
   SimpleGrid,
   Table,
@@ -27,11 +29,12 @@ import {
   Title,
   useMantineColorScheme,
 } from '@mantine/core';
+import { IconSum } from '@tabler/icons-react';
 import _ from 'lodash';
 import moment from 'moment';
 import { FC, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export const BallotView: FC = () => {
   const { colorScheme } = useMantineColorScheme();
@@ -173,6 +176,18 @@ export const BallotView: FC = () => {
       <Hero title='Ballot Explorer' />
       <Title className={classes.titleSpaces} size='h4'>
         {ballot.Election?.Name}
+        <span>&nbsp;&nbsp;</span>
+        <Link to={`/results/${ballot.ElectionId}`} className={classes.buttonText}>
+          <Button
+            radius='md'
+            color='orange'
+            variant='light'
+            p={0}
+            style={{ verticalAlign: 'middle' }}
+          >
+            <IconSum style={{ width: rem(16), height: rem(16) }} />
+          </Button>
+        </Link>
       </Title>
       <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
         <Title className={classes.titleSpaces} size='h4'>

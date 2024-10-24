@@ -193,7 +193,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
       .then((res: SubmitBallotModelResponse) => {
         console.info('Success from ballot submission', res);
         setVisible((v: any) => !v);
-        ballotBinderStorage.addOrUpdateBallotBinder(accessCode, res.BallotId);
+        ballotBinderStorage.addOrUpdateBallotBinder(accessCode, res.BallotId, res.ElectionId);
         navigate('/thanks', { state: res });
       })
       .catch((e: any) => {

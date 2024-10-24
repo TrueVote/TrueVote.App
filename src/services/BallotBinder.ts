@@ -2,6 +2,7 @@ export interface BallotBinder {
   UserId: string;
   ElectionAccessCode: string;
   BallotId: string;
+  ElectionId: string;
   DateCreated: Date;
   DateUpdated: Date;
 }
@@ -33,7 +34,11 @@ export class BallotBinderStorage {
     });
   }
 
-  addOrUpdateBallotBinder(electionAccessCode: string, ballotId: string): BallotBinder {
+  addOrUpdateBallotBinder(
+    electionAccessCode: string,
+    ballotId: string,
+    electionId: string,
+  ): BallotBinder {
     let ballotBinders = this.loadBallotBinders();
     const existingIndex = ballotBinders.findIndex(
       (binder) =>
@@ -49,6 +54,7 @@ export class BallotBinderStorage {
         UserId: this._userId,
         ElectionAccessCode: electionAccessCode,
         BallotId: ballotId,
+        ElectionId: electionId,
         DateCreated: now,
         DateUpdated: now,
       };
@@ -67,7 +73,7 @@ export class BallotBinderStorage {
     return ballotBinder;
   }
 
-  getBallotBinder(electionAccessCode: string): BallotBinder | undefined {
+  getBallotBinderbyEAC(electionAccessCode: string): BallotBinder | undefined {
     const ballotBinders = this.loadBallotBinders();
     return ballotBinders.find(
       (binder) =>
@@ -75,6 +81,12 @@ export class BallotBinderStorage {
     );
   }
 
+  getBallotBinderbyElectionId(electionId: string): BallotBinder | undefined {
+    const ballotBinders = this.loadBallotBinders();
+    return ballotBinders.find(
+      (binder) => binder.ElectionId === electionId && binder.UserId === this._userId,
+    );
+  }
   removeBallotBinder(electionAccessCode: string): void {
     let ballotBinders = this.loadBallotBinders();
     ballotBinders = ballotBinders.filter(

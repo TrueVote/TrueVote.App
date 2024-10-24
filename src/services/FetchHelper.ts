@@ -1,6 +1,6 @@
 import { SecureString } from '@/TrueVote.Api';
+import { signInWithNostr } from '../pages/SignIn';
 import { getNostrNsecFromStorage } from './NostrHelper';
-import { signInWithNostr } from './PagerHelper';
 import { storeJwt } from './RESTDataClient';
 
 export class FetchHelper {

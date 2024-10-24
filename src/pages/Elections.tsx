@@ -1,4 +1,6 @@
+import { useGlobalContext } from '@/Global';
 import { ElectionModel } from '@/TrueVote.Api';
+import { BallotBinderStorage } from '@/services/BallotBinder';
 import { allElectionsQuery } from '@/services/GraphQLSchemas';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
@@ -15,7 +17,13 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { IconCheckbox, IconChecklist, IconChevronRight, IconSum } from '@tabler/icons-react';
+import {
+  IconCheckbox,
+  IconChecklist,
+  IconChevronRight,
+  IconMailSpark,
+  IconSum,
+} from '@tabler/icons-react';
 import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -34,6 +42,7 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
   const { colorScheme } = useMantineColorScheme();
   const getColor: any = (color: string) => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
   const [electionsDetails, setElectionsDetails] = useState<ElectionModel[] | undefined>();
+  const { userModel } = useGlobalContext();
 
   const {
     loading: electionsLoading,
@@ -76,7 +85,14 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
       </Container>
     );
   }
+
   const elections: ElectionModel[] = electionsDetails;
+
+  let ballotBinderStorage: BallotBinderStorage;
+
+  if (userModel) {
+    ballotBinderStorage = new BallotBinderStorage(userModel.UserId);
+  }
 
   const items: any = elections.map(
     (e: ElectionModel, i: number): ReactElement => (
@@ -87,17 +103,35 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
           </Accordion.Control>
           <Accordion.Panel>
             <Text>{e.Description}</Text>
-            <Link to={`/ballot/${e.ElectionId}`} className={classes.buttonText}>
-              <Button
-                fullWidth
-                radius='md'
-                color='green'
-                variant='light'
-                rightSection={<IconCheckbox style={{ width: rem(16), height: rem(16) }} />}
+            {ballotBinderStorage &&
+            ballotBinderStorage.getBallotBinderbyElectionId(e.ElectionId) ? (
+              <Link
+                to={`/ballotview/${ballotBinderStorage.getBallotBinderbyElectionId(e.ElectionId)?.BallotId}`}
+                className={classes.buttonText}
               >
-                <span className={classes.buttonText}>Vote</span>
-              </Button>
-            </Link>
+                <Button
+                  fullWidth
+                  radius='md'
+                  color='green'
+                  variant='light'
+                  rightSection={<IconMailSpark style={{ width: rem(16), height: rem(16) }} />}
+                >
+                  <span className={classes.buttonText}>My Ballot</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link to={`/ballot/${e.ElectionId}`} className={classes.buttonText}>
+                <Button
+                  fullWidth
+                  radius='md'
+                  color='green'
+                  variant='light'
+                  rightSection={<IconCheckbox style={{ width: rem(16), height: rem(16) }} />}
+                >
+                  <span className={classes.buttonText}>Vote</span>
+                </Button>
+              </Link>
+            )}
             <Space h='md' />
             <Link to={`/results/${e.ElectionId}`} className={classes.buttonText}>
               <Button

@@ -115,7 +115,7 @@ const RaceGroup: React.FC<{
           </Table.Td>
           {avatarCount > 0 && (
             <Table.Td className={classes.tdCandidate} width='30px'>
-              <Avatar className={classes.avatarImage} src={candidate.CandidateImageUrl} />
+              <Avatar size='lg' className={classes.avatarImage} src={candidate.CandidateImageUrl} />
             </Table.Td>
           )}
           <Table.Td>
