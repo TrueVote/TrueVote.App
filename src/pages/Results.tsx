@@ -45,19 +45,26 @@ const useChartColors = (): ((index: number) => string) => {
 
 const groupSmallSlices = (data: CandidateResult[], threshold: number): CandidateResult[] => {
   const totalVotes = data.reduce((sum, item) => sum + item.TotalVotes, 0);
-  return data.reduce((acc, item) => {
+  const result = data.reduce((acc, item) => {
     if (item.TotalVotes / totalVotes < threshold) {
+      // If there's already an "Other" category, add to it
       const otherIndex = acc.findIndex((i) => i.CandidateName === 'Other');
       if (otherIndex !== -1) {
         acc[otherIndex].TotalVotes += item.TotalVotes;
       } else {
-        acc.push({ CandidateName: 'Other', TotalVotes: item.TotalVotes, CandidateId: '' });
+        // Only create "Other" category if there are actual votes
+        if (item.TotalVotes > 0) {
+          acc.push({ CandidateName: 'Other', TotalVotes: item.TotalVotes, CandidateId: '' });
+        }
       }
     } else {
       acc.push(item);
     }
     return acc;
   }, [] as CandidateResult[]);
+
+  // Filter out "Other" if it ended up with 0 votes
+  return result.filter((item) => item.CandidateName !== 'Other' || item.TotalVotes > 0);
 };
 
 const renderCustomizedLabel = ({
@@ -260,7 +267,7 @@ export const Results: FC = () => {
               {r.RaceName}: {r.totalVotes} Vote{r.totalVotes !== 1 ? 's, ' : ', '}
               {r.raceDetails?.RaceTypeName}
             </Title>
-            <PieChart width={380} height={380}>
+            <PieChart width={380} height={r.totalVotes > 0 ? 380 : 0}>
               <Pie
                 data={r.groupedCandidates.map((c) => ({
                   name: c.CandidateName,
