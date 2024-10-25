@@ -1866,12 +1866,12 @@
   dependencies:
     undici-types "~6.19.2"
 
-"@types/node@^22.7.9":
-  version "22.7.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.7.9.tgz#2bf2797b5e84702d8262ea2cf843c3c3c880d0e9"
-  integrity sha512-jrTfRC7FM6nChvU7X2KqcrgquofrWLFDeYC1hKfwNWomVvrn7JIksqf344WN2X/y8xrgqBd2dJATZV4GbatBfg==
+"@types/node@^22.8.1":
+  version "22.8.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.8.1.tgz#b39d4b98165e2ae792ce213f610c7c6108ccfa16"
+  integrity sha512-k6Gi8Yyo8EtrNtkHXutUu2corfDf9su95VYVP10aGYMMROM6SAItZi0w1XszA6RtWTHSVp5OeFof37w0IEqCQg==
   dependencies:
-    undici-types "~6.19.2"
+    undici-types "~6.19.8"
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -5051,10 +5051,10 @@ nostr-wasm@v0.1.0:
   resolved "https://registry.yarnpkg.com/nostr-wasm/-/nostr-wasm-0.1.0.tgz#17af486745feb2b7dd29503fdd81613a24058d94"
   integrity sha512-78BTryCLcLYv96ONU8Ws3Q1JzjlAt+43pWQhIl86xZmWeegYCNLPml7yQ+gG3vR6V5h4XGj+TxO+SS5dsThQIA==
 
-npm-check-updates@^17.1.4:
-  version "17.1.4"
-  resolved "https://registry.yarnpkg.com/npm-check-updates/-/npm-check-updates-17.1.4.tgz#1bebfb7a32a92c0d98f6ed6cf780b8841d787077"
-  integrity sha512-crOUeN2GngqlkRCFQ/zi1zsneWd9IGZgIfAWYGAuhYiPnfbBTmJBL7Yq1wI0e1dsW8CfWc+h348WmfCREqeOBA==
+npm-check-updates@^17.1.6:
+  version "17.1.6"
+  resolved "https://registry.yarnpkg.com/npm-check-updates/-/npm-check-updates-17.1.6.tgz#b2a4d4bcb6222342b3c920c6fb7e17245ab9e45d"
+  integrity sha512-9I0b60plxMrOLuQT3W7f0Aq5FQSMeR1HWGXbkhq9xPTGyOPbS/Oz9wCy2aK6I2hu+vLRHMhU27ObDs1+oU3QfA==
 
 oas-kit-common@^1.0.8:
   version "1.0.8"
@@ -6796,7 +6796,7 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
-undici-types@~6.19.2:
+undici-types@~6.19.2, undici-types@~6.19.8:
   version "6.19.8"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.19.8.tgz#35111c9d1437ab83a7cdc0abae2f26d88eda0a02"
   integrity sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==
