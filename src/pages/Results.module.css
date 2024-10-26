@@ -15,39 +15,48 @@
 
 .subtitle {
   font-size: 1.5rem;
-  color: var(--mantine-color-gray-3);
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-gray-3));
   margin-bottom: var(--mantine-spacing-md);
 }
 
 .notice {
-  background-color: rgba(var(--mantine-color-blue-9-rgb), 0.1);
+  background-color: light-dark(
+    rgba(var(--mantine-color-blue-9-rgb), 0.05),
+    rgba(var(--mantine-color-blue-9-rgb), 0.1)
+  );
   border-color: var(--mantine-color-blue-5);
   margin-bottom: var(--mantine-spacing-md);
 }
 
 .statsCard {
-  background-color: rgba(var(--mantine-color-dark-7-rgb), 0.6);
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    rgba(var(--mantine-color-dark-7-rgb), 0.6)
+  );
   backdrop-filter: blur(4px);
-  border: 1px solid var(--mantine-color-dark-5);
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
   transition:
     transform 200ms ease,
     box-shadow 200ms ease;
 }
 
 .icon {
-  background-color: rgba(var(--mantine-color-violet-5-rgb), 0.2);
+  background-color: light-dark(
+    rgba(var(--mantine-color-violet-5-rgb), 0.1),
+    rgba(var(--mantine-color-violet-5-rgb), 0.2)
+  );
   color: orange;
 }
 
 .label {
-  color: var(--mantine-color-gray-5);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-5));
   font-size: var(--mantine-font-size-md);
 }
 
 .value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--mantine-white);
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-white));
 }
 
 .sectionTitle {
@@ -59,7 +68,7 @@
   -webkit-text-fill-color: transparent;
   letter-spacing: 1px;
   padding-bottom: var(--mantine-spacing-xs);
-  border-bottom: 2px solid var(--mantine-color-dark-4);
+  border-bottom: 2px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   width: fit-content;
   position: relative;
 }
