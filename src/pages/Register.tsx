@@ -12,19 +12,21 @@ import * as settings from '@/settings.json';
 import { SecureString } from '@/TrueVote.Api';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
+import { NpubView } from '@/ui/NPubView';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   ActionIcon,
   Box,
   Button,
   Container,
-  HoverCard,
   Modal,
   rem,
   Slider,
   Space,
   Stack,
   Text,
+  useMantineColorScheme,
+  useMantineTheme,
 } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { IconCheck, IconClipboardCheck, IconClipboardCopy } from '@tabler/icons-react';
@@ -33,6 +35,9 @@ import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import { signInWithNostr } from './SignIn';
 
 export const Register: FC = () => {
+  const theme: MantineTheme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+  const getColor = (color: string): string => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
   const { updateUserModel } = useGlobalContext();
@@ -122,22 +127,12 @@ export const Register: FC = () => {
       >
         <Text>Error: {errorMessage}</Text>
       </Modal>
-      {nostrProfile !== null && String(nostrProfile?.npub).length > 0 ? (
+      {nostrProfile !== null &&
+      nostrProfile !== undefined &&
+      String(nostrProfile?.npub).length > 0 ? (
         <>
           <Text>Already Signed In</Text>
-          <Space h='md' />
-          <Text className={classes.profileText}>
-            <b>Signed In Public Key:</b>{' '}
-            <HoverCard shadow='md'>
-              <HoverCard.Target>
-                <span className={classes.textChopped}>{nostrProfile?.npub}</span>
-              </HoverCard.Target>
-              <HoverCard.Dropdown>
-                <Text size='sm'>{nostrProfile?.npub}</Text>
-              </HoverCard.Dropdown>
-            </HoverCard>
-          </Text>
-          <Space h='md' />
+          <NpubView npub={nostrProfile.npub} />
           <Text>Click below for sign out page.</Text>
           <Space h='md' />
           <Button
@@ -161,10 +156,10 @@ export const Register: FC = () => {
             information below is vital for you to keep safe.
           </Text>
           <Space h='md' />
-          <Text size='l' mb='xs' style={{ color: '#FFD700' }}>
+          <Text size='l' mb='xs' c={getColor('yellow')}>
             ⚠️ Important: Your private key is your only way to access your account. Store it
             somewhere safe - if you lose it, there&apos;s no way to recover your account.
-          </Text>{' '}
+          </Text>
           <Space h='md' />
           <Box
             p='md'
@@ -176,7 +171,7 @@ export const Register: FC = () => {
               width: '100%', // Ensure full width
             }}
           >
-            <Text
+            <span
               className={classes.profileText}
               style={{
                 wordBreak: 'break-all',
@@ -198,7 +193,7 @@ export const Register: FC = () => {
               >
                 {npub}
               </Text>
-            </Text>
+            </span>
           </Box>
           <Box
             p='md'
@@ -210,7 +205,7 @@ export const Register: FC = () => {
               width: '100%', // Ensure full width
             }}
           >
-            <Text
+            <span
               className={classes.profileText}
               style={{
                 wordBreak: 'break-all',
@@ -254,8 +249,8 @@ export const Register: FC = () => {
                   )}
                 </ActionIcon>
               </div>
-            </Text>
-          </Box>{' '}
+            </span>
+          </Box>
           <Box px='md'>
             <Text
               style={{
@@ -274,7 +269,7 @@ export const Register: FC = () => {
                 I understand that if I lose my Nsec (Private) Key I will lose access to my user
                 account.
               </span>
-            </Text>{' '}
+            </Text>
             <Space h='md' />
             <Slider
               size='xl'

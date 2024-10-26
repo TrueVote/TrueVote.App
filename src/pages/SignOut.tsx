@@ -2,8 +2,9 @@ import { emptyUserModel, useGlobalContext } from '@/Global';
 import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { jwtSignOut } from '@/services/RESTDataClient';
 import { Hero } from '@/ui/Hero';
+import { NpubView } from '@/ui/NPubView';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Button, Container, HoverCard, Space, Stack, Text } from '@mantine/core';
+import { Button, Container, Space, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
@@ -28,21 +29,12 @@ export const SignOut: FC = () => {
       <Stack gap={32}>
         <Hero title='Sign Out' />
       </Stack>
-      {nostrProfile !== null && String(nostrProfile?.npub).length > 0 ? (
+      {nostrProfile !== null &&
+      nostrProfile !== undefined &&
+      String(nostrProfile?.npub).length > 0 ? (
         <>
           <Space h='md' />
-          <Text className={classes.profileText}>
-            <b>Signed In Public Key:</b>{' '}
-            <HoverCard shadow='md'>
-              <HoverCard.Target>
-                <span className={classes.textChopped}>{nostrProfile?.npub}</span>
-              </HoverCard.Target>
-              <HoverCard.Dropdown>
-                <Text size='sm'>{nostrProfile?.npub}</Text>
-              </HoverCard.Dropdown>
-            </HoverCard>
-          </Text>
-          <Space h='md' />
+          <NpubView npub={nostrProfile.npub} />
           <Text>Click below to sign out.</Text>
           <Space h='md' />
           <Button radius='md' color='green' variant='light' onClick={signOutClick}>
