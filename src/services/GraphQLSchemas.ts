@@ -132,6 +132,7 @@ export const electionResultsByIdQuery = gql`
     GetElectionResultsByElectionId(ElectionId: $ElectionId) {
       ElectionId
       TotalBallots
+      TotalBallotsHashed
       Races {
         RaceId
         RaceName
@@ -150,6 +151,7 @@ export const electionResultsByIdSubscription = gql`
     ElectionResultsUpdated(electionId: $electionId) {
       ElectionId
       TotalBallots
+      TotalBallotsHashed
       Races {
         RaceId
         RaceName

@@ -427,6 +427,12 @@ export interface ElectionResults {
    * @max 2147483647
    */
   TotalBallots: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  TotalBallotsHashed: number;
   Races: RaceResult[];
 }
 

@@ -9,20 +9,25 @@ import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { useQuery, useSubscription } from '@apollo/client';
 import {
+  Alert,
   Box,
   Card,
   Container,
   Group,
+  Paper,
   ScrollArea,
   Stack,
   Text,
+  ThemeIcon,
   Title,
   useMantineColorScheme,
 } from '@mantine/core';
+import { IconInfoCircle, IconSum } from '@tabler/icons-react';
 import { FC, useEffect, useMemo, useState } from 'react';
 import ReactJson from 'react-json-view';
 import { Params, useParams } from 'react-router-dom';
 import { Cell, Pie, PieChart } from 'recharts';
+import resultsclasses from './Results.module.css';
 
 // eslint-disable-next-line no-unused-vars
 const useChartColors = (): ((index: number) => string) => {
@@ -257,28 +262,46 @@ export const Results: FC = () => {
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Results' />
-      <Text size='xl'>{electionDetails?.Name}</Text>
-      <Text
-        size='sm'
-        style={{
-          color: '#888',
-          marginTop: '2px',
-          padding: '10px',
-          borderLeft: '3px solid #444',
-          background: 'rgba(255, 255, 255, 0.05)',
-        }}
+      <Text className={resultsclasses.subtitle}>{electionDetails?.Name}</Text>
+      <Alert
+        icon={<IconInfoCircle size={16} />}
+        className={resultsclasses.notice}
+        radius='md'
+        variant='light'
       >
-        NOTE: This election displays results in real-time. Some elections will not display results
-        after all ballots are tabulated and the voting window is closed.
-      </Text>
-      <Text size='l'>Total Ballots Submitted: {electionResults.TotalBallots}</Text>
+        This election displays results in real-time. Some elections will not display results until
+        the voting window is closed and all ballots are tabulated.
+      </Alert>
+      <Paper p='xs' radius='md' className={resultsclasses.statsCard}>
+        <Stack gap='xs'>
+          <Text className={resultsclasses.sectionTitle}>Totals</Text>
+          <Group align='flex-start'>
+            <Group>
+              <ThemeIcon size={56} radius='md' className={resultsclasses.icon}>
+                <IconSum size={56} />
+              </ThemeIcon>
+              <Box>
+                <Text className={resultsclasses.label}>Total Ballots Submitted</Text>
+                <Text className={resultsclasses.value}>
+                  {electionResults?.TotalBallots?.toLocaleString() || 0}
+                </Text>
+              </Box>
+            </Group>
+            <Box>
+              <Text className={resultsclasses.label}>Total Ballots Hashed</Text>
+              <Text className={resultsclasses.value}>
+                {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
+              </Text>
+            </Box>
+          </Group>
+        </Stack>{' '}
+      </Paper>{' '}
       <Box className={classes.boxGap} />
       <Stack gap='md'>
         {processedRaces.map((r) => (
           <Card shadow='sm' p='lg' radius='md' padding='xl' withBorder key={r.RaceId}>
             <Title className={classes.titleSpaces} size='h4'>
-              {r.RaceName}: {r.totalVotes} Vote{r.totalVotes !== 1 ? 's, ' : ', '}
-              {r.raceDetails?.RaceTypeName}
+              {r.RaceName}: {r.totalVotes.toLocaleString()} Vote{r.totalVotes !== 1 ? 's' : ''}
             </Title>
             <PieChart width={380} height={r.totalVotes > 0 ? 380 : 0}>
               <Pie
