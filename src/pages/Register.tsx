@@ -31,7 +31,7 @@ import {
 import { useClipboard } from '@mantine/hooks';
 import { IconCheck, IconClipboardCheck, IconClipboardCopy } from '@tabler/icons-react';
 import { FC, useState } from 'react';
-import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { Link, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { signInWithNostr } from './SignIn';
 
 export const Register: FC = () => {
@@ -48,6 +48,7 @@ export const Register: FC = () => {
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const clipboard: any = useClipboard({ timeout: 500 });
+  const location = useLocation();
 
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
@@ -78,7 +79,13 @@ export const Register: FC = () => {
             storeNostrKeys(npub, nsec);
             storeJwt(res.Token);
             setVisible((v: boolean) => !v);
-            navigate('/profile');
+            const from = location.state?.from?.pathname || '/profile';
+            console.info(
+              'Profile generated and SignedIn. Navigating to location history stack',
+              location,
+              from,
+            );
+            navigate(from, { replace: true });
           }
         }
       })
