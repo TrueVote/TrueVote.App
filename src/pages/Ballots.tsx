@@ -12,6 +12,7 @@ import {
   Container,
   MantineTheme,
   rem,
+  Space,
   Table,
   Text,
   useMantineColorScheme,
@@ -25,7 +26,7 @@ import {
 } from '@tabler/icons-react';
 import moment from 'moment';
 import { FC, Fragment, ReactElement, useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const Ballots: FC = () => {
   const theme: MantineTheme = useMantineTheme();
@@ -85,14 +86,29 @@ export const AllBallots: React.FC<{
 }> = ({ theme, ballots }) => {
   const { colorScheme } = useMantineColorScheme();
   const getColor = (color: string): string => theme.colors[color][colorScheme === 'dark' ? 5 : 7];
+  const navigate: NavigateFunction = useNavigate();
 
   if (ballots.length == 0) {
     return (
       <Container size='xs' px='xs' className={classes.container}>
-        <Text>No Ballots Found</Text>
-        <Link to='/elections' className={classes.buttonText}>
-          Vote in an Election!
-        </Link>
+        <Text size='lg'>No Ballots Found</Text>
+        <Space h='md' />
+        <Button
+          radius='md'
+          color='green'
+          variant='light'
+          fullWidth
+          h={40}
+          size='xl'
+          onClick={() => navigate('/elections')}
+          styles={{
+            label: {
+              fontSize: 18,
+            },
+          }}
+        >
+          Vote in an Election
+        </Button>
       </Container>
     );
   }

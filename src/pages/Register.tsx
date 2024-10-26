@@ -12,13 +12,14 @@ import * as settings from '@/settings.json';
 import { SecureString } from '@/TrueVote.Api';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
-import { NpubView } from '@/ui/NPubView';
+import { NpubView } from '@/ui/NpubView';
 import classes from '@/ui/shell/AppStyles.module.css';
 import {
   ActionIcon,
   Box,
   Button,
   Container,
+  MantineTheme,
   Modal,
   rem,
   Slider,

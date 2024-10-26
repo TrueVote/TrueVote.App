@@ -2,7 +2,7 @@ import { emptyUserModel, useGlobalContext } from '@/Global';
 import { emptyNostrProfile, nostrSignOut } from '@/services/NostrHelper';
 import { jwtSignOut } from '@/services/RESTDataClient';
 import { Hero } from '@/ui/Hero';
-import { NpubView } from '@/ui/NPubView';
+import { NpubView } from '@/ui/NpubView';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Space, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
