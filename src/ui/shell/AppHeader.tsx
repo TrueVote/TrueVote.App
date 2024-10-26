@@ -8,6 +8,7 @@ import classes from '@/ui/shell/AppStyles.module.css';
 import {
   AppShell,
   Avatar,
+  Box,
   Burger,
   Container,
   Group,
@@ -17,6 +18,13 @@ import {
   Transition,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
+import {
+  IconBox,
+  IconChartBar,
+  IconClipboardList,
+  IconInfoCircle,
+  IconUser,
+} from '@tabler/icons-react';
 import { FC, useEffect, useState } from 'react';
 import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
 import { signInWithNostr } from '../../pages/SignIn';
@@ -85,6 +93,7 @@ export const AppHeader: FC = () => {
     label: string;
     protected: boolean;
     matched: PathMatch<string> | null;
+    icon: any;
   }
 
   const links: LinkType[] = [
@@ -94,6 +103,7 @@ export const AppHeader: FC = () => {
       label: 'My Ballots',
       protected: true,
       matched: useMatch('/ballots'),
+      icon: IconClipboardList,
     },
     {
       id: '1',
@@ -101,16 +111,32 @@ export const AppHeader: FC = () => {
       label: 'Elections',
       protected: false,
       matched: useMatch('/elections'),
+      icon: IconBox,
     },
-    { id: '2', link: '/polls', label: 'Polls', protected: false, matched: useMatch('/polls') },
+    {
+      id: '2',
+      link: '/polls',
+      label: 'Polls',
+      protected: false,
+      matched: useMatch('/polls'),
+      icon: IconChartBar,
+    },
     {
       id: '3',
       link: '/profile',
       label: 'Profile',
       protected: false,
       matched: useMatch('/profile'),
+      icon: IconUser,
     },
-    { id: '4', link: '/about', label: 'About', protected: false, matched: useMatch('/about') },
+    {
+      id: '4',
+      link: '/about',
+      label: 'About',
+      protected: false,
+      matched: useMatch('/about'),
+      icon: IconInfoCircle,
+    },
   ];
   const [, toggle] = useToggle();
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -123,27 +149,42 @@ export const AppHeader: FC = () => {
     setMenuOpen(false);
   };
 
-  const items: JSX.Element[] = links.map((link: LinkType) =>
-    link.protected ? (
-      <ProtectedNavLink
-        key={link.id}
-        to={link.link}
-        className={classes.link}
-        onClick={(): void => toggle(false)}
-      >
-        {link.label}
-      </ProtectedNavLink>
-    ) : (
+  const renderMenuItem = (link: LinkType): any => {
+    const Icon = link.icon;
+    const commonProps = {
+      key: link.id,
+      to: link.link,
+      className: `${classes.link} inline-flex items-center relative`, // added relative
+      onClick: (): void => toggle(false),
+    };
+
+    const iconElement = (
+      <Icon size={24} stroke={1.5} className='flex-shrink-0' style={{ marginRight: '8px' }} />
+    );
+
+    if (link.protected) {
+      return (
+        <ProtectedNavLink {...commonProps}>
+          {iconElement}
+          <span style={{ position: 'relative', top: '-6px' }}>{link.label}</span>
+        </ProtectedNavLink>
+      );
+    }
+
+    return (
       <NavLink
-        key={link.id}
-        to={link.link}
-        className={classes.link}
-        onClick={(): void => toggle(false)}
+        {...commonProps}
+        className={({ isActive }: { isActive: boolean }) => `
+          ${commonProps.className}
+          ${isActive ? classes.linkActive : ''}
+        `}
       >
-        {link.label}
+        {iconElement}
+        <span style={{ position: 'relative', top: '-6px' }}>{link.label}</span>
       </NavLink>
-    ),
-  );
+    );
+  };
+  const items: JSX.Element[] = links.map(renderMenuItem);
 
   return (
     <AppShell.Header>
@@ -182,8 +223,13 @@ export const AppHeader: FC = () => {
 
         <Transition transition='pop-top-right' duration={200} mounted={isMenuOpen}>
           {(styles: MantineStyleProp): JSX.Element => (
-            <Paper className={classes.dropdown} withBorder style={styles} onClick={handleCloseMenu}>
-              {items}
+            <Paper
+              className={`${classes.dropdown} bg-white dark:bg-gray-900 shadow-lg`}
+              withBorder
+              style={styles}
+              onClick={handleCloseMenu}
+            >
+              <Box className='p-2 space-y-1'>{items}</Box>
             </Paper>
           )}
         </Transition>

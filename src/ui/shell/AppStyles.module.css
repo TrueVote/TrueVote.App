@@ -41,7 +41,7 @@
 
 .headerLeft {
   position: left;
-  min-width: 62px;
+  min-width: 76px;
   align-items: left;
 }
 
@@ -88,18 +88,20 @@
 
   @media (min-width: $mantine-breakpoint-sm) {
     .dropdown {
-      display: none;
-    }
+    display: none;
+  }
   }
 
   .link {
     padding: 1rem;
+    font-size: var(--mantine-h5-font-size);
   }
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
   .links {
     visibility: hidden;
+    align-items: center;
   }
 }
 
@@ -116,7 +118,7 @@
   border-radius: var(--mantine-radius-sm);
   text-decoration: none;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-  font-size: var(--mantine-h4-font-size);
+  font-size: var(--mantine-h5-font-size);
   font-weight: 500;
   text-decoration: none;
 }
