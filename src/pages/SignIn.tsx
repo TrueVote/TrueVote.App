@@ -20,7 +20,6 @@ import {
   Button,
   Container,
   HoverCard,
-  Image,
   Modal,
   PasswordInput,
   Space,
@@ -133,15 +132,6 @@ export const SignIn: FC = () => {
           <Button radius='md' color='green' variant='light' disabled={!valid} onClick={signInClick}>
             Sign In
           </Button>
-          <Space h='md' />
-          <Text>
-            Or, sign in with a browser extension, such as{' '}
-            <Link to='https://getalby.com' className={classes.linkActive}>
-              Alby
-            </Link>
-            .
-            <Image className={classes.albyImage} component={Link} to='https://getalby.com' />
-          </Text>
         </>
       ) : (
         <>

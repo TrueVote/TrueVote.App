@@ -97,17 +97,6 @@ const LoadProfile: any = () => {
       ) : (
         <>
           <Stack className={classes.profileButtons}>
-            <Text size='md'>Sign In if you have an exising Nostr account</Text>
-            <Button
-              leftSection={<IconLogin />}
-              className={classes.profileButton}
-              radius='md'
-              color='blue'
-              variant='light'
-              onClick={(): void => navigate('/signin')}
-            >
-              Sign In
-            </Button>
             <Text size='md'>To get started with a new Nostr account for TrueVote, Register</Text>
             <Button
               leftSection={<IconUserPlus />}
@@ -118,6 +107,17 @@ const LoadProfile: any = () => {
               onClick={(): void => navigate('/register')}
             >
               Register
+            </Button>
+            <Text size='md'>Sign In if you have an exising Nostr account</Text>
+            <Button
+              leftSection={<IconLogin />}
+              className={classes.profileButton}
+              radius='md'
+              color='blue'
+              variant='light'
+              onClick={(): void => navigate('/signin')}
+            >
+              Sign In
             </Button>
           </Stack>
         </>
