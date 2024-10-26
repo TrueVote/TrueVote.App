@@ -264,10 +264,11 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
         </Card.Section>
         <Button
           variant='light'
-          color='blue'
+          color='green'
           fullWidth
-          mt='md'
           radius='md'
+          h={60}
+          size='xl'
           className={classes.ballotButton}
           disabled={!isSubmitEnabled}
           onClick={(): void => submitBallot()}
