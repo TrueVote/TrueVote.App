@@ -3,6 +3,7 @@
   font-size: 44px;
   line-height: 1.2;
   font-weight: 900;
+  margin-bottom: 10px;
 }
 
 @media (max-width: var(--mantine-breakpoint-xs)) {

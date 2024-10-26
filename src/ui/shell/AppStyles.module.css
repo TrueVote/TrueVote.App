@@ -195,6 +195,8 @@
   &[disabled] {
     border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   }
+  margin-top: 10px;
+  font-size: 36px;
 }
 
 .boxGap {

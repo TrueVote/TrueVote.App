@@ -24,6 +24,8 @@ const LoadProfile: any = () => {
   const { nostrProfile } = useGlobalContext();
   const { userModel } = useGlobalContext();
 
+  console.info('LoadProfile', nostrProfile, userModel);
+
   // Quick check to storage to see if we're even able to fetch a profile
   if (getNostrNpubFromStorage() !== null && userModel === emptyUserModel) {
     return <TrueVoteLoader />;
@@ -59,7 +61,7 @@ const LoadProfile: any = () => {
           >
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td className={classes.tdRight}>Nostr Name:</Table.Td>
+                <Table.Td className={classes.tdRight}>nostr Name:</Table.Td>
                 <Table.Td className={classes.profileName}>{nostrProfile.displayName}</Table.Td>
               </Table.Tr>
               <Table.Tr>
@@ -97,18 +99,7 @@ const LoadProfile: any = () => {
       ) : (
         <>
           <Stack className={classes.profileButtons}>
-            <Text size='md'>Sign In if you have an exising Nostr account</Text>
-            <Button
-              leftSection={<IconLogin />}
-              className={classes.profileButton}
-              radius='md'
-              color='blue'
-              variant='light'
-              onClick={(): void => navigate('/signin')}
-            >
-              Sign In
-            </Button>
-            <Text size='md'>To get started with a new Nostr account for TrueVote, Register</Text>
+            <Text size='md'>To get started with a new nostr account for TrueVote, Register</Text>
             <Button
               leftSection={<IconUserPlus />}
               className={classes.profileButton}
@@ -118,6 +109,17 @@ const LoadProfile: any = () => {
               onClick={(): void => navigate('/register')}
             >
               Register
+            </Button>
+            <Text size='md'>Sign In if you have an existing nostr account</Text>
+            <Button
+              leftSection={<IconLogin />}
+              className={classes.profileButton}
+              radius='md'
+              color='blue'
+              variant='light'
+              onClick={(): void => navigate('/signin')}
+            >
+              Sign In
             </Button>
           </Stack>
         </>

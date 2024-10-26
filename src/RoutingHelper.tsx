@@ -16,7 +16,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   console.info('location', location);
 
   if (userModel === emptyUserModel) {
-    return <Navigate to='/signin' state={{ from: location }} replace />;
+    return <Navigate to='/register' state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

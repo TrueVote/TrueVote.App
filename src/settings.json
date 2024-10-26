@@ -1,10 +1,4 @@
 {
-  "nostrPublicRelays": [
-    "wss://nostr-relay.truevote.org",
-    "wss://nostr.relayable.org",
-    "wss://nostr.pjv.me",
-    "wss://relay.nostrss.re",
-    "wss://relay.damus.io"
-  ],
+  "nostrPublicRelays": ["wss://nostr.pjv.me", "wss://relay.damus.io"],
   "nostrPrivateRelays": ["wss://nostr-relay.truevote.org"]
 }

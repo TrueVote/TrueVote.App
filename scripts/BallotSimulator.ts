@@ -68,7 +68,7 @@ const signIn = async (nsec: string): Promise<SignInResponse | undefined> => {
   console.info('signIn');
 
   const handleError: any = (e: SecureString): void => {
-    console.error('Nostr sign-in error:', e);
+    console.error('nostr sign-in error:', e);
     process.exit(1);
   };
 
@@ -76,7 +76,7 @@ const signIn = async (nsec: string): Promise<SignInResponse | undefined> => {
     const signInEventModel = await signInWithNostr(nsec, handleError);
     // console.info(signInEventModel);
     if (signInEventModel) {
-      console.info('Successfully signed Nostr event');
+      console.info('Successfully signed nostr event');
       try {
         const result: FetchResult = await DBUserSignIn(signInEventModel);
         // console.info(result.data);
@@ -87,11 +87,11 @@ const signIn = async (nsec: string): Promise<SignInResponse | undefined> => {
         return undefined;
       }
     } else {
-      console.error('Failed to sign Nostr event');
+      console.error('Failed to sign nostr event');
       return undefined;
     }
   } catch (error) {
-    console.error('Unexpected error during Nostr sign-in:', error);
+    console.error('Unexpected error during nostr sign-in:', error);
     return undefined;
   }
 };
@@ -441,7 +441,7 @@ const main = async (): Promise<void> => {
         demandOption: true,
       })
       .option('nsec', {
-        description: 'Nostr secret key (nsec)',
+        description: 'nostr secret key (nsec)',
         type: 'string',
         demandOption: true,
       })

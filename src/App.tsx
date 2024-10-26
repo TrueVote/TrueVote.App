@@ -19,6 +19,7 @@ import { EnvConfig } from './EnvConfig';
 import { GlobalProvider } from './Global';
 import { ROUTES } from './Routes';
 import { getJwt } from './services/RESTDataClient';
+import { AppLaunchModal } from './ui/AppLaunchModal';
 import { TrueVoteSpinnerLoader } from './ui/CustomLoader';
 
 export const App: FC = () => {
@@ -97,6 +98,7 @@ export const App: FC = () => {
             },
           }}
         >
+          <AppLaunchModal />
           <BrowserRouter>{ROUTES}</BrowserRouter>
         </MantineProvider>
       </GlobalProvider>

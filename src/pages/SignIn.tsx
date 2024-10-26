@@ -1,6 +1,7 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
 import {
   emptyNostrProfile,
+  generateProfile,
   getNostrProfileInfo,
   nostrKeyKeyHandler,
   NostrProfile,
@@ -20,7 +21,6 @@ import {
   Button,
   Container,
   HoverCard,
-  Image,
   Modal,
   PasswordInput,
   Space,
@@ -46,7 +46,7 @@ export const SignIn: FC = () => {
 
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
-    setOpened((v: any) => !v);
+    setOpened(true);
   };
 
   const handleChange: any = (e: any): void => {
@@ -61,29 +61,66 @@ export const SignIn: FC = () => {
 
   const handleError: any = (e: SecureString): void => {
     console.error('Error from signIn', e);
-    setVisible((v: boolean) => !v);
+    setVisible(false);
     errorModal(e.Value);
     updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
     jwtSignOut();
   };
 
-  const signInClick: any = async () => {
+  const handleErrorSilent: any = (e: SecureString): void => {
+    console.error('Error from signIn', e);
+    updateNostrProfile(emptyNostrProfile);
+    nostrSignOut();
+    jwtSignOut();
+  };
+
+  const signInClick = async (): Promise<void> => {
     updateAccessCodes([]);
-    setVisible((v: any) => !v);
+    setVisible(true);
+    console.info('nostr nsec:', nsec);
 
-    console.info('Nostr Key:', nsec);
-
-    const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
+    // First attempt to sign in with existing profile
+    const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleErrorSilent);
     if (res) {
       console.info('Success from signIn', res);
       updateNostrProfile(retrievedProfile);
       updateUserModel(res.User);
       storeNostrKeys(npub, nsec);
       storeJwt(res.Token);
-      setVisible((v: boolean) => !v);
-      // navigate('/profile');
+      setVisible(false);
+      return;
     }
+
+    // If no existing profile, generate one
+    console.warn(
+      'Error from signIn. Possible not to have any nostr account. Generating new profile',
+    );
+    const derivedNpub = npubfromnsec(nsec);
+
+    generateProfile(derivedNpub, nsec, settings.nostrPrivateRelays)
+      .then(async (newProfile: NostrProfile) => {
+        console.info('New Profile generated from signIn', newProfile);
+        if (nsec !== null) {
+          const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
+          if (res) {
+            console.info('Success from generateProfile->signIn', res);
+            updateNostrProfile(retrievedProfile);
+            updateUserModel(res.User);
+            storeNostrKeys(npub, nsec);
+            storeJwt(res.Token);
+            setVisible(false);
+          }
+        }
+      })
+      .catch((e: any) => {
+        console.error('Caught Error generating nostr profile:', e);
+        updateNostrProfile(emptyNostrProfile);
+        nostrSignOut();
+        jwtSignOut();
+        setVisible(false);
+        errorModal(e);
+      });
   };
 
   useEffect(() => {
@@ -123,7 +160,7 @@ export const SignIn: FC = () => {
           <Space h='md' />
           <PasswordInput
             description='Your secret key'
-            placeholder='Nostr nsec1 key'
+            placeholder='nostr nsec1 key'
             onChange={handleChange}
           />
           <Space h='xl'>
@@ -133,15 +170,6 @@ export const SignIn: FC = () => {
           <Button radius='md' color='green' variant='light' disabled={!valid} onClick={signInClick}>
             Sign In
           </Button>
-          <Space h='md' />
-          <Text>
-            Or, sign in with a browser extension, such as{' '}
-            <Link to='https://getalby.com' className={classes.linkActive}>
-              Alby
-            </Link>
-            .
-            <Image className={classes.albyImage} component={Link} to='https://getalby.com' />
-          </Text>
         </>
       ) : (
         <>
@@ -209,7 +237,7 @@ export const signInWithNostr: (
         return { retrievedProfile, npub, res: undefined };
       }
 
-      // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
+      // Now that we got the nostr profile and signed the event, sign into the TrueVote api
       const signInEventModel: SignInEventModel = {
         Kind: NostrKind.ShortTextNote as number,
         CreatedAt: new Date(dt * 1000).toISOString(),
