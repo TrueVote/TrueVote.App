@@ -29,7 +29,7 @@ export const signInWithNostr: (
       return undefined;
     }
 
-    // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
+    // Now that we got the nostr profile and signed the event, sign into the TrueVote api
     const signInEventModel: SignInEventModel = {
       Kind: NostrKind.ShortTextNote as number,
       CreatedAt: new Date(dt * 1000).toISOString(),
@@ -40,7 +40,7 @@ export const signInWithNostr: (
 
     return signInEventModel;
   } catch (e) {
-    console.error('Exception signing Nostr profile', e);
+    console.error('Exception signing nostr profile', e);
     handleError({ Value: (e as Error).message });
     return undefined;
   }

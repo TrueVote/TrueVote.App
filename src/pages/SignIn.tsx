@@ -71,7 +71,7 @@ export const SignIn: FC = () => {
     updateAccessCodes([]);
     setVisible((v: any) => !v);
 
-    console.info('Nostr Key:', nsec);
+    console.info('nostr nsec:', nsec);
 
     const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
     if (res) {
@@ -122,7 +122,7 @@ export const SignIn: FC = () => {
           <Space h='md' />
           <PasswordInput
             description='Your secret key'
-            placeholder='Nostr nsec1 key'
+            placeholder='nostr nsec1 key'
             onChange={handleChange}
           />
           <Space h='xl'>
@@ -199,7 +199,7 @@ export const signInWithNostr: (
         return { retrievedProfile, npub, res: undefined };
       }
 
-      // Now that we got the Nostr profile and signed the event, sign into the TrueVote api
+      // Now that we got the nostr profile and signed the event, sign into the TrueVote api
       const signInEventModel: SignInEventModel = {
         Kind: NostrKind.ShortTextNote as number,
         CreatedAt: new Date(dt * 1000).toISOString(),
