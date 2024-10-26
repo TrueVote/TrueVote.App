@@ -264,7 +264,7 @@ export const Results: FC = () => {
       <Hero title='Results' />
       <Text className={resultsclasses.subtitle}>{electionDetails?.Name}</Text>
       <Alert
-        icon={<IconInfoCircle size={16} />}
+        icon={<IconInfoCircle size={32} />}
         className={resultsclasses.notice}
         radius='md'
         variant='light'
