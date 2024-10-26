@@ -7,7 +7,9 @@ import {
   nostrSignOut,
   storeNostrKeys,
 } from '@/services/NostrHelper';
-import { jwtSignOut } from '@/services/RESTDataClient';
+import { jwtSignOut, storeJwt } from '@/services/RESTDataClient';
+import * as settings from '@/settings.json';
+import { SecureString } from '@/TrueVote.Api';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -28,10 +30,12 @@ import { useClipboard } from '@mantine/hooks';
 import { IconCheck, IconClipboardCheck, IconClipboardCopy } from '@tabler/icons-react';
 import { FC, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { signInWithNostr } from './SignIn';
 
 export const Register: FC = () => {
   const navigate: NavigateFunction = useNavigate();
   const { nostrProfile, updateNostrProfile } = useGlobalContext();
+  const { updateUserModel } = useGlobalContext();
   const [npub, updateNpub] = useState<string | null>(null);
   const [nsec, updateNsec] = useState<string | null>(null);
   const [nsecCheckbox, updateNsecCheckbox] = useState<boolean>(false);
@@ -45,16 +49,33 @@ export const Register: FC = () => {
     setOpened((v: any) => !v);
   };
 
-  const createProfile: any = () => {
+  const handleError: any = (e: SecureString): void => {
+    console.error('Error from signIn', e);
+    setVisible((v: boolean) => !v);
+    errorModal(e.Value);
+    updateNostrProfile(emptyNostrProfile);
+    nostrSignOut();
+    jwtSignOut();
+  };
+
+  const createProfile: any = async () => {
     setVisible((v: any) => !v);
 
-    generateProfile(npub, nsec)
-      .then((newProfile: NostrProfile) => {
+    generateProfile(npub, nsec, settings.nostrPrivateRelays)
+      .then(async (newProfile: NostrProfile) => {
         console.info('New Profile Returned back to Register', newProfile);
-        setVisible((v: any) => !v);
-        updateNostrProfile(newProfile);
-        storeNostrKeys(npub, nsec);
-        navigate('/profile');
+        if (nsec !== null) {
+          const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
+          if (res) {
+            console.info('Success from generateProfile->signIn', res);
+            updateNostrProfile(retrievedProfile);
+            updateUserModel(res.User);
+            storeNostrKeys(npub, nsec);
+            storeJwt(res.Token);
+            setVisible((v: boolean) => !v);
+            navigate('/profile');
+          }
+        }
       })
       .catch((e: any) => {
         console.error('Caught Error generating nostr profile:', e);
@@ -132,8 +153,8 @@ export const Register: FC = () => {
         <>
           <Text size='l' mt='xs' className='text-wrap'>
             TrueVote uses public / private key pairs for login. It&apos;s the same authentication
-            method used for NOSTR, a nascent decentralized social network. This is a new way to
-            login on the Internet and different to what most people are used to.
+            method used for nostr, a nascent decentralized social network. This is a new way to
+            login on the Internet and different from what most people are used to.
             <br />
             <br />
             Storing your keys on your device is the only way to access your account. Your key

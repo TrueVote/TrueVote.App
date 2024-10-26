@@ -142,14 +142,15 @@ export const getNostrProfileInfo: any = async (
     throw new Error('Invalid NIP-19 profile response');
   }
 
-  const pool: SimplePool = new SimplePool();
+  const privatePool: SimplePool = new SimplePool();
+  const publicPool: SimplePool = new SimplePool();
 
   try {
     const latestProfileEvent: any = await new Promise<any>((resolve: any) => {
       let latestEvent: any = null;
 
-      const sub: SubCloser = pool.subscribeMany(
-        nostrPublicRelays,
+      const privateSub: SubCloser = privatePool.subscribeMany(
+        nostrPrivateRelays,
         [{ kinds: [0], authors: [pubKey.data] }],
         {
           onevent(event: any) {
@@ -158,10 +159,32 @@ export const getNostrProfileInfo: any = async (
             }
           },
           oneose() {
-            sub.close();
+            privateSub.close();
 
             if (!latestEvent) {
-              resolve(undefined);
+              console.warn('No profile event found');
+              console.warn('Checking in public relays');
+
+              const publicSub: SubCloser = publicPool.subscribeMany(
+                nostrPublicRelays,
+                [{ kinds: [0], authors: [pubKey.data] }],
+                {
+                  onevent(event: any) {
+                    if (!latestEvent || latestEvent.created_at < event.created_at) {
+                      latestEvent = event;
+                    }
+                  },
+                  oneose() {
+                    publicSub.close();
+
+                    if (!latestEvent) {
+                      resolve(undefined);
+                    } else {
+                      resolve(latestEvent);
+                    }
+                  },
+                },
+              );
             } else {
               resolve(latestEvent);
             }
@@ -206,6 +229,7 @@ export const generateKeyPair: () => {
 export const generateProfile: any = async (
   npub: string,
   nsec: string,
+  nostrPrivateRelays: string[],
 ): Promise<NostrProfile | undefined> => {
   console.info('generateProfile()', npub, nsec);
 
@@ -226,7 +250,7 @@ export const generateProfile: any = async (
   }
 
   // Publish the event
-  return await publishEvent(verifiedEvent)
+  return await publishEvent(verifiedEvent, nostrPrivateRelays)
     .then(() => {
       return Promise.resolve(profile);
     })
@@ -303,12 +327,13 @@ const signProfile: any = async (
 
 const publishEvent: any = async (
   signedEvent: VerifiedEvent,
-  nostrPublicRelays: string[],
+  nostrPrivateRelays: string[],
 ): Promise<any> => {
   const pool: SimplePool = new SimplePool();
 
   try {
-    const promises: any = await pool.publish(nostrPublicRelays, signedEvent);
+    console.warn('publishEvent()->Start()', nostrPrivateRelays);
+    const promises: any = await pool.publish(nostrPrivateRelays, signedEvent);
     const results: any = await Promise.allSettled(promises);
     for (const result of results) {
       if (result.status === 'rejected') {
