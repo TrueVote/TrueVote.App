@@ -1,6 +1,7 @@
 import { emptyUserModel, useGlobalContext } from '@/Global';
 import {
   emptyNostrProfile,
+  generateProfile,
   getNostrProfileInfo,
   nostrKeyKeyHandler,
   NostrProfile,
@@ -45,7 +46,7 @@ export const SignIn: FC = () => {
 
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
-    setOpened((v: any) => !v);
+    setOpened(true);
   };
 
   const handleChange: any = (e: any): void => {
@@ -60,29 +61,66 @@ export const SignIn: FC = () => {
 
   const handleError: any = (e: SecureString): void => {
     console.error('Error from signIn', e);
-    setVisible((v: boolean) => !v);
+    setVisible(false);
     errorModal(e.Value);
     updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
     jwtSignOut();
   };
 
-  const signInClick: any = async () => {
-    updateAccessCodes([]);
-    setVisible((v: any) => !v);
+  const handleErrorSilent: any = (e: SecureString): void => {
+    console.error('Error from signIn', e);
+    updateNostrProfile(emptyNostrProfile);
+    nostrSignOut();
+    jwtSignOut();
+  };
 
+  const signInClick = async (): Promise<void> => {
+    updateAccessCodes([]);
+    setVisible(true);
     console.info('nostr nsec:', nsec);
 
-    const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
+    // First attempt to sign in with existing profile
+    const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleErrorSilent);
     if (res) {
       console.info('Success from signIn', res);
       updateNostrProfile(retrievedProfile);
       updateUserModel(res.User);
       storeNostrKeys(npub, nsec);
       storeJwt(res.Token);
-      setVisible((v: boolean) => !v);
-      // navigate('/profile');
+      setVisible(false);
+      return;
     }
+
+    // If no existing profile, generate one
+    console.warn(
+      'Error from signIn. Possible not to have any nostr account. Generating new profile',
+    );
+    const derivedNpub = npubfromnsec(nsec);
+
+    generateProfile(derivedNpub, nsec, settings.nostrPrivateRelays)
+      .then(async (newProfile: NostrProfile) => {
+        console.info('New Profile generated from signIn', newProfile);
+        if (nsec !== null) {
+          const { retrievedProfile, npub, res } = await signInWithNostr(nsec, handleError);
+          if (res) {
+            console.info('Success from generateProfile->signIn', res);
+            updateNostrProfile(retrievedProfile);
+            updateUserModel(res.User);
+            storeNostrKeys(npub, nsec);
+            storeJwt(res.Token);
+            setVisible(false);
+          }
+        }
+      })
+      .catch((e: any) => {
+        console.error('Caught Error generating nostr profile:', e);
+        updateNostrProfile(emptyNostrProfile);
+        nostrSignOut();
+        jwtSignOut();
+        setVisible(false);
+        errorModal(e);
+      });
   };
 
   useEffect(() => {

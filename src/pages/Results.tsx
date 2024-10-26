@@ -258,6 +258,19 @@ export const Results: FC = () => {
     <Container size='xs' px='xs' className={classes.container}>
       <Hero title='Results' />
       <Text size='xl'>{electionDetails?.Name}</Text>
+      <Text
+        size='sm'
+        style={{
+          color: '#888',
+          marginTop: '2px',
+          padding: '10px',
+          borderLeft: '3px solid #444',
+          background: 'rgba(255, 255, 255, 0.05)',
+        }}
+      >
+        NOTE: This election displays results in real-time. Some elections will not display results
+        after all ballots are tabulated and the voting window is closed.
+      </Text>
       <Text size='l'>Total Ballots Submitted: {electionResults.TotalBallots}</Text>
       <Box className={classes.boxGap} />
       <Stack gap='md'>
