@@ -311,9 +311,16 @@ export const Results: FC = () => {
             </Group>
             <Box>
               <Text className={resultsclasses.label}>Ballots Hashed</Text>
-              <Text className={resultsclasses.value}>
-                {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
-              </Text>
+              <Group gap='xs' align='baseline'>
+                <Text className={resultsclasses.value}>
+                  {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
+                </Text>
+                <Text size='sm' c='dimmed'>
+                  {electionResults?.TotalBallots
+                    ? `(${Math.round((electionResults.TotalBallotsHashed / electionResults.TotalBallots) * 100)}%)`
+                    : '(0%)'}
+                </Text>
+              </Group>
             </Box>
           </Group>
         </Stack>{' '}
