@@ -152,7 +152,6 @@ export const AppHeader: FC = () => {
   const renderMenuItem = (link: LinkType): any => {
     const Icon = link.icon;
     const commonProps = {
-      key: link.id,
       to: link.link,
       className: `${classes.link} inline-flex items-center relative`, // added relative
       onClick: (): void => toggle(false),
@@ -164,7 +163,7 @@ export const AppHeader: FC = () => {
 
     if (link.protected) {
       return (
-        <ProtectedNavLink {...commonProps}>
+        <ProtectedNavLink key={link.id} {...commonProps}>
           {iconElement}
           <span style={{ position: 'relative', top: '-6px' }}>{link.label}</span>
         </ProtectedNavLink>
@@ -173,6 +172,7 @@ export const AppHeader: FC = () => {
 
     return (
       <NavLink
+        key={link.id}
         {...commonProps}
         className={({ isActive }: { isActive: boolean }) => `
           ${commonProps.className}
