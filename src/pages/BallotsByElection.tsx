@@ -204,7 +204,7 @@ export const BallotsByElection: FC = () => {
                   className={`${resultsclasses.icon} ${resultsclasses.interactiveIcon}`}
                 >
                   <IconSum size={56} />
-                  <IconChevronRight size={12} className={resultsclasses.chevronIcon} />
+                  <IconZoomIn size={12} className={resultsclasses.magnifierSumIcon} />
                 </ThemeIcon>
               </Link>
               <Box>

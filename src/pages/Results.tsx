@@ -23,7 +23,7 @@ import {
   Title,
   useMantineColorScheme,
 } from '@mantine/core';
-import { IconInfoCircle, IconSearch, IconSum } from '@tabler/icons-react';
+import { IconInfoCircle, IconSum, IconZoomIn } from '@tabler/icons-react';
 import { FC, useEffect, useMemo, useState } from 'react';
 import ReactJson from 'react-json-view';
 import { Link, Params, useParams } from 'react-router-dom';
@@ -304,7 +304,7 @@ export const Results: FC = () => {
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     {electionResults?.TotalBallots?.toLocaleString() || 0}
-                    <IconSearch size={14} className={resultsclasses.magnifierIcon} />
+                    <IconZoomIn size={14} className={resultsclasses.magnifierIcon} />
                   </Link>{' '}
                 </Text>
               </Box>
