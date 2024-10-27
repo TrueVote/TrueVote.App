@@ -19,7 +19,7 @@ export const AppFooter: FC = () => {
           className={classes.link}
           target='_blank'
         >
-          <Text size='xs'>{localization?.getLocalizedString('VERSION')} 1.0</Text>
+          <Text size='xs'>{localization?.getLocalizedString('VERSION')} 0.9 Alpha</Text>
         </Anchor>
       </Container>
     </AppShell.Footer>

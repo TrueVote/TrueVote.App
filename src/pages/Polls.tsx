@@ -1,6 +1,6 @@
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import { Container, Stack } from '@mantine/core';
+import { Container, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
 
 export const Polls: FC = () => {
@@ -9,6 +9,7 @@ export const Polls: FC = () => {
       <Stack gap={32}>
         <Hero title='Polls' />
       </Stack>
+      <Text size='lg'>No Polls Found</Text>
     </Container>
   );
 };
