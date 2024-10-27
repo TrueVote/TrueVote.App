@@ -198,22 +198,34 @@ export const BallotsByElection: FC = () => {
           <Group align='flex-start'>
             <Group>
               <Link to={`/results/${electionId}`} className={classes.buttonText}>
-                <ThemeIcon size={56} radius='md' className={resultsclasses.icon}>
+                <ThemeIcon
+                  size={56}
+                  radius='md'
+                  className={`${resultsclasses.icon} ${resultsclasses.interactiveIcon}`}
+                >
                   <IconSum size={56} />
+                  <IconZoomIn size={12} className={resultsclasses.magnifierSumIcon} />
                 </ThemeIcon>
               </Link>
               <Box>
-                <Text className={resultsclasses.label}>Total Ballots Submitted</Text>
+                <Text className={resultsclasses.label}>Ballots Submitted</Text>
                 <Text className={resultsclasses.value}>
                   {electionResults?.TotalBallots?.toLocaleString() || 0}
                 </Text>
               </Box>
             </Group>
             <Box>
-              <Text className={resultsclasses.label}>Total Ballots Hashed</Text>
-              <Text className={resultsclasses.value}>
-                {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
-              </Text>
+              <Text className={resultsclasses.label}>Ballots Hashed</Text>
+              <Group gap='xs' align='baseline'>
+                <Text className={resultsclasses.value}>
+                  {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
+                </Text>
+                <Text size='sm' c='dimmed'>
+                  {electionResults?.TotalBallots
+                    ? `(${Math.round((electionResults.TotalBallotsHashed / electionResults.TotalBallots) * 100)}%)`
+                    : '(0%)'}
+                </Text>
+              </Group>
             </Box>
           </Group>
         </Stack>{' '}

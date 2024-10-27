@@ -82,3 +82,42 @@
   height: 2px;
   background: linear-gradient(90deg, var(--mantine-color-yellow-4), var(--mantine-color-orange-5));
 }
+
+.numberContainer {
+  position: relative;
+  cursor: pointer;
+  padding-right: 24px;
+  transition: opacity 0.2s ease;
+}
+
+.numberContainer:hover {
+  opacity: 0.8;
+}
+
+.interactiveIcon {
+  position: relative;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.interactiveIcon:hover {
+  opacity: 0.8;
+}
+
+.magnifierIcon {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+}
+
+.magnifierSumIcon {
+  position: absolute;
+  bottom: 2px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+}

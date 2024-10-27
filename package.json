@@ -78,7 +78,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-storybook": "^0.10.1",
     "http-server": "^14.1.1",
-    "npm-check-updates": "^17.1.6",
+    "npm-check-updates": "^17.1.7",
     "postcss": "^8.4.47",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",

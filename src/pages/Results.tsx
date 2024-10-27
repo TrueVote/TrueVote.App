@@ -23,7 +23,7 @@ import {
   Title,
   useMantineColorScheme,
 } from '@mantine/core';
-import { IconInfoCircle, IconSum } from '@tabler/icons-react';
+import { IconInfoCircle, IconSum, IconZoomIn } from '@tabler/icons-react';
 import { FC, useEffect, useMemo, useState } from 'react';
 import ReactJson from 'react-json-view';
 import { Link, Params, useParams } from 'react-router-dom';
@@ -296,25 +296,34 @@ export const Results: FC = () => {
                 <IconSum size={56} />
               </ThemeIcon>
               <Box>
-                <Text className={resultsclasses.label}>Total Ballots Submitted</Text>
+                <Text className={resultsclasses.label}>Ballots Submitted</Text>
                 <Text className={resultsclasses.value}>
                   <Link
                     to={`/ballotsbyelection/${electionId}`}
-                    className='cursor-pointer text-inherit hover:underline'
+                    className={resultsclasses.numberContainer}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     {electionResults?.TotalBallots?.toLocaleString() || 0}
-                  </Link>
+                    <IconZoomIn size={14} className={resultsclasses.magnifierIcon} />
+                  </Link>{' '}
                 </Text>
               </Box>
             </Group>
             <Box>
-              <Text className={resultsclasses.label}>Total Ballots Hashed</Text>
-              <Text className={resultsclasses.value}>
-                {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
-              </Text>
+              <Text className={resultsclasses.label}>Ballots Hashed</Text>
+              <Group gap='xs' align='baseline'>
+                <Text className={resultsclasses.value}>
+                  {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
+                </Text>
+                <Text size='sm' c='dimmed'>
+                  {electionResults?.TotalBallots
+                    ? `(${Math.round((electionResults.TotalBallotsHashed / electionResults.TotalBallots) * 100)}%)`
+                    : '(0%)'}
+                </Text>
+              </Group>
             </Box>
           </Group>
-        </Stack>
+        </Stack>{' '}
       </Paper>
       <Box className={classes.boxGap} />
       <Stack gap='md'>

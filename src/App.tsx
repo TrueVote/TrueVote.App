@@ -84,6 +84,7 @@ export const App: FC = () => {
     <ApolloProvider client={client}>
       <GlobalProvider>
         <MantineProvider
+          defaultColorScheme='dark'
           theme={{
             components: {
               Loader: Loader.extend({
