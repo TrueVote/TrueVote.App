@@ -445,7 +445,7 @@ export interface ElectionResults {
    */
   TotalBallotsHashed: number;
   Races: RaceResult[];
-  PaginatedBallotIds: PaginatedBallotIds;
+  BallotIds: PaginatedBallotIds;
 }
 
 export interface Error500Flag {
