@@ -56,7 +56,7 @@ export const BallotsByElection: FC = () => {
     error: detailsError,
     data: detailsData,
   } = useQuery(electionDetailsByIdQuery, {
-    variables: { ElectionId: electionId, offset: (currentPage - 1) * pageSize, limit: pageSize },
+    variables: { ElectionId: electionId },
     skip: !electionId,
     onCompleted: (data) => {
       console.info('Election details query completed:', data);
@@ -92,7 +92,7 @@ export const BallotsByElection: FC = () => {
 
   // Subscribe to results updates
   const { data: subscriptionData } = useSubscription(electionResultsByIdSubscription, {
-    variables: { electionId: params.electionId },
+    variables: { ElectionId: electionId, offset: (currentPage - 1) * pageSize, limit: pageSize },
     skip: !params.electionId,
     onData: ({ data }) => {
       console.info('Election results subscription data received:', data);

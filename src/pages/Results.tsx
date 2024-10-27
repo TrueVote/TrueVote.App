@@ -201,7 +201,7 @@ export const Results: FC = () => {
 
   // Subscribe to results updates
   const { data: subscriptionData } = useSubscription(electionResultsByIdSubscription, {
-    variables: { electionId: params.electionId },
+    variables: { ElectionId: params.electionId },
     skip: !params.electionId,
     onData: ({ data }) => {
       console.info('Election results subscription data received:', data);
