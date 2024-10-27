@@ -4,6 +4,7 @@ import {
   electionResultsByIdQuery,
   electionResultsByIdSubscription,
 } from '@/services/GraphQLSchemas';
+import { Pagination } from '@/ui/BallotPagination';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -46,6 +47,8 @@ export const BallotsByElection: FC = () => {
   const [electionResults, setElectionResults] = useState<ElectionResults | undefined>();
   const [electionDetails, setElectionDetails] = useState<ElectionModel | undefined>();
   const getColor: any = () => (colorScheme === 'dark' ? 'monokai' : 'rjv-default');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize: number = 10;
 
   // Fetch election details
   const {
@@ -53,7 +56,7 @@ export const BallotsByElection: FC = () => {
     error: detailsError,
     data: detailsData,
   } = useQuery(electionDetailsByIdQuery, {
-    variables: { ElectionId: electionId },
+    variables: { ElectionId: electionId, offset: (currentPage - 1) * pageSize, limit: pageSize },
     skip: !electionId,
     onCompleted: (data) => {
       console.info('Election details query completed:', data);
@@ -77,7 +80,7 @@ export const BallotsByElection: FC = () => {
     error: resultsError,
     data: resultsData,
   } = useQuery(electionResultsByIdQuery, {
-    variables: { ElectionId: electionId },
+    variables: { ElectionId: electionId, offset: (currentPage - 1) * pageSize, limit: pageSize },
     skip: !electionId,
     onCompleted: (data) => {
       console.info('Election results query completed:', data);
@@ -168,6 +171,14 @@ export const BallotsByElection: FC = () => {
     ),
   );
 
+  const totalPages = Math.ceil((electionResults?.BallotIds.TotalCount || 0) / pageSize);
+
+  const handlePageChange = (page: number): void => {
+    setCurrentPage(page);
+    // Scroll to top of list when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Hero title='All Ballots for Election' />
@@ -186,9 +197,11 @@ export const BallotsByElection: FC = () => {
           <Text className={resultsclasses.sectionTitle}>Totals</Text>
           <Group align='flex-start'>
             <Group>
-              <ThemeIcon size={56} radius='md' className={resultsclasses.icon}>
-                <IconSum size={56} />
-              </ThemeIcon>
+              <Link to={`/results/${electionId}`} className={classes.buttonText}>
+                <ThemeIcon size={56} radius='md' className={resultsclasses.icon}>
+                  <IconSum size={56} />
+                </ThemeIcon>
+              </Link>
               <Box>
                 <Text className={resultsclasses.label}>Total Ballots Submitted</Text>
                 <Text className={resultsclasses.value}>
@@ -207,14 +220,32 @@ export const BallotsByElection: FC = () => {
       </Paper>{' '}
       <Box className={classes.boxGap} />
       <Stack gap='md'>
-        <Accordion
-          chevronPosition='right'
-          variant='contained'
-          chevron={<IconChevronRight size={26} />}
-          className={classes.accordion}
-        >
-          {items}
-        </Accordion>
+        <Box h={500} style={{ overflowY: 'auto' }}>
+          {' '}
+          <Accordion
+            chevronPosition='right'
+            variant='contained'
+            chevron={<IconChevronRight size={26} />}
+            className={classes.accordion}
+          >
+            {items}
+          </Accordion>
+        </Box>
+        <Text ta='center' size='sm' c='dimmed'>
+          Page {currentPage} of {totalPages}
+        </Text>
+        <Group justify='center' mb='xs'>
+          <Text ta='center' size='sm' c='dimmed'>
+            Showing {(currentPage - 1) * pageSize + 1}-
+            {Math.min(currentPage * pageSize, electionResults?.BallotIds.TotalCount || 0)} of{' '}
+            {electionResults?.BallotIds.TotalCount || 0} ballots
+          </Text>
+        </Group>{' '}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />{' '}
       </Stack>
       <Card shadow='sm' p='lg' radius='md' padding='none' withBorder>
         <Title className={classes.titleSpaces} size='h4'>
