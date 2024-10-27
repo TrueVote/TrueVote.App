@@ -128,11 +128,20 @@ export const ballotDetailsByIdQuery = gql`
 `;
 
 export const electionResultsByIdQuery = gql`
-  query GetElectionResultsById($ElectionId: String!) {
-    GetElectionResultsByElectionId(ElectionId: $ElectionId) {
+  query GetElectionResultsById($ElectionId: String!, $offset: Int = 0, $limit: Int = 100) {
+    GetElectionResultsByElectionId(ElectionId: $ElectionId, offset: $offset, limit: $limit) {
       ElectionId
       TotalBallots
       TotalBallotsHashed
+      BallotIds {
+        Items {
+          BallotId
+          DateCreated
+        }
+        TotalCount
+        Offset
+        Limit
+      }
       Races {
         RaceId
         RaceName
@@ -147,11 +156,20 @@ export const electionResultsByIdQuery = gql`
 `;
 
 export const electionResultsByIdSubscription = gql`
-  subscription ElectionResultsUpdated($electionId: String!) {
-    ElectionResultsUpdated(electionId: $electionId) {
+  subscription ElectionResultsUpdated($ElectionId: String!, $offset: Int = 0, $limit: Int = 100) {
+    ElectionResultsUpdated(ElectionId: $ElectionId, offset: $offset, limit: $limit) {
       ElectionId
       TotalBallots
       TotalBallotsHashed
+      BallotIds {
+        Items {
+          BallotId
+          DateCreated
+        }
+        TotalCount
+        Offset
+        Limit
+      }
       Races {
         RaceId
         RaceName

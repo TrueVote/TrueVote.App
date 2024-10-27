@@ -25,7 +25,7 @@ import {
 import { IconInfoCircle, IconSum } from '@tabler/icons-react';
 import { FC, useEffect, useMemo, useState } from 'react';
 import ReactJson from 'react-json-view';
-import { Params, useParams } from 'react-router-dom';
+import { Link, Params, useParams } from 'react-router-dom';
 import { Cell, Pie, PieChart } from 'recharts';
 import resultsclasses from './Results.module.css';
 
@@ -201,7 +201,7 @@ export const Results: FC = () => {
 
   // Subscribe to results updates
   const { data: subscriptionData } = useSubscription(electionResultsByIdSubscription, {
-    variables: { electionId: params.electionId },
+    variables: { ElectionId: params.electionId },
     skip: !params.electionId,
     onData: ({ data }) => {
       console.info('Election results subscription data received:', data);
@@ -283,7 +283,12 @@ export const Results: FC = () => {
               <Box>
                 <Text className={resultsclasses.label}>Total Ballots Submitted</Text>
                 <Text className={resultsclasses.value}>
-                  {electionResults?.TotalBallots?.toLocaleString() || 0}
+                  <Link
+                    to={`/ballotsbyelection/${electionId}`}
+                    className='cursor-pointer text-inherit hover:underline'
+                  >
+                    {electionResults?.TotalBallots?.toLocaleString() || 0}
+                  </Link>{' '}
                 </Text>
               </Box>
             </Group>

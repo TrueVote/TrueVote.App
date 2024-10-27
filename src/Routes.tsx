@@ -6,6 +6,7 @@ import { About } from './pages/About';
 import { Ballot } from './pages/Ballot';
 import { BallotView } from './pages/BallotView';
 import { Ballots } from './pages/Ballots';
+import { BallotsByElection } from './pages/BallotsByElection';
 import { Elections } from './pages/Elections';
 import { Feedback } from './pages/Feedback';
 import { Home } from './pages/Home';
@@ -32,6 +33,7 @@ export const ROUTES: ReactElement = (
           </ProtectedRoute>
         }
       />
+      <Route path='/ballotsbyelection/:electionId' element={<BallotsByElection />} />
       <Route
         path='/ballot/:electionId/:accessCode?'
         element={
