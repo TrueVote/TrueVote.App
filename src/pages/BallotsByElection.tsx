@@ -198,7 +198,11 @@ export const BallotsByElection: FC = () => {
           <Group align='flex-start'>
             <Group>
               <Link to={`/results/${electionId}`} className={classes.buttonText}>
-                <ThemeIcon size={56} radius='md' className={resultsclasses.icon}>
+                <ThemeIcon
+                  size={56}
+                  radius='md'
+                  className={`${resultsclasses.icon} ${resultsclasses.interactiveIcon}`}
+                >
                   <IconSum size={56} />
                 </ThemeIcon>
               </Link>

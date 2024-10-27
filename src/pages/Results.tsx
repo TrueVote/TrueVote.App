@@ -300,7 +300,7 @@ export const Results: FC = () => {
                 <Text className={resultsclasses.value}>
                   <Link
                     to={`/ballotsbyelection/${electionId}`}
-                    className='cursor-pointer text-inherit hover:underline'
+                    className={resultsclasses.interactiveCount}
                   >
                     {electionResults?.TotalBallots?.toLocaleString() || 0}
                   </Link>

@@ -82,3 +82,28 @@
   height: 2px;
   background: linear-gradient(90deg, var(--mantine-color-yellow-4), var(--mantine-color-orange-5));
 }
+
+.interactiveIcon {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  &:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+.interactiveCount {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(90deg, #0a4d2e 0%, #117048 100%);
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: inline-block;
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 2px 4px rgba(10, 77, 46, 0.3);
+  }
+}
