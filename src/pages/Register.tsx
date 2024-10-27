@@ -46,7 +46,7 @@ export const Register: FC = () => {
   const [npub, updateNpub] = useState<string | null>(null);
   const [nsec, updateNsec] = useState<string | null>(null);
   const [nsecCheckbox, updateNsecCheckbox] = useState<boolean>(false);
-  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const clipboard: any = useClipboard({ timeout: 500 });
@@ -62,7 +62,7 @@ export const Register: FC = () => {
 
   const handleError: any = (e: SecureString): void => {
     console.error('Error from signIn', e);
-    setVisible((v: boolean) => !v);
+    setLoading((v: boolean) => !v);
     errorModal(e.Value);
     updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
@@ -70,7 +70,7 @@ export const Register: FC = () => {
   };
 
   const createProfile: any = async () => {
-    setVisible((v: any) => !v);
+    setLoading(true);
 
     generateProfile(npub, nsec, settings.nostrPrivateRelays)
       .then(async (newProfile: NostrProfile) => {
@@ -83,23 +83,24 @@ export const Register: FC = () => {
             updateUserModel(res.User);
             storeNostrKeys(npub, nsec);
             storeJwt(res.Token);
-            setVisible((v: boolean) => !v);
             const from = location.state?.from?.pathname || '/elections';
             console.info(
               'Profile generated and SignedIn. Navigating to location history stack',
               location,
               from,
             );
+            setLoading(false);
             navigate(from, { replace: true });
           }
         }
+        setLoading(false);
       })
       .catch((e: any) => {
         console.error('Caught Error generating nostr profile:', e);
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
         jwtSignOut();
-        setVisible((v: any) => !v);
+        setLoading(false);
         errorModal(e);
       });
   };
@@ -124,12 +125,15 @@ export const Register: FC = () => {
     </>
   );
 
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
+
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Stack gap={32}>
         <Hero title='Register' />
       </Stack>
-      <TrueVoteLoader visible={visible} />
       <Modal
         centered
         withCloseButton={true}

@@ -9,7 +9,24 @@ interface TrueVoteLoaderProps {
 export const TrueVoteLoader: React.FC<TrueVoteLoaderProps> = ({
   visible = true,
 }): React.JSX.Element => {
-  return <LoadingOverlay visible={visible} overlayProps={{ blur: 2 }} />;
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1000,
+      }}
+    >
+      <LoadingOverlay
+        visible={visible}
+        overlayProps={{ blur: 2 }}
+        loaderProps={{ children: <TrueVoteSpinner /> }}
+      />
+    </div>
+  );
 };
 
 export const TrueVoteSpinnerLoader: MantineLoaderComponent = forwardRef(() => {

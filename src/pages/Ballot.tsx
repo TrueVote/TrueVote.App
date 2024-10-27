@@ -101,7 +101,7 @@ interface ElectionProps {
 }
 
 const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, accessCodeProp }) => {
-  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const listCheckIcon = <IconListCheck style={{ width: rem(16), height: rem(16) }} />;
@@ -183,7 +183,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
       return;
     }
 
-    setVisible((v: any) => !v);
+    setLoading(true);
 
     const submitBallotModel: SubmitBallotModel = {} as SubmitBallotModel;
     submitBallotModel.Election = electionBallot;
@@ -192,16 +192,20 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
     DBSubmitBallot(submitBallotModel)
       .then((res: SubmitBallotModelResponse) => {
         console.info('Success from ballot submission', res);
-        setVisible((v: any) => !v);
+        setLoading(false);
         ballotBinderStorage.addOrUpdateBallotBinder(accessCode, res.BallotId, res.ElectionId);
         navigate('/thanks', { state: res });
       })
       .catch((e: any) => {
         console.error('Error from ballot submission', e);
-        setVisible((v: any) => !v);
+        setLoading(false);
         errorModal(formatErrorObject(e));
       });
   };
+
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
@@ -210,7 +214,6 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
         Complete your ballot below
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <TrueVoteLoader visible={visible} />
         <Modal
           centered
           withCloseButton={true}
