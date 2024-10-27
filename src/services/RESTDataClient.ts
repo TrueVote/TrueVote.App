@@ -161,6 +161,10 @@ export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<
     const body: string = JSON.stringify(signInEventModel);
     console.info('Body: /user/signin', body);
 
+    if (FetchHelper.debugDelay > 0) {
+      await new Promise((resolve) => setTimeout(resolve, FetchHelper.debugDelay));
+    }
+
     const response = await fetch(EnvConfig.apiRoot + '/api/user/signin', {
       method: 'POST',
       body: body,

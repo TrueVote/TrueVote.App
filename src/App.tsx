@@ -75,8 +75,25 @@ export const App: FC = () => {
     authLink.concat(httpLink),
   );
 
+  /* Useful if we want to test slow loading
+  const delayLink = new ApolloLink((operation, forward) => {
+    return new Observable((observer) => {
+      setTimeout(() => {
+        forward(operation).subscribe({
+          next: observer.next.bind(observer),
+          error: observer.error.bind(observer),
+          complete: observer.complete.bind(observer),
+        });
+      }, 5000);
+    });
+  });
+  */
+
   const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-    link: splitLink,
+    link: ApolloLink.from([
+      // delayLink,
+      splitLink,
+    ]),
     cache: new InMemoryCache(),
   });
 
