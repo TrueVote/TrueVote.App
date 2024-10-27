@@ -1,10 +1,11 @@
 import { Button, Group, Text } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { FC } from 'react';
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (_page: number) => void;
 }
 
 export const Pagination: FC<PaginationProps> = ({
@@ -14,7 +15,7 @@ export const Pagination: FC<PaginationProps> = ({
 }: {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (_page: number) => void;
 }) => {
   const renderPageNumbers = (): JSX.Element[] => {
     const pages = [];
