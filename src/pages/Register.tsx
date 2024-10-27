@@ -84,7 +84,7 @@ export const Register: FC = () => {
             storeNostrKeys(npub, nsec);
             storeJwt(res.Token);
             setVisible((v: boolean) => !v);
-            const from = location.state?.from?.pathname || '/profile';
+            const from = location.state?.from?.pathname || '/elections';
             console.info(
               'Profile generated and SignedIn. Navigating to location history stack',
               location,
