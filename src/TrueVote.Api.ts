@@ -139,6 +139,17 @@ export interface BallotHashModel {
   TimestampId?: string | null;
 }
 
+export interface BallotIdInfo {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotId: string;
+  /** @format date-time */
+  DateCreated: string;
+}
+
 export interface BallotList {
   /** @maxItems 2048 */
   Ballots: BallotModel[];
@@ -434,6 +445,7 @@ export interface ElectionResults {
    */
   TotalBallotsHashed: number;
   Races: RaceResult[];
+  PaginatedBallotIds: PaginatedBallotIds;
 }
 
 export interface Error500Flag {
@@ -576,6 +588,28 @@ export enum NostrKind {
   Value30078 = 30078,
   Value30311 = 30311,
   Value30402 = 30402,
+}
+
+export interface PaginatedBallotIds {
+  Items: BallotIdInfo[];
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  TotalCount: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  Offset: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 2147483647
+   */
+  Limit: number;
 }
 
 export interface RaceModel {

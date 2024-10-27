@@ -133,6 +133,15 @@ export const electionResultsByIdQuery = gql`
       ElectionId
       TotalBallots
       TotalBallotsHashed
+      BallotIds {
+        Items {
+          BallotId
+          DateCreated
+        }
+        TotalCount
+        Offset
+        Limit
+      }
       Races {
         RaceId
         RaceName
@@ -152,6 +161,15 @@ export const electionResultsByIdSubscription = gql`
       ElectionId
       TotalBallots
       TotalBallotsHashed
+      BallotIds {
+        Items {
+          BallotId
+          DateCreated
+        }
+        TotalCount
+        Offset
+        Limit
+      }
       Races {
         RaceId
         RaceName
