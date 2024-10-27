@@ -21,7 +21,7 @@ export const SignOut: FC = () => {
     nostrSignOut();
     jwtSignOut();
     console.info('Signed out');
-    navigate('/profile');
+    navigate('/');
   };
 
   return (
