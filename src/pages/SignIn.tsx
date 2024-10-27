@@ -39,7 +39,7 @@ export const SignIn: FC = () => {
   const [message, setMessage] = useState('');
   const [valid, setValid] = useState(false);
   const [nsec, setNsec] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const location = useLocation();
@@ -61,7 +61,7 @@ export const SignIn: FC = () => {
 
   const handleError: any = (e: SecureString): void => {
     console.error('Error from signIn', e);
-    setVisible(false);
+    setLoading(false);
     errorModal(e.Value);
     updateNostrProfile(emptyNostrProfile);
     nostrSignOut();
@@ -77,7 +77,7 @@ export const SignIn: FC = () => {
 
   const signInClick = async (): Promise<void> => {
     updateAccessCodes([]);
-    setVisible(true);
+    setLoading(true);
     console.info('nostr nsec:', nsec);
 
     // First attempt to sign in with existing profile
@@ -88,7 +88,7 @@ export const SignIn: FC = () => {
       updateUserModel(res.User);
       storeNostrKeys(npub, nsec);
       storeJwt(res.Token);
-      setVisible(false);
+      setLoading(false);
       return;
     }
 
@@ -109,7 +109,7 @@ export const SignIn: FC = () => {
             updateUserModel(res.User);
             storeNostrKeys(npub, nsec);
             storeJwt(res.Token);
-            setVisible(false);
+            setLoading(false);
           }
         }
       })
@@ -118,7 +118,7 @@ export const SignIn: FC = () => {
         updateNostrProfile(emptyNostrProfile);
         nostrSignOut();
         jwtSignOut();
-        setVisible(false);
+        setLoading(false);
         errorModal(e);
       });
   };
@@ -131,12 +131,15 @@ export const SignIn: FC = () => {
     }
   }, [userModel, location, navigate]);
 
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
+
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Stack gap={32}>
         <Hero title='Sign In' />
       </Stack>
-      <TrueVoteLoader visible={visible} />
       <Modal
         centered
         withCloseButton={true}

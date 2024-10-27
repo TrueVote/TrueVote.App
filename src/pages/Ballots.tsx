@@ -32,7 +32,7 @@ export const Ballots: FC = () => {
   const theme: MantineTheme = useMantineTheme();
   const { userModel } = useGlobalContext();
   const [ballotListArray, setBallotListArray] = useState<BallotList[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const [getBallotDetails, { error }] = useLazyQuery(ballotDetailsByIdQuery);
 
@@ -55,7 +55,7 @@ export const Ballots: FC = () => {
     } catch (err) {
       console.error('Error fetching ballot details:', err);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   }, [userModel?.UserId, getBallotDetails]);
 
@@ -63,7 +63,7 @@ export const Ballots: FC = () => {
     fetchBallotListArray();
   }, [fetchBallotListArray]);
 
-  if (isLoading) {
+  if (loading) {
     return <TrueVoteLoader />;
   }
 

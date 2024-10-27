@@ -124,11 +124,13 @@ const AllElections: any = ({ theme }: { theme: MantineTheme }) => {
                 <Button
                   fullWidth
                   radius='md'
-                  color='green'
+                  color={new Date().toISOString() > e.EndDate ? 'blue' : 'green'}
                   variant='light'
                   rightSection={<IconCheckbox style={{ width: rem(16), height: rem(16) }} />}
                 >
-                  <span className={classes.buttonText}>Vote</span>
+                  <span className={classes.buttonText}>
+                    {new Date().toISOString() > e.EndDate ? 'View Ballot' : 'Vote'}
+                  </span>
                 </Button>
               </Link>
             )}

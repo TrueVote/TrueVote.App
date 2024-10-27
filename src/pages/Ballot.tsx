@@ -101,7 +101,7 @@ interface ElectionProps {
 }
 
 const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, accessCodeProp }) => {
-  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const listCheckIcon = <IconListCheck style={{ width: rem(16), height: rem(16) }} />;
@@ -148,7 +148,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
     if (
       election.HeaderImageUrl !== undefined &&
       election.HeaderImageUrl?.length !== undefined &&
-      election.HeaderImageUrl?.length > 0
+      election.HeaderImageUrl?.length > 1
     ) {
       return (
         <Card.Section>
@@ -183,7 +183,7 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
       return;
     }
 
-    setVisible((v: any) => !v);
+    setLoading(true);
 
     const submitBallotModel: SubmitBallotModel = {} as SubmitBallotModel;
     submitBallotModel.Election = electionBallot;
@@ -192,16 +192,20 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
     DBSubmitBallot(submitBallotModel)
       .then((res: SubmitBallotModelResponse) => {
         console.info('Success from ballot submission', res);
-        setVisible((v: any) => !v);
+        setLoading(false);
         ballotBinderStorage.addOrUpdateBallotBinder(accessCode, res.BallotId, res.ElectionId);
         navigate('/thanks', { state: res });
       })
       .catch((e: any) => {
         console.error('Error from ballot submission', e);
-        setVisible((v: any) => !v);
+        setLoading(false);
         errorModal(formatErrorObject(e));
       });
   };
+
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
@@ -210,7 +214,6 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
         Complete your ballot below
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <TrueVoteLoader visible={visible} />
         <Modal
           centered
           withCloseButton={true}
@@ -224,12 +227,14 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
         <Text size='xl'>{election.Name}</Text>
         <Group mt='md' mb='xs'>
           <Badge color='green' variant='light'>
-            Starts: {moment.utc(election.StartDate).local().format('MMMM DD, YYYY, HH:mm:ss')}
+            {new Date().toISOString() > election.StartDate ? 'Started: ' : 'Starts: '}
+            {moment.utc(election.StartDate).local().format('MMMM DD, YYYY, HH:mm:ss')}
           </Badge>
           <Badge color='pink' variant='light'>
-            Ends: {moment.utc(election.EndDate).local().format('MMMM DD, YYYY, HH:mm:ss')}
+            {new Date().toISOString() > election.EndDate ? 'Ended: ' : 'Ends: '}
+            {moment.utc(election.EndDate).local().format('MMMM DD, YYYY, HH:mm:ss')}
           </Badge>
-        </Group>
+        </Group>{' '}
         <Text size='sm' c='dimmed'>
           {election.Description}
         </Text>
@@ -262,19 +267,22 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
             {races as any}
           </Flex>
         </Card.Section>
-        <Button
-          variant='light'
-          color='green'
-          fullWidth
-          radius='md'
-          h={60}
-          size='xl'
-          className={classes.ballotButton}
-          disabled={!isSubmitEnabled}
-          onClick={(): void => submitBallot()}
-        >
-          Submit Ballot
-        </Button>
+        {new Date().toISOString() >= election.StartDate &&
+          new Date().toISOString() <= election.EndDate && (
+            <Button
+              variant='light'
+              color='green'
+              fullWidth
+              radius='md'
+              h={60}
+              size='xl'
+              className={classes.ballotButton}
+              disabled={!isSubmitEnabled}
+              onClick={(): void => submitBallot()}
+            >
+              Submit Ballot
+            </Button>
+          )}{' '}
       </Card>
     </Container>
   );

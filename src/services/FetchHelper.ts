@@ -4,6 +4,8 @@ import { getNostrNsecFromStorage } from './NostrHelper';
 import { storeJwt } from './RESTDataClient';
 
 export class FetchHelper {
+  public static debugDelay = 0; // Useful if we want to test slow loading. Milliseconds.
+
   public static handleError(e: SecureString): void {
     console.error('Error from FetchHelper->signIn', e);
   }
@@ -33,6 +35,10 @@ export class FetchHelper {
     url: string,
     options?: RequestInit,
   ): Promise<Response> {
+    if (FetchHelper.debugDelay > 0) {
+      await new Promise((resolve) => setTimeout(resolve, FetchHelper.debugDelay));
+    }
+
     // Add authorization header with the current token
     if (currentToken) {
       if (!options) {

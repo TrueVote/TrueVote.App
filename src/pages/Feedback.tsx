@@ -12,14 +12,14 @@ export const Feedback: FC = () => {
   const [savedFeedback, setSavedFeedback] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const { userModel } = useGlobalContext();
-  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
   const submitFeedback: any = async () => {
     console.info('submitFeedback', feedback);
 
     setIsClicked(true);
-    setVisible((v: boolean) => !v);
+    setLoading(true);
     setSavedFeedback('Submitting Feedback');
 
     const feedbackModel: FeedbackModel = {
@@ -34,23 +34,26 @@ export const Feedback: FC = () => {
         console.info('DBSaveFeedback', res);
         setSavedFeedback('Feedback Submitted');
         setTimeout(() => setIsClicked(false), 3000);
-        setVisible((v: boolean) => !v);
+        setLoading(false);
         setTimeout(() => setDone((d: boolean) => !d), 1000);
       })
       .catch((e: SecureString) => {
         console.error('Error from DBSaveUser', e);
         setSavedFeedback('Error saving feedback: ' + e.Value);
         setTimeout(() => setIsClicked(false), 3000);
-        setVisible((v: boolean) => !v);
+        setLoading(false);
       });
   };
+
+  if (loading) {
+    return <TrueVoteLoader />;
+  }
 
   return (
     <Container size='xs' px='xs' className={classes.container}>
       <Stack gap={32}>
         <Hero title='Feedback' />
       </Stack>
-      <TrueVoteLoader visible={visible} />
       {done ? (
         <>
           <Text>Thank you for your feedback!</Text>
