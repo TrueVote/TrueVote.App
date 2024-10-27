@@ -13,6 +13,7 @@ import {
   Box,
   Card,
   Container,
+  Divider,
   Group,
   Paper,
   ScrollArea,
@@ -32,18 +33,18 @@ import resultsclasses from './Results.module.css';
 // eslint-disable-next-line no-unused-vars
 const useChartColors = (): ((index: number) => string) => {
   const COLORS = [
-    '#6277b7',
-    '#21b371',
-    '#d97757',
-    '#1c2336',
-    '#fddb33',
-    '#6A0DAD',
-    '#1E90FF',
-    '#32CD32',
-    '#FFD700',
-    '#FF69B4',
-    '#20B2AA',
-    '#BA55D3',
+    '#6277b7', // Blue
+    '#21b371', // Green
+    '#d97757', // Coral
+    '#1c2336', // Dark Blue
+    '#FFA500', // Orange
+    '#6A0DAD', // Purple
+    '#1E90FF', // Dodger Blue
+    '#32CD32', // Lime Green
+    '#FFD700', // Gold
+    '#FF69B4', // Hot Pink
+    '#20B2AA', // Light Sea Green
+    '#BA55D3', // Medium Orchid
   ];
   return (_index: number) => COLORS[_index % COLORS.length];
 };
@@ -72,16 +73,14 @@ const groupSmallSlices = (data: CandidateResult[], threshold: number): Candidate
   return result.filter((item) => item.CandidateName !== 'Other' || item.TotalVotes > 0);
 };
 
-const renderCustomizedLabel = ({
+const renderSimpleLabel = ({
   cx,
   cy,
   midAngle,
   innerRadius,
   outerRadius,
   percent,
-  name,
   value,
-  partyAffiliation,
 }: {
   cx: number;
   cy: number;
@@ -89,65 +88,77 @@ const renderCustomizedLabel = ({
   innerRadius: number;
   outerRadius: number;
   percent: number;
-  name: string;
   value: number;
-  partyAffiliation: string;
 }): JSX.Element => {
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   const cos = Math.cos(-midAngle * RADIAN);
-  const isLeftSide = cos < 0;
-  const textAnchor = isLeftSide ? 'end' : 'start';
-  const xOffset = isLeftSide ? -5 : 5;
-
-  // More aggressive text wrapping function
-  const wrapText = (text: string, maxLength: number): string[] => {
-    const words = text.split(' ');
-    const lines: string[] = [];
-    let currentLine = '';
-    words.forEach((word) => {
-      if (currentLine.length + word.length <= maxLength) {
-        currentLine += (currentLine ? ' ' : '') + word;
-      } else {
-        if (currentLine) lines.push(currentLine);
-        currentLine = word;
-      }
-    });
-    if (currentLine) lines.push(currentLine);
-    return lines;
-  };
-
-  const nameLines = wrapText(name, 10); // More aggressive wrapping
-  const percentText = `${(percent * 100).toFixed(0)}%`;
-  const voteText = `${value} Vote${value !== 1 ? 's' : ''}`;
+  const textAnchor = cos >= 0 ? 'start' : 'end';
+  const xOffset = cos >= 0 ? 5 : -5;
 
   return (
     <text x={x + xOffset} y={y} fill='white' textAnchor={textAnchor} dominantBaseline='central'>
-      {nameLines.map((line, i) => (
-        <tspan
-          x={x + xOffset}
-          dy={i === 0 ? `-${(nameLines.length - 1) * 18}` : 20}
-          key={i}
-          fontSize='16px'
-          fontWeight='bold'
-        >
-          {line}
-        </tspan>
-      ))}
-      <tspan x={x + xOffset} dy='22' fontSize='12px' fontStyle='italic'>
-        {partyAffiliation}
+      <tspan x={x + xOffset} dy='-7' fontSize='14px'>
+        {value.toLocaleString()}
       </tspan>
-      <tspan x={x + xOffset} dy='20' fontSize='14px'>
-        {voteText}
-      </tspan>
-      <tspan x={x + xOffset} dy='20' fontSize='14px'>
-        {percentText}
+      <tspan x={x + xOffset} dy='16' fontSize='12px'>
+        {`(${(percent * 100).toFixed(0)}%)`}
       </tspan>
     </text>
   );
 };
+
+const CustomLegend: FC<{
+  data: Array<{
+    name: string;
+    value: number;
+    partyAffiliation: string;
+    fill: string;
+  }>;
+  totalVotes: number;
+}> = ({ data, totalVotes }) => (
+  <Stack gap='sm' mt='md'>
+    {data.map((entry, index) => (
+      <Group key={index} align='center'>
+        <div
+          style={{
+            width: 16,
+            height: 16,
+            backgroundColor: entry.fill,
+            borderRadius: 3,
+            marginRight: 8,
+          }}
+        />
+        <Box style={{ flex: 1 }}>
+          <Text size='sm' fw={500}>
+            {entry.name}
+          </Text>
+          {entry.partyAffiliation && (
+            <Text size='xs' c='dimmed' fs='italic'>
+              {entry.partyAffiliation}
+            </Text>
+          )}
+        </Box>
+        <Group gap='xs'>
+          <Text size='sm' fw={500}>
+            {entry.value.toLocaleString()} votes
+          </Text>
+          <Text size='sm' c='dimmed'>
+            ({((entry.value / totalVotes) * 100).toFixed(0)}%)
+          </Text>
+        </Group>
+      </Group>
+    ))}
+    <Divider my='sm' />
+    <Group justify='flex-end'>
+      <Text size='sm' fw={500}>
+        {totalVotes.toLocaleString()} Vote{totalVotes !== 1 ? 's' : ''}
+      </Text>
+    </Group>
+  </Stack>
+);
 
 export const Results: FC = () => {
   const { colorScheme } = useMantineColorScheme();
@@ -231,7 +242,11 @@ export const Results: FC = () => {
     if (!electionResults || !electionDetails) return [];
     return electionResults.Races.map((race) => {
       const raceDetails = electionDetails.Races.find((r) => r.RaceId === race.RaceId);
-      const groupedCandidates = groupSmallSlices(race.CandidateResults, 0.05);
+      // Sort the candidates by votes in descending order before grouping
+      const sortedCandidates = [...race.CandidateResults].sort(
+        (a, b) => b.TotalVotes - a.TotalVotes,
+      );
+      const groupedCandidates = groupSmallSlices(sortedCandidates, 0.05);
       const totalVotes = race.CandidateResults.reduce(
         (sum, candidate) => sum + candidate.TotalVotes,
         0,
@@ -288,7 +303,7 @@ export const Results: FC = () => {
                     className='cursor-pointer text-inherit hover:underline'
                   >
                     {electionResults?.TotalBallots?.toLocaleString() || 0}
-                  </Link>{' '}
+                  </Link>
                 </Text>
               </Box>
             </Group>
@@ -299,8 +314,8 @@ export const Results: FC = () => {
               </Text>
             </Box>
           </Group>
-        </Stack>{' '}
-      </Paper>{' '}
+        </Stack>
+      </Paper>
       <Box className={classes.boxGap} />
       <Stack gap='md'>
         {processedRaces.map((r) => (
@@ -308,26 +323,41 @@ export const Results: FC = () => {
             <Title className={classes.titleSpaces} size='h4'>
               {r.RaceName}: {r.totalVotes.toLocaleString()} Vote{r.totalVotes !== 1 ? 's' : ''}
             </Title>
-            <PieChart width={380} height={r.totalVotes > 0 ? 380 : 0}>
-              <Pie
-                data={r.groupedCandidates.map((c) => ({
-                  name: c.CandidateName,
-                  value: c.TotalVotes,
-                  partyAffiliation: c.PartyAffiliation,
-                }))}
-                cx='50%'
-                cy='50%'
-                labelLine={false}
-                label={renderCustomizedLabel}
-                outerRadius={190}
-                fill='#8884d8'
-                dataKey='value'
-              >
-                {r.groupedCandidates.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={colorIndex(index)} />
-                ))}
-              </Pie>
-            </PieChart>
+            {r.totalVotes > 0 ? (
+              <>
+                <PieChart width={380} height={280}>
+                  <Pie
+                    data={r.groupedCandidates.map((c) => ({
+                      name: c.CandidateName,
+                      value: c.TotalVotes,
+                      partyAffiliation: c.PartyAffiliation,
+                    }))}
+                    cx='50%'
+                    cy='50%'
+                    labelLine={false}
+                    label={renderSimpleLabel}
+                    outerRadius={130}
+                    fill='#8884d8'
+                    dataKey='value'
+                  >
+                    {r.groupedCandidates.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={colorIndex(index)} />
+                    ))}
+                  </Pie>
+                </PieChart>
+                <CustomLegend
+                  data={r.groupedCandidates.map((c, index) => ({
+                    name: c.CandidateName,
+                    value: c.TotalVotes,
+                    partyAffiliation: c.PartyAffiliation,
+                    fill: colorIndex(index),
+                  }))}
+                  totalVotes={r.totalVotes}
+                />
+              </>
+            ) : (
+              <Text>No votes recorded yet</Text>
+            )}
           </Card>
         ))}
       </Stack>
