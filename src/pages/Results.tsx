@@ -23,7 +23,7 @@ import {
   Title,
   useMantineColorScheme,
 } from '@mantine/core';
-import { IconInfoCircle, IconSum } from '@tabler/icons-react';
+import { IconInfoCircle, IconSearch, IconSum } from '@tabler/icons-react';
 import { FC, useEffect, useMemo, useState } from 'react';
 import ReactJson from 'react-json-view';
 import { Link, Params, useParams } from 'react-router-dom';
@@ -296,25 +296,27 @@ export const Results: FC = () => {
                 <IconSum size={56} />
               </ThemeIcon>
               <Box>
-                <Text className={resultsclasses.label}>Total Ballots Submitted</Text>
+                <Text className={resultsclasses.label}>Ballots Submitted</Text>
                 <Text className={resultsclasses.value}>
                   <Link
                     to={`/ballotsbyelection/${electionId}`}
-                    className={resultsclasses.interactiveCount}
+                    className={resultsclasses.numberContainer}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     {electionResults?.TotalBallots?.toLocaleString() || 0}
-                  </Link>
+                    <IconSearch size={14} className={resultsclasses.magnifierIcon} />
+                  </Link>{' '}
                 </Text>
               </Box>
             </Group>
             <Box>
-              <Text className={resultsclasses.label}>Total Ballots Hashed</Text>
+              <Text className={resultsclasses.label}>Ballots Hashed</Text>
               <Text className={resultsclasses.value}>
                 {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
               </Text>
             </Box>
           </Group>
-        </Stack>
+        </Stack>{' '}
       </Paper>
       <Box className={classes.boxGap} />
       <Stack gap='md'>

@@ -204,17 +204,18 @@ export const BallotsByElection: FC = () => {
                   className={`${resultsclasses.icon} ${resultsclasses.interactiveIcon}`}
                 >
                   <IconSum size={56} />
+                  <IconChevronRight size={12} className={resultsclasses.chevronIcon} />
                 </ThemeIcon>
               </Link>
               <Box>
-                <Text className={resultsclasses.label}>Total Ballots Submitted</Text>
+                <Text className={resultsclasses.label}>Ballots Submitted</Text>
                 <Text className={resultsclasses.value}>
                   {electionResults?.TotalBallots?.toLocaleString() || 0}
                 </Text>
               </Box>
             </Group>
             <Box>
-              <Text className={resultsclasses.label}>Total Ballots Hashed</Text>
+              <Text className={resultsclasses.label}>Ballots Hashed</Text>
               <Text className={resultsclasses.value}>
                 {electionResults?.TotalBallotsHashed?.toLocaleString() || 0}
               </Text>

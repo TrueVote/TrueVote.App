@@ -83,27 +83,47 @@
   background: linear-gradient(90deg, var(--mantine-color-yellow-4), var(--mantine-color-orange-5));
 }
 
-.interactiveIcon {
+.numberContainer {
+  position: relative;
   cursor: pointer;
-  transition: all 0.2s ease;
-  &:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-  }
+  padding-right: 24px;
+  transition: opacity 0.2s ease;
 }
 
-.interactiveCount {
+.numberContainer:hover {
+  opacity: 0.8;
+}
+
+.interactiveIcon {
+  position: relative;
   cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  background: linear-gradient(90deg, #0a4d2e 0%, #117048 100%);
-  padding: 4px 6px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  display: inline-block;
-  &:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-    box-shadow: 0 2px 4px rgba(10, 77, 46, 0.3);
-  }
+  transition: opacity 0.2s ease;
+}
+
+.interactiveIcon:hover {
+  opacity: 0.8;
+}
+
+.magnifierIcon {
+  position: absolute;
+  bottom: 2px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.chevronIcon {
+  position: absolute;
+  bottom: 2px;
+  right: -5px;
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 2px;
 }
