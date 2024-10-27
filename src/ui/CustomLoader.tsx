@@ -10,9 +10,11 @@ interface TrueVoteLoaderProps {
 export const TrueVoteLoader: React.FC<TrueVoteLoaderProps> = ({
   visible = true,
 }): React.JSX.Element => {
+  if (!visible) return <></>;
+
   return (
     <div className={classes.loaderWrapper}>
-      <LoadingOverlay visible={visible} overlayProps={{ blur: 2 }} />
+      <LoadingOverlay overlayProps={{ blur: 2 }} />
     </div>
   );
 };

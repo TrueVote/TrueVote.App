@@ -18,6 +18,7 @@ import {
   ActionIcon,
   Box,
   Button,
+  Checkbox,
   Container,
   MantineTheme,
   Modal,
@@ -50,6 +51,9 @@ export const Register: FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const clipboard: any = useClipboard({ timeout: 500 });
   const location = useLocation();
+  const [copyChecked, setCopyChecked] = useState<boolean>(false);
+  const [understandChecked, setUnderstandChecked] = useState<boolean>(false);
+  const [hasCopied, setHasCopied] = useState(false);
 
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
@@ -244,40 +248,55 @@ export const Register: FC = () => {
                   {nsec}
                 </Text>
                 <ActionIcon
-                  onClick={(): void => clipboard.copy(nsec)}
+                  onClick={(): void => {
+                    clipboard.copy(nsec);
+                    setHasCopied(true); // Set our permanent state
+                  }}
                   aria-label='Copy'
                   variant='transparent'
+                  className={hasCopied || nsecCheckbox ? '' : classes.pulseIcon} // Use our state instead
+                  style={{ marginLeft: 8 }}
                 >
-                  {clipboard.copied ? (
+                  {hasCopied ? ( // Use our state here too
                     <IconClipboardCheck size={24} />
                   ) : nsecCheckbox ? (
                     <IconCheck size={24} color='green' />
                   ) : (
                     <IconClipboardCopy size={24} />
                   )}
-                </ActionIcon>
+                </ActionIcon>{' '}
               </div>
             </span>
           </Box>
           <Box px='md'>
-            <Text
+            <Box
               style={{
                 color: 'rgb(255, 59, 48)',
                 display: 'flex',
-                alignItems: 'flex-start',
+                alignItems: 'center',
                 marginBottom: '12px',
               }}
             >
+              <Checkbox
+                checked={copyChecked}
+                onChange={(event) => setCopyChecked(event.currentTarget.checked)}
+                style={{ marginRight: '8px' }}
+              />
               <span style={{ marginRight: '8px' }}>🔑</span>
-              <span>I have copied my Nsec (Private) Key and stored it somewhere safe.</span>
-            </Text>
-            <Text style={{ color: 'rgb(255, 59, 48)', display: 'flex', alignItems: 'flex-start' }}>
+              <Text>I have copied my Nsec (Private) Key and stored it somewhere safe.</Text>
+            </Box>
+            <Box style={{ color: 'rgb(255, 59, 48)', display: 'flex', alignItems: 'center' }}>
+              <Checkbox
+                checked={understandChecked}
+                onChange={(event) => setUnderstandChecked(event.currentTarget.checked)}
+                style={{ marginRight: '8px' }}
+              />
               <span style={{ marginRight: '8px' }}>🔑</span>
-              <span>
+              <Text>
                 I understand that if I lose my Nsec (Private) Key I will lose access to my user
                 account.
-              </span>
-            </Text>
+              </Text>
+            </Box>{' '}
             <Space h='md' />
             <Slider
               size='xl'
@@ -321,7 +340,7 @@ export const Register: FC = () => {
             fullWidth
             h={60}
             size='xl'
-            disabled={!nsecCheckbox}
+            disabled={!nsecCheckbox || !copyChecked || !understandChecked}
             onClick={createProfile}
             styles={{
               label: {
@@ -348,7 +367,7 @@ export const Register: FC = () => {
         </>
       ) : (
         <>
-          <Text>If you do not have a nostr key, click below to generate one</Text>
+          <Text>If you do not have a nostr key, click below to generate one.</Text>
           <Space h='md' />
           <Button
             radius='md'
