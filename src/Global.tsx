@@ -47,7 +47,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   const [isInitialized, setIsInitialized] = useState(false);
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
   const [userModel, setUserModel] = useState<UserModel>(emptyUserModel);
-  const [localization, setLocalization] = useState<Localization>();
+  const [localization, setLocalization] = useState<Localization>(() => new Localization());
   const [accessCodes, setAccessCodes] = useState<string[]>(() => {
     const savedCodes = localStorage.getItem('accessCodes');
     return savedCodes ? JSON.parse(savedCodes) : [];
@@ -55,7 +55,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
 
   // Initialize state from localStorage and any other necessary sources
   useEffect(() => {
-    const initializeState = async () => {
+    const initializeState = async (): Promise<void> => {
       try {
         // Load access codes (already handled in useState above)
 
@@ -71,22 +71,18 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
           setNostrProfile(JSON.parse(storedNostrProfile));
         }
 
-        // Load localization if it exists
-        const storedLocalization = localStorage.getItem('localization');
-        if (storedLocalization) {
-          setLocalization(JSON.parse(storedLocalization));
-        }
-
         // Add any other initialization logic here
       } catch (error) {
         console.error('Failed to initialize state:', error);
       } finally {
-        setIsInitialized(true);
+        if (localization?.isInitialized()) {
+          setIsInitialized(true);
+        }
       }
     };
 
     initializeState();
-  }, []);
+  }, [localization]);
 
   // Persist access codes
   useEffect(() => {
@@ -107,18 +103,17 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
     }
   }, [nostrProfile]);
 
-  // Persist localization
-  useEffect(() => {
-    if (localization) {
-      localStorage.setItem('localization', JSON.stringify(localization));
-    }
-  }, [localization]);
-
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
   };
 
   const updateUserModel: (um: UserModel) => void = (um: UserModel) => {
+    if (um === emptyUserModel) {
+      localStorage.removeItem('userModel');
+      localStorage.removeItem('accessCodes');
+      localStorage.removeItem('ballotBinders');
+      localStorage.removeItem('nostrProfile');
+    }
     setUserModel(um);
   };
 
