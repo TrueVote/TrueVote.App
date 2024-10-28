@@ -20,6 +20,7 @@ export const emptyUserModel: UserModel = {
 };
 
 interface GlobalContextType {
+  isInitialized: boolean;
   nostrProfile: NostrProfile | undefined;
   userModel: UserModel | undefined;
   localization: Localization | undefined;
@@ -43,6 +44,7 @@ interface GlobalProviderProps {
 export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   children,
 }: GlobalProviderProps) => {
+  const [isInitialized, setIsInitialized] = useState(false);
   const [nostrProfile, setNostrProfile] = useState<NostrProfile>(emptyNostrProfile);
   const [userModel, setUserModel] = useState<UserModel>(emptyUserModel);
   const [localization, setLocalization] = useState<Localization>();
@@ -50,9 +52,67 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
     const savedCodes = localStorage.getItem('accessCodes');
     return savedCodes ? JSON.parse(savedCodes) : [];
   });
+
+  // Initialize state from localStorage and any other necessary sources
+  useEffect(() => {
+    const initializeState = async () => {
+      try {
+        // Load access codes (already handled in useState above)
+
+        // Load user model if it exists
+        const storedUser = localStorage.getItem('userModel');
+        if (storedUser) {
+          setUserModel(JSON.parse(storedUser));
+        }
+
+        // Load nostr profile if it exists
+        const storedNostrProfile = localStorage.getItem('nostrProfile');
+        if (storedNostrProfile) {
+          setNostrProfile(JSON.parse(storedNostrProfile));
+        }
+
+        // Load localization if it exists
+        const storedLocalization = localStorage.getItem('localization');
+        if (storedLocalization) {
+          setLocalization(JSON.parse(storedLocalization));
+        }
+
+        // Add any other initialization logic here
+      } catch (error) {
+        console.error('Failed to initialize state:', error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    initializeState();
+  }, []);
+
+  // Persist access codes
   useEffect(() => {
     localStorage.setItem('accessCodes', JSON.stringify(accessCodes));
   }, [accessCodes]);
+
+  // Persist user model
+  useEffect(() => {
+    if (userModel !== emptyUserModel) {
+      localStorage.setItem('userModel', JSON.stringify(userModel));
+    }
+  }, [userModel]);
+
+  // Persist nostr profile
+  useEffect(() => {
+    if (nostrProfile !== emptyNostrProfile) {
+      localStorage.setItem('nostrProfile', JSON.stringify(nostrProfile));
+    }
+  }, [nostrProfile]);
+
+  // Persist localization
+  useEffect(() => {
+    if (localization) {
+      localStorage.setItem('localization', JSON.stringify(localization));
+    }
+  }, [localization]);
 
   const updateNostrProfile: (np: NostrProfile) => void = (np: NostrProfile) => {
     setNostrProfile(np);
@@ -91,6 +151,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({
   return (
     <GlobalContext.Provider
       value={{
+        isInitialized,
         nostrProfile,
         updateNostrProfile,
         userModel,
