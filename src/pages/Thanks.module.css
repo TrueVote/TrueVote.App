@@ -1,0 +1,40 @@
+.checkIcon {
+  background-color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-8));
+  color: var(--mantine-color-white);
+}
+
+.mainText {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
+}
+
+.confirmationBox {
+  background-color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-9));
+  color: var(--mantine-color-white);
+}
+
+.trackingBox {
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.labelText {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
+}
+
+.trackingButton {
+  background-color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-8));
+  color: var(--mantine-color-white);
+}
+
+.trackingButton:hover {
+  background-color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-9));
+}
+
+.shareButton {
+  background-color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-8));
+  color: var(--mantine-color-white);
+}
+
+.shareButton:hover {
+  background-color: light-dark(var(--mantine-color-green-7), var(--mantine-color-green-9));
+}
