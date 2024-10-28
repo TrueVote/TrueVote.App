@@ -9,6 +9,7 @@ import { BallotBinderStorage } from '@/services/BallotBinder';
 import { electionDetailsByIdQuery } from '@/services/GraphQLSchemas';
 import { DBSubmitBallot } from '@/services/RESTDataClient';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
+import { ErrorModal } from '@/ui/ErrorModal';
 import { formatErrorObject, objectDifference } from '@/ui/Helpers';
 import { Hero } from '@/ui/Hero';
 import { Race } from '@/ui/Race';
@@ -23,7 +24,6 @@ import {
   Flex,
   Group,
   Image,
-  Modal,
   rem,
   Text,
   TextInput,
@@ -214,15 +214,12 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
         Complete your ballot below
       </Title>
       <Card shadow='sm' p='lg' radius='md' withBorder>
-        <Modal
-          centered
-          withCloseButton={true}
-          title='Ballot Submission Error'
+        <ErrorModal
+          visible={opened}
           onClose={(): void => setOpened(false)}
-          opened={opened}
-        >
-          <Text style={{ whiteSpace: 'pre-wrap' }}>Error: {errorMessage}</Text>
-        </Modal>
+          text={errorMessage}
+          title='Ballot Submission Error'
+        />
         <HeaderImage election={election} />
         <Text size='xl'>{election.Name}</Text>
         <Group mt='md' mb='xs'>

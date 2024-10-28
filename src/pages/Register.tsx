@@ -11,6 +11,7 @@ import { jwtSignOut, storeJwt } from '@/services/RESTDataClient';
 import * as settings from '@/settings.json';
 import { SecureString } from '@/TrueVote.Api';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
+import { ErrorModal } from '@/ui/ErrorModal';
 import { Hero } from '@/ui/Hero';
 import { NpubView } from '@/ui/NpubView';
 import classes from '@/ui/shell/AppStyles.module.css';
@@ -21,7 +22,6 @@ import {
   Checkbox,
   Container,
   MantineTheme,
-  Modal,
   rem,
   Slider,
   Space,
@@ -134,15 +134,12 @@ export const Register: FC = () => {
       <Stack gap={32}>
         <Hero title='Register' />
       </Stack>
-      <Modal
-        centered
-        withCloseButton={true}
-        title='Register Error'
+      <ErrorModal
+        visible={opened}
         onClose={(): void => setOpened(false)}
-        opened={opened}
-      >
-        <Text>Error: {errorMessage}</Text>
-      </Modal>
+        text={errorMessage}
+        title='Register Error'
+      />
       {nostrProfile !== null &&
       nostrProfile !== undefined &&
       String(nostrProfile?.npub).length > 0 ? (

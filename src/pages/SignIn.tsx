@@ -15,18 +15,10 @@ import * as settings from '@/settings.json';
 import { BaseUserModel, SecureString, SignInEventModel, SignInResponse } from '@/TrueVote.Api';
 import { NostrKind } from '@/TrueVote.Api.ManualModels';
 import { TrueVoteLoader } from '@/ui/CustomLoader';
+import { ErrorModal } from '@/ui/ErrorModal';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
-import {
-  Button,
-  Container,
-  HoverCard,
-  Modal,
-  PasswordInput,
-  Space,
-  Stack,
-  Text,
-} from '@mantine/core';
+import { Button, Container, HoverCard, PasswordInput, Space, Stack, Text } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
 import { Link, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
@@ -140,15 +132,12 @@ export const SignIn: FC = () => {
       <Stack gap={32}>
         <Hero title='Sign In' />
       </Stack>
-      <Modal
-        centered
-        withCloseButton={true}
-        title='Sign In Error'
+      <ErrorModal
+        visible={opened}
         onClose={(): void => setOpened(false)}
-        opened={opened}
-      >
-        <Text>Error: {errorMessage}</Text>
-      </Modal>
+        text={errorMessage}
+        title='Sign In Error'
+      />
       {nostrProfile === null || String(nostrProfile?.npub).length === 0 ? (
         <>
           <Text>
