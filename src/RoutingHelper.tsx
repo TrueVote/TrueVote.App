@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Link, NavLink, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { emptyUserModel, useGlobalContext } from './Global';
+import { TrueVoteLoader } from './ui/CustomLoader';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -11,9 +12,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }: {
   children: ReactNode;
 }) => {
-  const { userModel } = useGlobalContext();
+  const { userModel, isInitialized } = useGlobalContext();
   const location = useLocation();
   console.info('location', location);
+  console.info('isInitialized', isInitialized);
+
+  if (!isInitialized) {
+    return <TrueVoteLoader />;
+  }
 
   if (userModel === emptyUserModel) {
     return <Navigate to='/register' state={{ from: location }} replace />;

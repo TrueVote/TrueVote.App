@@ -536,3 +536,24 @@
     opacity: 1;
   }
 }
+
+.accessIcon {
+  display: inline-block;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  vertical-align: middle;
+}
+
+.accessTitle {
+  font-size: 1rem;
+  color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-8));
+}
+
+.accessInput {
+  margin-top: 0.25rem;
+}
+
+.accessHelpText {
+  margin-top: 0.1rem;
+  font-size: 0.675rem;
+}

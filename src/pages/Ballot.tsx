@@ -29,7 +29,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { IconListCheck } from '@tabler/icons-react';
+import { IconKey, IconListCheck } from '@tabler/icons-react';
 import _ from 'lodash';
 import moment from 'moment';
 import { FC, useEffect, useState } from 'react';
@@ -236,20 +236,23 @@ const Election: FC<ElectionProps> = ({ election, electionBallot, navigate, acces
           {election.Description}
         </Text>
         <Box className={classes.boxGap} />
-        <Card.Section>
-          <Card className={classes.cardWide} shadow='sm' p='xs' radius='lg' withBorder>
-            <div className={classes.flexShell}>
-              <TextInput
-                leftSection={listCheckIcon}
-                maxLength={16}
-                placeholder='Election Access Code'
-                value={accessCode}
-                width='100px'
-                onChange={(event) => setAccessCode(event.currentTarget.value)}
-              />
-            </div>
-          </Card>
-        </Card.Section>
+        <Card withBorder padding='md'>
+          <div>
+            <IconKey className={classes.accessIcon} size={20} stroke={1.5} />
+            <span className={classes.accessTitle}>Enter Your Access Code:</span>
+            <TextInput
+              leftSection={listCheckIcon}
+              maxLength={16}
+              placeholder='Type / Paste your EAC here'
+              value={accessCode}
+              onChange={(event) => setAccessCode(event.currentTarget.value)}
+              className={classes.accessInput}
+            />
+            <p className={classes.accessHelpText}>
+              Enter the access code provided to authorize ballot submission
+            </p>
+          </div>
+        </Card>
         <Box className={classes.boxGap} />
         <Card.Section>
           <Flex
