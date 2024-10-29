@@ -52,7 +52,7 @@ export const Home: FC = () => {
           <Group gap='md' grow className={classes.homeButtons}>
             <Button
               leftSection={<IconUserPlus />}
-              className={`${classes.profileButton} ${classes.primaryGreenBackgroundColor}`}
+              className={`${classes.primaryGreenBackgroundColor}`}
               radius='md'
               variant='filled'
               onClick={(): void => navigate('/register')}
@@ -66,7 +66,7 @@ export const Home: FC = () => {
             </Button>
             <Button
               leftSection={<IconLogin />}
-              className={`${classes.profileButton} ${classes.primaryPurpleBackgroundColor}`}
+              className={`${classes.primaryPurpleBackgroundColor}`}
               radius='md'
               variant='filled'
               onClick={(): void => navigate('/signin')}

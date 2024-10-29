@@ -31,7 +31,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
-import { IconCheck, IconClipboardCheck, IconClipboardCopy } from '@tabler/icons-react';
+import { IconCheck, IconClipboardCheck, IconClipboardCopy, IconLogout } from '@tabler/icons-react';
 import { FC, useState } from 'react';
 import { Link, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { signInWithNostr } from './SignIn';
@@ -149,10 +149,16 @@ export const Register: FC = () => {
           <Text>Click below for sign out page.</Text>
           <Space h='md' />
           <Button
+            leftSection={<IconLogout />}
+            className={`${classes.primaryPurpleBackgroundColor}`}
             radius='md'
-            color='green'
-            variant='light'
+            variant='filled'
             onClick={(): void => navigate('/signout')}
+            styles={{
+              root: {
+                color: 'white',
+              },
+            }}
           >
             Sign Out
           </Button>
