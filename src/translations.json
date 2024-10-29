@@ -5,8 +5,8 @@
     "VOTEONPHONEORCOMPUTER": "Vote on your phone or desktop computer",
     "REVIEWRESULTS": "Review the results in real-time or when the election window closes",
     "WELCOME": "Welcome",
-    "COPYRIGHT": "Copyright",
-    "VERSION": "Version"
+    "COPYRIGHT": "© 2024 TrueVote, Inc.",
+    "VERSION": "Version 0.9 Alpha"
   },
   "es": {
     "HOME": "Hogar",
@@ -14,8 +14,8 @@
     "VOTEONPHONEORCOMPUTER": "Vota desde tu teléfono o computadora de escritorio",
     "REVIEWRESULTS": "Revise los resultados en tiempo real o cuando se cierre la ventana electoral",
     "WELCOME": "Bienvenido",
-    "COPYRIGHT": "Derechos de autor",
-    "VERSION": "Versión"
+    "COPYRIGHT": "© 2024 TrueVote, Inc.",
+    "VERSION": "Versión 0.9 Alpha"
   },
   "fr": {
     "HOME": "Maison",
@@ -23,8 +23,8 @@
     "VOTEONPHONEORCOMPUTER": "Votez sur votre téléphone ou votre ordinateur de bureau",
     "REVIEWRESULTS": "Consultez les résultats en temps réel ou à la fermeture de la fenêtre électorale",
     "WELCOME": "Bienvenue",
-    "COPYRIGHT": "droits d'auteur",
-    "VERSION": "Version"
+    "COPYRIGHT": "© 2024 TrueVote, Inc.",
+    "VERSION": "Version 0.9 Alpha"
   },
   "ru": {
     "HOME": "Дом",
@@ -32,8 +32,8 @@
     "VOTEONPHONEORCOMPUTER": "Голосуйте на своем телефоне или настольном компьютере",
     "REVIEWRESULTS": "Просматривайте результаты в режиме реального времени или когда окно выборов закроется",
     "WELCOME": "Добро пожаловать",
-    "COPYRIGHT": "Авторские права",
-    "VERSION": "Версия"
+    "COPYRIGHT": "© 2024 TrueVote, Inc.",
+    "VERSION": "Версия 0.9 Alpha"
   },
   "zh": {
     "HOME": "家",
@@ -41,8 +41,8 @@
     "VOTEONPHONEORCOMPUTER": "在手机或台式电脑上投票",
     "REVIEWRESULTS": "实时或在选举窗口关闭时查看结果",
     "WELCOME": "欢迎",
-    "COPYRIGHT": "版权",
-    "VERSION": "版本"
+    "COPYRIGHT": "© 2024 TrueVote, Inc.",
+    "VERSION": "版本 0.9 Alpha"
   },
   "ar": {
     "HOME": "الصفحة الرئيسية",
@@ -50,7 +50,7 @@
     "VOTEONPHONEORCOMPUTER": "التصويت على هاتفك أو جهاز الكمبيوتر المكتبي",
     "REVIEWRESULTS": "قم بمراجعة النتائج في الوقت الفعلي أو عند إغلاق نافذة الانتخابات",
     "WELCOME": "مرحباً",
-    "COPYRIGHT": "حقوق النشر",
-    "VERSION": "إصدار"
+    "COPYRIGHT": "© 2024 TrueVote, Inc.",
+    "VERSION": "الإصدار 0.9 Alpha"
   }
 }
