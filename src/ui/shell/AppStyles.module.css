@@ -352,7 +352,7 @@
 
 .profileImageDiv,
 .voterImageDiv,
-.wideLogoImageeDiv,
+.wideLogoImageDiv,
 .homeLogoDiv {
   align-items: center;
   display: flex;
@@ -415,7 +415,7 @@
     url('/static/TrueVote_Logo_Text_Light.svg'),
     url('/static/TrueVote_Logo_Text.svg')
   );
-  width: 350px;
+  max-height: 70px;
 }
 
 .chartsImage {
