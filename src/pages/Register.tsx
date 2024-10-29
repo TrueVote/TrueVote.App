@@ -21,6 +21,7 @@ import {
   Button,
   Checkbox,
   Container,
+  List,
   MantineTheme,
   rem,
   Slider,
@@ -31,7 +32,15 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
-import { IconCheck, IconClipboardCheck, IconClipboardCopy, IconLogout } from '@tabler/icons-react';
+import { modals } from '@mantine/modals';
+import {
+  IconCheck,
+  IconClipboardCheck,
+  IconClipboardCopy,
+  IconFileDownload,
+  IconLogout,
+} from '@tabler/icons-react';
+import { jsPDF } from 'jspdf';
 import { FC, useState } from 'react';
 import { Link, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { signInWithNostr } from './SignIn';
@@ -54,6 +63,10 @@ export const Register: FC = () => {
   const [copyChecked, setCopyChecked] = useState<boolean>(false);
   const [understandChecked, setUnderstandChecked] = useState<boolean>(false);
   const [hasCopied, setHasCopied] = useState(false);
+  const isSafariOniOS =
+    /iPhone|iPad|iPod/i.test(navigator.userAgent) &&
+    /WebKit/i.test(navigator.userAgent) &&
+    !/(CriOS|FxiOS|OPiOS|mercury)/i.test(navigator.userAgent);
 
   const errorModal: any = (e: any) => {
     setErrorMessage(String(e));
@@ -124,6 +137,69 @@ export const Register: FC = () => {
       </Text>
     </>
   );
+
+  const saveToPDF = (): void => {
+    const doc = new jsPDF();
+    const filename = 'truevote-key-backup.pdf';
+
+    // Add TrueVote branding/header
+    doc.setFontSize(20);
+    doc.text('TrueVote Key Backup', 20, 20);
+
+    // Add warning
+    doc.setFontSize(12);
+    doc.text('IMPORTANT: Store this PDF in a secure location', 20, 40);
+
+    // Add keys
+    doc.text('Public Key (npub):', 20, 60);
+    doc.text(npub!, 20, 70, { maxWidth: 170 });
+
+    doc.text('Private Key (nsec):', 20, 90);
+    doc.text(nsec!, 20, 100, { maxWidth: 170 });
+
+    if (isSafariOniOS) {
+      modals.open({
+        title: 'Save Your Key Backup',
+        centered: true,
+        size: 'lg',
+        children: (
+          <Stack>
+            <Text>After tapping the button below:</Text>
+            <List>
+              <List.Item>The PDF will open in a new tab</List.Item>
+              <List.Item>Tap the Share icon</List.Item>
+              <List.Item>Select &quot;Save to Files&quot;</List.Item>
+              <List.Item>Choose a secure location</List.Item>
+              <List.Item>Tap &quot;Save&quot;</List.Item>
+              <List.Item>
+                Note: The file will be named &quot;unknown.pdf&quot; - you can rename it after
+                saving
+              </List.Item>
+            </List>
+            <Button
+              onClick={() => {
+                const pdfBlob = doc.output('blob');
+                const blobUrl = URL.createObjectURL(
+                  new Blob([pdfBlob], { type: 'application/pdf' }),
+                );
+                window.open(blobUrl, '_blank');
+                modals.closeAll();
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+              }}
+              fullWidth
+              size='lg'
+              mt='md'
+            >
+              Open PDF
+            </Button>
+          </Stack>
+        ),
+        withCloseButton: true,
+      });
+    } else {
+      doc.save(filename);
+    }
+  };
 
   if (loading) {
     return <TrueVoteLoader />;
@@ -276,6 +352,23 @@ export const Register: FC = () => {
             </span>
           </Box>
           <Box px='md'>
+            <Button
+              leftSection={<IconFileDownload size={24} />}
+              variant='light'
+              color='blue'
+              fullWidth
+              h={60}
+              size='xl'
+              onClick={saveToPDF}
+              styles={{
+                label: {
+                  fontSize: 24, // Slightly smaller than Generate Profile button
+                },
+              }}
+            >
+              {isSafariOniOS ? 'Save Key Backup (Share → Save to Files)' : 'Save Key Backup PDF'}
+            </Button>
+            <Space h='md' />{' '}
             <Box
               style={{
                 color: 'rgb(255, 59, 48)',
@@ -290,7 +383,7 @@ export const Register: FC = () => {
                 style={{ marginRight: '8px' }}
               />
               <span style={{ marginRight: '8px' }}>🔑</span>
-              <Text>I have copied my Nsec (Private) Key and stored it somewhere safe.</Text>
+              <Text>I have copied/saved my Nsec (Private) Key and stored it somewhere safe.</Text>
             </Box>
             <Box style={{ color: 'rgb(255, 59, 48)', display: 'flex', alignItems: 'center' }}>
               <Checkbox

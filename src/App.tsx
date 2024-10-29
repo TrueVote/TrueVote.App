@@ -12,6 +12,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { Loader, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
+import { ModalsProvider } from '@mantine/modals';
 import { createClient } from 'graphql-ws';
 import { FC } from 'react';
 import { BrowserRouter } from 'react-router-dom';
@@ -117,7 +118,9 @@ export const App: FC = () => {
           }}
         >
           <AppLaunchModal />
-          <BrowserRouter>{ROUTES}</BrowserRouter>
+          <ModalsProvider>
+            <BrowserRouter>{ROUTES}</BrowserRouter>
+          </ModalsProvider>
         </MantineProvider>
       </GlobalProvider>
     </ApolloProvider>
