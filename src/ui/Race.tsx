@@ -92,6 +92,21 @@ const RaceGroup: React.FC<{
     }
   };
 
+  const handleCellClick = (candidate: CandidateModel): void => {
+    if (race.RaceType.toString() === RaceTypes.ChooseOne) {
+      setVal(candidate, true);
+      handleChange([candidate.Name]);
+    } else {
+      const newValue = !candidate.Selected;
+      setVal(candidate, newValue);
+      if (newValue) {
+        handleChange([...values, candidate.Name]);
+      } else {
+        handleChange(values.filter((v) => v !== candidate.Name));
+      }
+    }
+  };
+
   const renderCandidateRow = (candidate: CandidateModel): JSX.Element => (
     <Table key={candidate.CandidateId} verticalSpacing='xs' className={classes.tableCandidate}>
       <Table.Tbody>
@@ -114,11 +129,15 @@ const RaceGroup: React.FC<{
             )}
           </Table.Td>
           {avatarCount > 0 && (
-            <Table.Td className={classes.tdCandidate} width='30px'>
+            <Table.Td
+              className={classes.tdCandidate}
+              width='30px'
+              onClick={() => handleCellClick(candidate)}
+            >
               <Avatar size='lg' className={classes.avatarImage} src={candidate.CandidateImageUrl} />
             </Table.Td>
           )}
-          <Table.Td>
+          <Table.Td onClick={() => handleCellClick(candidate)}>
             <Text className={classes.mediumText}>{formatCandidateName(candidate)}</Text>
           </Table.Td>
         </Table.Tr>
