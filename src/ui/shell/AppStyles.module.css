@@ -3,6 +3,22 @@
   z-index: 1;
 }
 
+.primaryPurpleBackgroundColor {
+  background-color: #7793d8;
+}
+
+.primaryPurpleBackgroundColor:hover {
+  background-color: #5f77bd !important;
+}
+
+.primaryGreenBackgroundColor {
+  background-color: #34a26b;
+}
+
+.primaryGreenBackgroundColor:hover {
+  background-color: #2a8255 !important;
+}
+
 .flexShell {
   align-self: flex-start;
   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
@@ -359,7 +375,7 @@
 }
 
 .profileButton {
-  width: 200px;
+  width: 160px;
 }
 
 .electionHeaderImage {
@@ -395,7 +411,10 @@
 }
 
 .wideLogoImage {
-  content: url('/static/TrueVote_Logo_Text.svg');
+  content: light-dark(
+    url('/static/TrueVote_Logo_Text_Light.svg'),
+    url('/static/TrueVote_Logo_Text.svg')
+  );
   width: 350px;
 }
 
@@ -578,4 +597,8 @@
   color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-0));
   border-bottom: 2px solid light-dark(var(--mantine-color-blue-3), var(--mantine-color-blue-8));
   padding-bottom: var(--mantine-spacing-xs);
+}
+
+.homeButtons {
+  padding: 5px;
 }
