@@ -1,9 +1,9 @@
-import { useGlobalContext } from '@/Global';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Anchor, AppShell, Container, Text } from '@mantine/core';
 import { FC } from 'react';
 
 export const AppFooter: FC = () => {
+  /*
   const { localization, isInitialized } = useGlobalContext();
 
   const getLocalizedString = (key: string, fallback: string): string => {
@@ -28,18 +28,22 @@ export const AppFooter: FC = () => {
     }
   };
 
+  TODO: Fix this:   <Text size='xs'>{getLocalizedString('COPYRIGHT', '© 2024 TrueVote, Inc.')}</Text>
+  TODO: Fix this:   <Text size='xs'>{getLocalizedString('VERSION', 'Version 0.9 Alpha')}</Text>
+  */
+
   return (
     <AppShell.Footer>
       <Container fluid className={classes.footer}>
         <Anchor href='//truevote.org' className={classes.link} target='_blank'>
-          <Text size='xs'>{getLocalizedString('COPYRIGHT', '© 2024 TrueVote, Inc.')}</Text>
+          <Text size='xs'>Copyright © 2024 TrueVote, Inc.</Text>
         </Anchor>
         <Anchor
           href='//github.com/TrueVote/TrueVote.App/releases'
           className={classes.link}
           target='_blank'
         >
-          <Text size='xs'>{getLocalizedString('VERSION', 'Version 0.9 Alpha')}</Text>
+          <Text size='xs'>Version 0.9 Alpha</Text>
         </Anchor>
       </Container>
     </AppShell.Footer>
