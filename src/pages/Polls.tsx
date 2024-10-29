@@ -9,7 +9,7 @@ export const Polls: FC = () => {
       <Stack gap={32}>
         <Hero title='Polls' />
       </Stack>
-      <Text size='lg'>No Polls Found</Text>
+      <Text size='lg'>Polls - Coming soon!</Text>
     </Container>
   );
 };
