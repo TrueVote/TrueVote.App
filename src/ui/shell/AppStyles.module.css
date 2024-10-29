@@ -336,6 +336,7 @@
 
 .profileImageDiv,
 .voterImageDiv,
+.wideLogoImageeDiv,
 .homeLogoDiv {
   align-items: center;
   display: flex;
@@ -390,6 +391,11 @@
 
 .voterImage {
   content: url('/static/iStock-1421023235.png');
+  width: 350px;
+}
+
+.wideLogoImage {
+  content: url('/static/TrueVote_Logo_Text.svg');
   width: 350px;
 }
 
@@ -556,4 +562,20 @@
 .accessHelpText {
   margin-top: 0.1rem;
   font-size: 0.675rem;
+}
+
+.sloganPaper {
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-dark-6));
+  border: 2px solid light-dark(var(--mantine-color-blue-3), var(--mantine-color-dark-4));
+}
+
+.sectionPaper {
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.sectionTitle {
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-0));
+  border-bottom: 2px solid light-dark(var(--mantine-color-blue-3), var(--mantine-color-blue-8));
+  padding-bottom: var(--mantine-spacing-xs);
 }
