@@ -25,7 +25,7 @@ import {
   IconInfoCircle,
   IconUser,
 } from '@tabler/icons-react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
 import { signInWithNostr } from '../../pages/SignIn';
 import { LanguageSwitcher } from '../LanguageSwitcher';
@@ -37,6 +37,33 @@ export const AppHeader: FC = () => {
   const { updateUserModel } = useGlobalContext();
   const { localization, updateLocalization } = useGlobalContext();
   const [fetched, setFetched] = useState(false);
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const burgerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      // Check if the click was outside both the menu and the burger button
+      if (
+        menuRef.current &&
+        burgerRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        !burgerRef.current.contains(event.target as Node)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    // Add event listener when menu is open
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Cleanup
+    return (): void => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (localization === undefined) {
@@ -139,22 +166,20 @@ export const AppHeader: FC = () => {
     },
   ];
   const [, toggle] = useToggle();
-  const [isMenuOpen, setMenuOpen] = useState(false);
 
-  const handleMenuToggle: any = (): any => {
+  const handleMenuToggle = (): void => {
     setMenuOpen(!isMenuOpen);
   };
 
-  const handleCloseMenu: any = (): any => {
-    setMenuOpen(false);
-  };
-
-  const renderMenuItem = (link: LinkType): any => {
+  const renderMenuItem = (link: LinkType): JSX.Element => {
     const Icon = link.icon;
     const commonProps = {
       to: link.link,
-      className: `${classes.link} inline-flex items-center relative`, // added relative
-      onClick: (): void => toggle(false),
+      className: `${classes.link} inline-flex items-center relative`,
+      onClick: (): void => {
+        toggle(false);
+        setMenuOpen(false);
+      },
     };
 
     const iconElement = (
@@ -218,16 +243,17 @@ export const AppHeader: FC = () => {
             aria-label='Toggle navigation'
             size='sm'
             className={classes.burger}
+            ref={burgerRef}
           />
         </Group>
 
         <Transition transition='pop-top-right' duration={200} mounted={isMenuOpen}>
           {(styles: MantineStyleProp): JSX.Element => (
             <Paper
+              ref={menuRef}
               className={`${classes.dropdown} bg-white dark:bg-gray-900 shadow-lg`}
               withBorder
               style={styles}
-              onClick={handleCloseMenu}
             >
               <Box className='p-2 space-y-1'>{items}</Box>
             </Paper>

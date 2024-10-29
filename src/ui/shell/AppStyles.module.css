@@ -3,6 +3,44 @@
   z-index: 1;
 }
 
+.primaryPurpleBackgroundColor {
+  background-color: #7793d8;
+}
+
+.primaryPurpleBackgroundColor:hover {
+  background-color: #5f77bd !important;
+}
+
+.primaryPurpleBackgroundColor:disabled {
+  background-color: #b3c0e6;
+  color: #8e98b3;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.primaryPurpleBackgroundColor:disabled:hover {
+  background-color: #b3c0e6 !important;
+}
+
+.primaryGreenBackgroundColor {
+  background-color: #34a26b;
+}
+
+.primaryGreenBackgroundColor:hover {
+  background-color: #2a8255 !important;
+}
+
+.primaryGreenBackgroundColor:disabled {
+  background-color: #9ac7b1;
+  color: #7a9e8c;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.primaryGreenBackgroundColor:disabled:hover {
+  background-color: #9ac7b1 !important;
+}
+
 .flexShell {
   align-self: flex-start;
   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
@@ -336,6 +374,7 @@
 
 .profileImageDiv,
 .voterImageDiv,
+.wideLogoImageDiv,
 .homeLogoDiv {
   align-items: center;
   display: flex;
@@ -358,7 +397,7 @@
 }
 
 .profileButton {
-  width: 200px;
+  min-width: 300px;
 }
 
 .electionHeaderImage {
@@ -391,6 +430,14 @@
 .voterImage {
   content: url('/static/iStock-1421023235.png');
   width: 350px;
+}
+
+.wideLogoImage {
+  content: light-dark(
+    url('/static/TrueVote_Logo_Text_Light.svg'),
+    url('/static/TrueVote_Logo_Text.svg')
+  );
+  max-height: 70px;
 }
 
 .chartsImage {
@@ -556,4 +603,24 @@
 .accessHelpText {
   margin-top: 0.1rem;
   font-size: 0.675rem;
+}
+
+.sloganPaper {
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-dark-6));
+  border: 2px solid light-dark(var(--mantine-color-blue-3), var(--mantine-color-dark-4));
+}
+
+.sectionPaper {
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.sectionTitle {
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-0));
+  border-bottom: 2px solid light-dark(var(--mantine-color-blue-3), var(--mantine-color-blue-8));
+  padding-bottom: var(--mantine-spacing-xs);
+}
+
+.homeButtons {
+  padding: 5px;
 }

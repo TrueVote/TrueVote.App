@@ -5,6 +5,7 @@ import { Hero } from '@/ui/Hero';
 import { NpubView } from '@/ui/NpubView';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Space, Stack, Text } from '@mantine/core';
+import { IconLogout } from '@tabler/icons-react';
 import { FC } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
@@ -37,7 +38,18 @@ export const SignOut: FC = () => {
           <NpubView npub={nostrProfile.npub} />
           <Text>Click below to sign out.</Text>
           <Space h='md' />
-          <Button radius='md' color='green' variant='light' onClick={signOutClick}>
+          <Button
+            leftSection={<IconLogout />}
+            className={`${classes.primaryPurpleBackgroundColor}`}
+            radius='md'
+            variant='filled'
+            onClick={signOutClick}
+            styles={{
+              root: {
+                color: 'white',
+              },
+            }}
+          >
             Sign Out
           </Button>
         </>

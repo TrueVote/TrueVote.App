@@ -19,6 +19,7 @@ import { ErrorModal } from '@/ui/ErrorModal';
 import { Hero } from '@/ui/Hero';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, HoverCard, PasswordInput, Space, Stack, Text } from '@mantine/core';
+import { IconLogin } from '@tabler/icons-react';
 import { FC, useEffect, useState } from 'react';
 import { Link, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
@@ -159,7 +160,19 @@ export const SignIn: FC = () => {
             <Text c='red'>{error}</Text>
             <Text c='green'>{message}</Text>
           </Space>
-          <Button radius='md' color='green' variant='light' disabled={!valid} onClick={signInClick}>
+          <Button
+            leftSection={<IconLogin />}
+            className={`${classes.primaryPurpleBackgroundColor}`}
+            radius='md'
+            variant='filled'
+            disabled={!valid}
+            onClick={signInClick}
+            styles={{
+              root: {
+                color: 'white',
+              },
+            }}
+          >
             Sign In
           </Button>
         </>

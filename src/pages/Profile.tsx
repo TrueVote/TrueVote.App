@@ -6,7 +6,7 @@ import { Hero } from '@/ui/Hero';
 import { Preferences } from '@/ui/Preferences';
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Button, Container, Image, Space, Stack, Table, Text } from '@mantine/core';
-import { IconLogin, IconUserPlus } from '@tabler/icons-react';
+import { IconLogin, IconLogout, IconUserPlus } from '@tabler/icons-react';
 import { FC } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
@@ -88,10 +88,16 @@ const LoadProfile: any = () => {
           <Preferences />
           <Space h='md' />
           <Button
+            leftSection={<IconLogout />}
+            className={`${classes.primaryPurpleBackgroundColor}`}
             radius='md'
-            color='blue'
-            variant='light'
+            variant='filled'
             onClick={(): void => navigate('/signout')}
+            styles={{
+              root: {
+                color: 'white',
+              },
+            }}
           >
             Sign Out
           </Button>
@@ -102,22 +108,30 @@ const LoadProfile: any = () => {
             <Text size='md'>To get started with a new nostr account for TrueVote, Register</Text>
             <Button
               leftSection={<IconUserPlus />}
-              className={classes.profileButton}
+              className={`${classes.profileButton} ${classes.primaryGreenBackgroundColor}`}
               radius='md'
-              color='blue'
-              variant='light'
+              variant='filled'
               onClick={(): void => navigate('/register')}
+              styles={{
+                root: {
+                  color: 'white',
+                },
+              }}
             >
               Register
             </Button>
             <Text size='md'>Sign In if you have an existing nostr account</Text>
             <Button
               leftSection={<IconLogin />}
-              className={classes.profileButton}
+              className={`${classes.profileButton} ${classes.primaryPurpleBackgroundColor}`}
               radius='md'
-              color='blue'
-              variant='light'
+              variant='filled'
               onClick={(): void => navigate('/signin')}
+              styles={{
+                root: {
+                  color: 'white',
+                },
+              }}
             >
               Sign In
             </Button>
