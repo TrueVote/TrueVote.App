@@ -21,6 +21,7 @@ interface Props {
   candidates: CandidateModel[] | null;
   avatarCount: number;
   maxChoices: number;
+  minChoices: number;
   onSelectionChange: () => void;
   resetTrigger: number;
 }
@@ -69,6 +70,7 @@ export const RankedChoiceList: React.FC<Props> = ({
   candidates,
   avatarCount,
   maxChoices,
+  minChoices,
   onSelectionChange,
   resetTrigger,
 }: Props) => {
@@ -190,15 +192,24 @@ export const RankedChoiceList: React.FC<Props> = ({
                 <Divider
                   label={
                     <Group gap='xs'>
-                      <Text>Selected</Text>
+                      <Text>
+                        Selected ({selectedState.length}/{maxChoices})
+                      </Text>
                       {isDragging && dragSource === 'notSelected' && !isMaxSelected && (
                         <Text size='sm' color='dimmed'>
                           Drop here to select
                         </Text>
                       )}
+                      {selectedState.length < minChoices && (
+                        <Text size='sm' c='yellow'>
+                          {minChoices - selectedState.length} more{' '}
+                          {minChoices - selectedState.length === 1 ? 'selection' : 'selections'}{' '}
+                          required
+                        </Text>
+                      )}
                       {isMaxSelected && (
                         <Text size='sm' color='red'>
-                          Maximum {maxChoices} selections
+                          Maximum {maxChoices} {maxChoices === 1 ? 'selection' : 'selections'}
                         </Text>
                       )}
                     </Group>
@@ -275,7 +286,7 @@ export const RankedChoiceList: React.FC<Props> = ({
                   color='pink'
                   style={{ flexGrow: 1 }}
                 />
-              </Group>{' '}
+              </Group>
               <Space h='md' />
               {notSelectedState.map((candidate: CandidateModel, index: number) => (
                 <Draggable
