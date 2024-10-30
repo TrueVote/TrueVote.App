@@ -7,10 +7,12 @@
   padding-left: calc(var(--mantine-spacing-xl) - var(--mantine-spacing-md));
   background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-5));
   margin-bottom: var(--mantine-spacing-sm);
+  transition: all 200ms ease;
 }
 
 .itemDragging {
   box-shadow: var(--mantine-shadow-sm);
+  transform: scale(1.02);
 }
 
 .dragHandle {
@@ -20,7 +22,7 @@
   height: 100%;
   color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
   padding-left: 0px;
-  padding-right: 0px;
+  padding-right: var(--mantine-spacing-md);
 }
 
 .rank {
@@ -30,5 +32,15 @@
 }
 
 .selectedDroppable {
-  opacity: 0.1;
+  opacity: 0.5;
+}
+
+.dropZone {
+  min-height: 100px;
+  transition: all 200ms ease;
+}
+
+.dropZoneActive {
+  border: 2px dashed var(--mantine-color-blue-4);
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-9-alpha-10));
 }
