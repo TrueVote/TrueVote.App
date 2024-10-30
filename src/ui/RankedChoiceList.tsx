@@ -9,9 +9,9 @@ import {
   Droppable,
   DroppableProvided,
 } from '@hello-pangea/dnd';
-import { Avatar, Divider, Space, Table, Text } from '@mantine/core';
+import { Avatar, Box, Divider, Group, Space, Table, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
-import { IconGripVertical } from '@tabler/icons-react';
+import { IconArrowUp, IconGripVertical } from '@tabler/icons-react';
 import cx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { formatCandidateName } from './Helpers';
@@ -21,6 +21,7 @@ interface Props {
   candidates: CandidateModel[] | null;
   avatarCount: number;
   maxChoices: number;
+  minChoices: number;
   onSelectionChange: () => void;
   resetTrigger: number;
 }
@@ -69,6 +70,7 @@ export const RankedChoiceList: React.FC<Props> = ({
   candidates,
   avatarCount,
   maxChoices,
+  minChoices,
   onSelectionChange,
   resetTrigger,
 }: Props) => {
@@ -76,10 +78,8 @@ export const RankedChoiceList: React.FC<Props> = ({
   const [notSelectedState, notSelectedHandlers] = useListState<CandidateModel>([]);
   const [isMaxSelected, setIsMaxSelected] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-
-  const selectedDroppableClass: string = cx({
-    [listClasses.selectedDroppable]: isMaxSelected,
-  });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragSource, setDragSource] = useState<string | null>(null);
 
   const reSelect = (): void => {
     selectedState.forEach((c: CandidateModel, index: number) => {
@@ -119,7 +119,9 @@ export const RankedChoiceList: React.FC<Props> = ({
 
   return (
     <DragDropContext
-      onDragStart={() => {
+      onDragStart={(start) => {
+        setIsDragging(true);
+        setDragSource(start.source.droppableId);
         setIsMaxSelected(selectedState.length >= maxChoices);
       }}
       onDragEnd={({
@@ -129,6 +131,8 @@ export const RankedChoiceList: React.FC<Props> = ({
         destination: DraggableLocation | null;
         source: DraggableLocation;
       }) => {
+        setIsDragging(false);
+        setDragSource(null);
         setIsMaxSelected(false);
 
         if (!destination) return;
@@ -172,78 +176,148 @@ export const RankedChoiceList: React.FC<Props> = ({
         }
       }}
     >
-      <Droppable droppableId='selected' direction='vertical' isDropDisabled={isMaxSelected}>
-        {(provided: DroppableProvided) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            className={selectedDroppableClass}
-          >
-            <Divider label={<Text>Selected</Text>} size={3} labelPosition='left' color='green' />
-            <Space h='md' />
-            {selectedState.map((candidate: CandidateModel, index: number) => (
-              <Draggable
-                key={candidate.CandidateId}
-                index={index}
-                draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
-              >
-                {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                  <div
-                    className={cx(listClasses.item, {
-                      [listClasses.itemDragging]: snapshot.isDragging,
-                    })}
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                  >
-                    <RenderCandidate
-                      candidate={candidate}
-                      avatarCount={avatarCount}
-                      index={index}
-                      provided={provided}
-                      showNumbers={true}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-      <Droppable droppableId='notSelected' direction='vertical'>
-        {(provided: DroppableProvided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            <Divider label={<Text>Not Selected</Text>} size={3} labelPosition='left' color='pink' />
-            <Space h='md' />
-            {notSelectedState.map((candidate: CandidateModel, index: number) => (
-              <Draggable
-                key={candidate.CandidateId}
-                index={index}
-                draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
-              >
-                {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                  <div
-                    className={cx(listClasses.item, {
-                      [listClasses.itemDragging]: snapshot.isDragging,
-                    })}
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                  >
-                    <RenderCandidate
-                      candidate={candidate}
-                      avatarCount={avatarCount}
-                      index={index}
-                      provided={provided}
-                      showNumbers={false}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+      <Box>
+        <Droppable droppableId='selected' direction='vertical' isDropDisabled={isMaxSelected}>
+          {(provided: DroppableProvided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={cx(listClasses.dropZone, {
+                [listClasses.dropZoneActive]:
+                  isDragging && dragSource === 'notSelected' && !isMaxSelected,
+                [listClasses.selectedDroppable]: isMaxSelected,
+              })}
+            >
+              <Group justify='space-between' align='center'>
+                <Divider
+                  label={
+                    <Group gap='xs'>
+                      <Text>
+                        Selected ({selectedState.length}/{maxChoices})
+                      </Text>
+                      {isDragging && dragSource === 'notSelected' && !isMaxSelected && (
+                        <Text size='sm' color='dimmed'>
+                          Drop here to select
+                        </Text>
+                      )}
+                      {selectedState.length < minChoices && (
+                        <Text size='sm' c='yellow'>
+                          {minChoices - selectedState.length} more{' '}
+                          {minChoices - selectedState.length === 1 ? 'selection' : 'selections'}{' '}
+                          required
+                        </Text>
+                      )}
+                      {isMaxSelected && (
+                        <Text size='sm' color='red'>
+                          Maximum {maxChoices} {maxChoices === 1 ? 'selection' : 'selections'}
+                        </Text>
+                      )}
+                    </Group>
+                  }
+                  size={3}
+                  labelPosition='left'
+                  color='green'
+                  style={{ flexGrow: 1 }}
+                />
+              </Group>{' '}
+              <Space h='md' />
+              {selectedState.map((candidate: CandidateModel, index: number) => (
+                <Draggable
+                  key={candidate.CandidateId}
+                  index={index}
+                  draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
+                >
+                  {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                    <div
+                      className={cx(listClasses.item, {
+                        [listClasses.itemDragging]: snapshot.isDragging,
+                      })}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                    >
+                      <RenderCandidate
+                        candidate={candidate}
+                        avatarCount={avatarCount}
+                        index={index}
+                        provided={provided}
+                        showNumbers={true}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </Box>
+
+      <Space h='md' />
+
+      <Box style={{ opacity: isDragging && dragSource === 'notSelected' ? 0.5 : 1 }}>
+        <Droppable droppableId='notSelected' direction='vertical'>
+          {(provided: DroppableProvided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              <Group justify='space-between' align='center'>
+                <Divider
+                  label={
+                    <Group gap='xs'>
+                      <Text>Not Selected</Text>
+                      {isDragging && dragSource === 'notSelected' && (
+                        <Group gap='xs' style={{ color: 'var(--mantine-color-blue-5)' }}>
+                          <Box
+                            style={{
+                              '@keyframes bounce': {
+                                '0%, 100%': { transform: 'translateY(0)' },
+                                '50%': { transform: 'translateY(-20%)' },
+                              },
+                              animation: 'bounce 1s infinite',
+                            }}
+                          >
+                            <IconArrowUp size={16} />
+                          </Box>
+                          <Text size='sm'>Drag up to select</Text>
+                        </Group>
+                      )}
+                    </Group>
+                  }
+                  size={3}
+                  labelPosition='left'
+                  color='pink'
+                  style={{ flexGrow: 1 }}
+                />
+              </Group>
+              <Space h='md' />
+              {notSelectedState.map((candidate: CandidateModel, index: number) => (
+                <Draggable
+                  key={candidate.CandidateId}
+                  index={index}
+                  draggableId={candidate.CandidateId ? candidate.CandidateId : ''}
+                >
+                  {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                    <div
+                      className={cx(listClasses.item, {
+                        [listClasses.itemDragging]: snapshot.isDragging,
+                      })}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                    >
+                      <RenderCandidate
+                        candidate={candidate}
+                        avatarCount={avatarCount}
+                        index={index}
+                        provided={provided}
+                        showNumbers={false}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </Box>
     </DragDropContext>
   );
 };
