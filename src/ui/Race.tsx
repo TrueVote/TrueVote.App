@@ -35,6 +35,7 @@ const RaceGroup: React.FC<{
   const [resetTrigger, setResetTrigger] = useState(0);
 
   const maxNumberOfChoices = Number(race.MaxNumberOfChoices) || 0;
+  const minNumberOfChoices = Number(race.MinNumberOfChoices) || 0;
 
   const handleClear = (): void => {
     console.debug('handleClear()', race.Name);
@@ -169,6 +170,7 @@ const RaceGroup: React.FC<{
             resetTrigger={resetTrigger}
             candidates={race.Candidates || []}
             avatarCount={avatarCount}
+            minChoices={minNumberOfChoices}
             maxChoices={maxNumberOfChoices}
             onSelectionChange={onSelectionChange}
           />
