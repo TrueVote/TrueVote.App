@@ -269,7 +269,6 @@ export const DBCheckAccessCode = async (
 
   try {
     const queryParams = new URLSearchParams();
-    queryParams.append('UserId', checkCodeRequest.UserId);
     queryParams.append('AccessCode', checkCodeRequest.AccessCode);
     console.info('Body: /election/checkaccesscode', queryParams.toString());
 
