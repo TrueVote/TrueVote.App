@@ -243,8 +243,8 @@ export const Register: FC = () => {
         <>
           <Text size='l' mt='xs' className='text-wrap'>
             TrueVote uses public / private key pairs for login. It&apos;s the same authentication
-            method used for nostr, a nascent decentralized social network. This is a new way to
-            login on the Internet and different from what most people are used to.
+            method used for nostr, a nascent decentralized network. This is a new way to login on
+            the Internet and different from what most people are used to.
             <br />
             <br />
             Storing your keys on your device is the only way to access your account. Your key

@@ -56,12 +56,6 @@ export interface AccessCodesRequest {
    * @minLength 1
    * @maxLength 2048
    */
-  UserId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
   RequestDescription: string;
   /**
    * @format int32
@@ -357,13 +351,71 @@ export interface CheckCodeRequest {
    * @minLength 1
    * @maxLength 2048
    */
-  UserId: string;
+  AccessCode: string;
+}
+
+export interface CommunicationEventModel {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 50
+   */
+  Type: string;
+  CommunicationMethod: Record<string, string>;
+  RelatedEntities: Record<string, string>;
+  Metadata?: Record<string, string>;
+  communicationMethodJson?: string | null;
+  relatedEntitiesJson?: string | null;
+  metadataJson?: string | null;
   /**
    * @format string
    * @minLength 1
    * @maxLength 2048
    */
-  AccessCode: string;
+  CommunicationEventId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 50
+   */
+  Status: string;
+  /** @format date */
+  DateCreated: string;
+  /** @format date */
+  DateUpdated: string;
+  /** @format date-time */
+  DateProcessed?: string | null;
+  /**
+   * @format string
+   * @maxLength 4096
+   */
+  ErrorMessage?: string | null;
+  /** @format int32 */
+  TimeToLive?: number | null;
+}
+
+export interface CommunicationEventUpdateModel {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CommunicationEventId: string;
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 50
+   */
+  Status: string;
+  /** @format date-time */
+  DateUpdated?: string;
+  /** @format date-time */
+  DateProcessed: string;
+  /**
+   * @format string
+   * @maxLength 4096
+   */
+  ErrorMessage?: string | null;
 }
 
 export interface CountBallotModel {
@@ -686,6 +738,13 @@ export interface SecureString {
   Value: string;
 }
 
+export interface ServiceBusCommsMessage {
+  Metadata: Record<string, string>;
+  CommunicationMethod: Record<string, string>;
+  RelatedEntities: Record<string, string>;
+  MessageData?: Record<string, string>;
+}
+
 export interface SignInEventModel {
   Kind: NostrKind;
   /**
@@ -694,7 +753,7 @@ export interface SignInEventModel {
    * @maxLength 2048
    */
   PubKey: string;
-  /** @format date */
+  /** @format date-time */
   CreatedAt: string;
   /**
    * @format string
@@ -843,4 +902,19 @@ export interface UserPreferencesModel {
   NotificationElectionStart?: boolean;
   NotificationElectionEnd?: boolean;
   NotificationNewTrueVoteFeatures?: boolean;
+}
+
+export interface VoterElectionAccessCodeRequest {
+  /**
+   * @format string
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /**
+   * @format email
+   * @minLength 1
+   * @maxLength 256
+   */
+  VoterEmail: string;
 }

@@ -44,7 +44,6 @@ export const ElectionCode: FC = () => {
           accessCodes.map(async (ac) => {
             try {
               const checkCodeRequest: CheckCodeRequest = {
-                UserId: userModel?.UserId ?? '',
                 AccessCode: ac,
               };
               return await DBCheckAccessCode(checkCodeRequest);
@@ -75,7 +74,6 @@ export const ElectionCode: FC = () => {
 
     try {
       const res = await DBCheckAccessCode({
-        UserId: userModel?.UserId ?? '',
         AccessCode: accessCode,
       });
       addAccessCode(accessCode);
