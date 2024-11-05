@@ -263,6 +263,9 @@ export const RankedChoiceList: React.FC<Props> = ({
                   label={
                     <Group gap='xs'>
                       <Text>Not Selected</Text>
+                      <Text size='sm' c='pink'>
+                        Grab handle on left and drag up to Selected
+                      </Text>
                       {isDragging && dragSource === 'notSelected' && (
                         <Group gap='xs' style={{ color: 'var(--mantine-color-blue-5)' }}>
                           <Box
