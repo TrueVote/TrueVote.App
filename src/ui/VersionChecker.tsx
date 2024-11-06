@@ -23,7 +23,7 @@ export const VersionChecker: FC = (): JSX.Element => {
         const initialResponse: Response = await fetch('/version.json');
         const initialData: VersionInfo = await initialResponse.json();
         setCurrentVersion(initialData.LastTag);
-        console.info('Current version:', currentVersion);
+        console.info('Current version:', initialData.LastTag);
         return;
       }
 
