@@ -624,3 +624,49 @@
 .homeButtons {
   padding: 5px;
 }
+
+.versionCheckerWrapper {
+  position: fixed;
+  bottom: var(--mantine-spacing-md);
+  right: var(--mantine-spacing-md);
+  z-index: 1000;
+  max-width: 24rem;
+}
+
+.versionCheckerAlert {
+  background-color: color-mix(in srgb, var(--mantine-color-orange-filled) 70%, transparent);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+}
+
+.versionCheckerContent {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-lg);
+  font-size: var(--mantine-font-size-md);
+  color: white;
+}
+
+.versionCheckerButton {
+  background-color: white !important;
+  color: var(--mantine-color-orange-filled) !important;
+  font-weight: 500;
+}
+
+.versionCheckerMessage {
+  color: white;
+}
+
+.versionCheckerAlertWrapper {
+  align-items: center;
+}
+
+.versionCheckerCloseButton {
+  color: white;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.versionCheckerCloseButton:hover {
+  opacity: 1;
+  background-color: transparent;
+}

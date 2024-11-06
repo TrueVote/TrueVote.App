@@ -22,6 +22,7 @@ import { ROUTES } from './Routes';
 import { getJwt } from './services/RESTDataClient';
 import { AppLaunchModal } from './ui/AppLaunchModal';
 import { TrueVoteSpinnerLoader } from './ui/CustomLoader';
+import { VersionChecker } from './ui/VersionChecker';
 
 export const App: FC = () => {
   const apiRoot: string | undefined = EnvConfig.apiRoot;
@@ -118,6 +119,7 @@ export const App: FC = () => {
           }}
         >
           <AppLaunchModal />
+          <VersionChecker />
           <ModalsProvider>
             <BrowserRouter>{ROUTES}</BrowserRouter>
           </ModalsProvider>
