@@ -23,6 +23,7 @@ export const VersionChecker: FC = (): JSX.Element => {
         const initialResponse: Response = await fetch('/version.json');
         const initialData: VersionInfo = await initialResponse.json();
         setCurrentVersion(initialData.LastTag);
+        console.info('Current version:', currentVersion);
         return;
       }
 
@@ -30,6 +31,7 @@ export const VersionChecker: FC = (): JSX.Element => {
       const data: VersionInfo = await response.json();
 
       if (data.LastTag !== currentVersion) {
+        console.warn('New version available:', data.LastTag);
         // Check if we're still within the dismiss timeout
         const dismissedUntil = localStorage.getItem('versionDismissedUntil');
         if (!dismissedUntil || new Date().getTime() > parseInt(dismissedUntil)) {
