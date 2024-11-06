@@ -42,6 +42,9 @@ echo "Version Output FilePath (.json): " $projectoutputfile
 #echo $template | grep -Eo '"[^"]*" *(: *([0-9]*|"[^"]*")[^{}\["]*|,)?|[^"\]\[\}\{]*|\{|\},?|\[|\],?|[0-9 ]*,?' | awk '{if ($0 ~ /^[}\]]/ ) offset-=2; printf "%*c%s\n", offset, " ", $0; if ($0 ~ /^[{\[]/) offset+=2}' > $projectoutputfile
 echo $template | sed '$s/ *}$/}/' > $projectoutputfile
 
+# Copy it to the public folder
+cp src/version.json public/version.json
+
 # Send a Git command to ignore these changes
 ignoreversion=`git update-index --assume-unchanged $projectoutputfile2`
 echo $ignoreversion
