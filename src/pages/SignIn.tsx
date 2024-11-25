@@ -199,7 +199,9 @@ export const SignIn: FC = () => {
             radius='md'
             color='green'
             variant='light'
-            onClick={(): void => navigate('/signout')}
+            onClick={(): void => {
+              navigate('/signout');
+            }}
           >
             Sign Out
           </Button>

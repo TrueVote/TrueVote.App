@@ -229,7 +229,9 @@ export const Register: FC = () => {
             className={`${classes.primaryPurpleBackgroundColor}`}
             radius='md'
             variant='filled'
-            onClick={(): void => navigate('/signout')}
+            onClick={(): void => {
+              navigate('/signout');
+            }}
             styles={{
               root: {
                 color: 'white',

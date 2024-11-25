@@ -55,7 +55,9 @@ export const Home: FC = () => {
               className={`${classes.primaryGreenBackgroundColor}`}
               radius='md'
               variant='filled'
-              onClick={(): void => navigate('/register')}
+              onClick={(): void => {
+                navigate('/register');
+              }}
               styles={{
                 root: {
                   color: 'white',
@@ -69,7 +71,9 @@ export const Home: FC = () => {
               className={`${classes.primaryPurpleBackgroundColor}`}
               radius='md'
               variant='filled'
-              onClick={(): void => navigate('/signin')}
+              onClick={(): void => {
+                navigate('/signin');
+              }}
               styles={{
                 root: {
                   color: 'white',

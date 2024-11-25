@@ -92,7 +92,9 @@ const LoadProfile: any = () => {
             className={`${classes.primaryPurpleBackgroundColor}`}
             radius='md'
             variant='filled'
-            onClick={(): void => navigate('/signout')}
+            onClick={(): void => {
+              navigate('/signout');
+            }}
             styles={{
               root: {
                 color: 'white',
@@ -111,7 +113,9 @@ const LoadProfile: any = () => {
               className={`${classes.profileButton} ${classes.primaryGreenBackgroundColor}`}
               radius='md'
               variant='filled'
-              onClick={(): void => navigate('/register')}
+              onClick={(): void => {
+                navigate('/register');
+              }}
               styles={{
                 root: {
                   color: 'white',
@@ -126,7 +130,9 @@ const LoadProfile: any = () => {
               className={`${classes.profileButton} ${classes.primaryPurpleBackgroundColor}`}
               radius='md'
               variant='filled'
-              onClick={(): void => navigate('/signin')}
+              onClick={(): void => {
+                navigate('/signin');
+              }}
               styles={{
                 root: {
                   color: 'white',
