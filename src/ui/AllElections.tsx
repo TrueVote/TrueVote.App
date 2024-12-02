@@ -50,7 +50,7 @@ export const AllElections = (): JSX.Element => {
     electionsDetails.length === 0
   ) {
     return (
-      <Container size='xs' px='xs' className={classes.container}>
+      <Container size='xs' px='xs'>
         <Text>No Elections Found</Text>
       </Container>
     );
