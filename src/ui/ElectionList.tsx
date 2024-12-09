@@ -12,7 +12,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { IconCheckbox, IconChecklist, IconMailSpark, IconSum } from '@tabler/icons-react';
-import { FC, ReactElement } from 'react';
+import { FC, JSX, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 

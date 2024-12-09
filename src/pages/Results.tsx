@@ -24,7 +24,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { IconInfoCircle, IconSum, IconZoomIn } from '@tabler/icons-react';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, JSX, useEffect, useMemo, useState } from 'react';
 import ReactJson from 'react-json-view';
 import { Link, Params, useParams } from 'react-router-dom';
 import { Cell, Pie, PieChart } from 'recharts';

@@ -1,5 +1,5 @@
 import { Button, Modal, Stack, Text } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 
 export const AppLaunchModal: any = (): JSX.Element => {
   const [showModal, setShowModal] = useState(false);

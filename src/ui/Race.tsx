@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import { IconEraser } from '@tabler/icons-react';
 import _ from 'lodash';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { formatCandidateName } from './Helpers';
 import { RankedChoiceList } from './RankedChoiceList';
 

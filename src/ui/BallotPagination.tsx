@@ -1,6 +1,6 @@
 import { Button, Group, Text } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
-import { FC } from 'react';
+import { FC, JSX } from 'react';
 
 interface PaginationProps {
   currentPage: number;

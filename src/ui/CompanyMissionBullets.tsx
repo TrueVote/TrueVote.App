@@ -9,6 +9,7 @@ import {
   IconLock,
   IconUserCircle,
 } from '@tabler/icons-react';
+import { JSX } from 'react';
 
 export const CompanyMissionBullets = (): JSX.Element => {
   const primaryGreen = '#34a26b';

@@ -1,7 +1,7 @@
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Alert, Button } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { FC, useEffect, useState } from 'react';
+import { FC, JSX, useEffect, useState } from 'react';
 
 interface VersionInfo {
   Branch: string;

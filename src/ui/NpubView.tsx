@@ -1,6 +1,6 @@
 import classes from '@/ui/shell/AppStyles.module.css';
 import { Box, Text } from '@mantine/core';
-import { FC } from 'react';
+import { FC, JSX } from 'react';
 
 export const NpubView: FC<{ npub: string }> = ({ npub }): JSX.Element => {
   return (

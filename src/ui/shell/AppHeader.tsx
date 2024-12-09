@@ -25,7 +25,7 @@ import {
   IconInfoCircle,
   IconUser,
 } from '@tabler/icons-react';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, JSX, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, PathMatch, useMatch } from 'react-router-dom';
 import { signInWithNostr } from '../../pages/SignIn';
 import { LanguageSwitcher } from '../LanguageSwitcher';

@@ -6,7 +6,7 @@ import classes from '@/ui/shell/AppStyles.module.css';
 import { useQuery } from '@apollo/client';
 import { Accordion, Container, Text } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { TrueVoteLoader } from './CustomLoader';
 import { ElectionList } from './ElectionList';
 
