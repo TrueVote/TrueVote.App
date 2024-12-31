@@ -6,6 +6,7 @@ export const electionDetailsByIdQuery = gql`
       ElectionId
       Name
       Description
+      Unlisted
       HeaderImageUrl
       DateCreated
       StartDate
@@ -38,6 +39,7 @@ export const allElectionsQuery = gql`
       ElectionId
       Name
       Description
+      Unlisted
       HeaderImageUrl
       DateCreated
       StartDate

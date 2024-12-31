@@ -73,26 +73,56 @@ const RaceGroup: React.FC<{
   };
 
   const getDescription = (): string => {
-    const minChoice =
-      race.MinNumberOfChoices && race.MinNumberOfChoices > 0
-        ? `from ${race.MinNumberOfChoices} `
-        : 'up ';
-    const maxChoice = maxNumberOfChoices > 0 ? `to ${maxNumberOfChoices}` : '';
+    const min = race.MinNumberOfChoices ?? 0;
+    const max = maxNumberOfChoices || 0;
+
+    // Helper function to pluralize "selection" based on count
+    const getSelectionText = (count: number): string => (count === 1 ? 'selection' : 'selections');
 
     switch (race.RaceType.toString()) {
       case RaceTypes.ChooseOne:
-        return race.MinNumberOfChoices && race.MinNumberOfChoices > 0
-          ? 'Must Choose 1'
-          : 'Choose 1';
+        return min > 0 ? 'Must Choose 1' : 'Choose 1';
+
       case RaceTypes.ChooseMany:
-        return `Choose ${minChoice}${maxChoice}`;
+        // If min and max are equal and greater than 0
+        if (min === max && min > 0) {
+          return `Choose ${min} ${getSelectionText(min)}`;
+        }
+        // If only min is specified
+        if (min > 0 && max === 0) {
+          return `Choose at least ${min} ${getSelectionText(min)}`;
+        }
+        // If only max is specified
+        if (min === 0 && max > 0) {
+          return `Choose up to ${max} ${getSelectionText(max)}`;
+        }
+        // If both min and max are specified and different
+        if (min > 0 && max > 0) {
+          return `Choose between ${min} and ${max} ${getSelectionText(max)}`;
+        }
+        // Default case when no constraints
+        return 'Choose any number of selections';
+
       case RaceTypes.RankedChoice:
-        return `Ranked Choice - Choose ${minChoice}${maxChoice} selections in order of preference`;
+        // Similar logic for ranked choice
+        if (min === max && min > 0) {
+          return `Ranked Choice - Choose ${min} ${getSelectionText(min)} in order of preference`;
+        }
+        if (min > 0 && max === 0) {
+          return `Ranked Choice - Choose at least ${min} ${getSelectionText(min)} in order of preference`;
+        }
+        if (min === 0 && max > 0) {
+          return `Ranked Choice - Choose up to ${max} ${getSelectionText(max)} in order of preference`;
+        }
+        if (min > 0 && max > 0) {
+          return `Ranked Choice - Choose between ${min} and ${max} ${getSelectionText(max)} in order of preference`;
+        }
+        return 'Ranked Choice - Choose any number of selections in order of preference';
+
       default:
         return '';
     }
   };
-
   const handleCellClick = (candidate: CandidateModel): void => {
     if (race.RaceType.toString() === RaceTypes.ChooseOne) {
       setVal(candidate, true);

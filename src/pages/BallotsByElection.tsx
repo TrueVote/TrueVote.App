@@ -124,7 +124,7 @@ export const BallotsByElection: FC = () => {
   if (detailsError) return <Text>Error loading election details: {detailsError.message}</Text>;
   if (!electionResults || !electionDetails) return <Text>Election Ballot Data Not Found</Text>;
 
-  const items = electionResults?.BallotIds.Items.map(
+  const items = electionResults?.PaginatedBallotIds.Items.map(
     (e: BallotIdInfo, i: number): ReactElement => (
       <Fragment key={i}>
         <Accordion.Item value={i.toString()} key={i}>
@@ -171,7 +171,7 @@ export const BallotsByElection: FC = () => {
     ),
   );
 
-  const totalPages = Math.ceil((electionResults?.BallotIds.TotalCount || 0) / pageSize);
+  const totalPages = Math.ceil((electionResults?.PaginatedBallotIds.TotalCount || 0) / pageSize);
 
   const handlePageChange = (page: number): void => {
     setCurrentPage(page);
@@ -249,8 +249,8 @@ export const BallotsByElection: FC = () => {
         <Group justify='center' mb='xs'>
           <Text ta='center' size='sm' c='dimmed'>
             Showing {(currentPage - 1) * pageSize + 1}-
-            {Math.min(currentPage * pageSize, electionResults?.BallotIds.TotalCount || 0)} of{' '}
-            {electionResults?.BallotIds.TotalCount || 0} ballots
+            {Math.min(currentPage * pageSize, electionResults?.PaginatedBallotIds.TotalCount || 0)}{' '}
+            of {electionResults?.PaginatedBallotIds.TotalCount || 0} ballots
           </Text>
         </Group>{' '}
         <Pagination

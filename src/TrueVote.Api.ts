@@ -9,35 +9,539 @@
  * ---------------------------------------------------------------
  */
 
-export interface AccessCodeModel {
+export interface SecureString {
   /**
-   * @format string
+   * Value
    * @minLength 1
    * @maxLength 2048
    */
-  RequestId: string;
+  Value: string;
+}
+
+export interface SubmitBallotModelResponse {
   /**
-   * @format string
+   * Ballot Id
    * @minLength 1
    * @maxLength 2048
    */
-  RequestDescription: string;
+  BallotId: string;
   /**
-   * @format string
+   * Election Id
    * @minLength 1
    * @maxLength 2048
    */
   ElectionId: string;
   /**
-   * @format string
+   * Message
+   * @minLength 1
+   * @maxLength 32768
+   */
+  Message: string;
+}
+
+export interface SubmitBallotModel {
+  /** Election */
+  Election: ElectionModel;
+  /**
+   * Access Code
+   * @minLength 1
+   * @maxLength 16
+   */
+  AccessCode: string;
+}
+
+export type ElectionModel = RootElectionBaseModel & {
+  /**
+   * Election Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /**
+   * Parent Election Id
+   * @maxLength 2048
+   */
+  ParentElectionId?: string | null;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
+  DateCreated: string;
+  /** List of Races */
+  Races: RaceModel[];
+};
+
+export type RaceModel = RootRaceBaseModel & {
+  /**
+   * Race Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceId: string;
+  /**
+   * Max Number of Choices
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MaxNumberOfChoices?: number | null;
+  /**
+   * Min Number of Choices
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MinNumberOfChoices?: number | null;
+  /** List of Candidates */
+  Candidates: CandidateModel[];
+};
+
+export type CandidateModel = RootCandidateBaseModel & {
+  /**
+   * Candidate Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CandidateId: string;
+};
+
+export interface RootCandidateBaseModel {
+  /**
+   * Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Name: string;
+  /**
+   * Party Affiliation
+   * @maxLength 2048
+   */
+  PartyAffiliation?: string;
+  /**
+   * CandidateImageUrl
+   * @maxLength 1024
+   */
+  CandidateImageUrl?: string;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
+  DateCreated: string;
+  /** Selected */
+  Selected: boolean;
+  /**
+   * SelectedMetadata
+   * @maxLength 1024
+   */
+  SelectedMetadata?: string;
+}
+
+export interface RootRaceBaseModel {
+  /**
+   * Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Name: string;
+  /** Race Type */
+  RaceType: RaceTypes;
+  /**
+   * Race Type Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceTypeName: string;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
+  DateCreated: string;
+}
+
+export enum RaceTypes {
+  ChooseOne = 0,
+  ChooseMany = 1,
+  RankedChoice = 2,
+}
+
+export interface RootElectionBaseModel {
+  /**
+   * Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Name: string;
+  /**
+   * Description
+   * @minLength 1
+   * @maxLength 32768
+   */
+  Description: string;
+  /**
+   * HeaderImageUrl
+   * @minLength 1
+   * @maxLength 1024
+   */
+  HeaderImageUrl: string;
+  /**
+   * StartDate
+   * @format date
+   * @minLength 1
+   */
+  StartDate: string;
+  /**
+   * EndDate
+   * @format date
+   * @minLength 1
+   */
+  EndDate: string;
+  /** Unlisted */
+  Unlisted: boolean;
+}
+
+export interface BallotList {
+  /**
+   * List of Ballots
+   * @maxItems 2048
+   */
+  Ballots: BallotModel[];
+  /**
+   * List of Ballot Hashes
+   * @maxItems 2048
+   */
+  BallotHashes: BallotHashModel[];
+}
+
+export interface BallotModel {
+  /**
+   * Ballot Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotId: string;
+  /**
+   * Election Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /** Election for the Ballot */
+  Election: ElectionModel;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
+  DateCreated: string;
+}
+
+export interface BallotHashModel {
+  /**
+   * Ballot Hash Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotHashId: string;
+  /**
+   * Ballot Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotId: string;
+  /**
+   * Server Ballot Hash
+   * @format byte
+   * @minLength 1
+   */
+  ServerBallotHash: string;
+  /**
+   * Server Ballot Hash String
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ServerBallotHashS: string;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
+  DateCreated: string;
+  /**
+   * DateUpdated
+   * @format date
+   * @minLength 1
+   */
+  DateUpdated: string;
+  /**
+   * Timestamp Id
+   * @maxLength 2048
+   */
+  TimestampId?: string | null;
+}
+
+export interface FindBallotModel {
+  /**
+   * Ballot Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotId: string;
+}
+
+export interface CountBallotModelResponse {
+  /**
+   * Number of Ballots
+   * @format int64
+   * @min 0
+   * @max 9223372036854780000
+   */
+  BallotCount: number;
+}
+
+export interface CountBallotModel {
+  /**
+   * DateCreatedStart
+   * @format date
+   * @minLength 1
+   */
+  DateCreatedStart: string;
+  /**
+   * DateCreatedEnd
+   * @format date
+   * @minLength 1
+   */
+  DateCreatedEnd: string;
+}
+
+export interface FindBallotHashModel {
+  /**
+   * Ballot Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  BallotId: string;
+}
+
+export type BaseCandidateModel = RootCandidateBaseModel & object;
+
+export interface CandidateModelList {
+  /**
+   * List of Candidates
+   * @maxItems 2048
+   */
+  Candidates: CandidateModel[];
+}
+
+export interface FindCandidateModel {
+  /**
+   * Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Name: string;
+  /**
+   * Party Affiliation
+   * @maxLength 2048
+   */
+  PartyAffiliation?: string;
+}
+
+export type CommunicationEventModel = RootCommunicationEventBaseModel & {
+  /**
+   * Communication Event Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CommunicationEventId: string;
+  /**
+   * Status of the communication
+   * @minLength 1
+   * @maxLength 50
+   */
+  Status: string;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
+  DateCreated: string;
+  /**
+   * DateUpdated
+   * @format date
+   * @minLength 1
+   */
+  DateUpdated: string;
+  /**
+   * DateProcessed
+   * @format date-time
+   */
+  DateProcessed?: string | null;
+  /**
+   * Error message if failed
+   * @maxLength 4096
+   */
+  ErrorMessage?: string | null;
+  /**
+   * Time To Live in seconds (null = forever)
+   * @format int32
+   */
+  TimeToLive?: number | null;
+};
+
+export interface RootCommunicationEventBaseModel {
+  /**
+   * Type of communication (Email, SMS, Push)
+   * @minLength 1
+   * @maxLength 50
+   */
+  Type: string;
+  /** Communication method and address/id (e.g., Email: user@domain.com, MobileDeviceId: abc123) */
+  CommunicationMethod: Record<string, string>;
+  /** Dictionary of related entity IDs and their types */
+  RelatedEntities: Record<string, string>;
+  /** Additional metadata for the communication event */
+  Metadata?: Record<string, string>;
+  CommunicationMethodJson?: string;
+  RelatedEntitiesJson?: string;
+  MetadataJson?: string | null;
+}
+
+export interface CommunicationEventUpdateModel {
+  /**
+   * Communication Event Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CommunicationEventId: string;
+  /**
+   * Status of the communication
+   * @minLength 1
+   * @maxLength 50
+   */
+  Status: string;
+  /**
+   * DateUpdated
+   * @format date-time
+   */
+  DateUpdated?: string;
+  /**
+   * DateProcessed
+   * @format date-time
+   * @minLength 1
+   */
+  DateProcessed: string;
+  /**
+   * Error message if failed
+   * @maxLength 4096
+   */
+  ErrorMessage?: string | null;
+}
+
+export type BaseElectionModel = RootElectionBaseModel & {
+  /** List of BaseRaces */
+  BaseRaces: BaseRaceModel[];
+};
+
+export type BaseRaceModel = RootRaceBaseModel & {
+  /**
+   * Max Number of Choices
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MaxNumberOfChoices: number;
+  /**
+   * Min Number of Choices
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  MinNumberOfChoices: number;
+  /** List of BaseCandidates */
+  BaseCandidates: BaseCandidateModel[];
+};
+
+export interface ElectionModelList {
+  /**
+   * List of Elections
+   * @maxItems 2048
+   */
+  Elections: ElectionModel[];
+}
+
+export interface FindElectionModel {
+  /**
+   * Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Name: string;
+}
+
+export interface AddRacesModel {
+  /**
+   * Election Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /** Race Ids */
+  RaceIds: string[];
+}
+
+export interface AccessCodesResponse {
+  /**
+   * Request Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RequestId: string;
+  /**
+   * Election Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /** List of Access Codes */
+  AccessCodes: AccessCodeModel[];
+}
+
+export interface AccessCodeModel {
+  /**
+   * Request Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RequestId: string;
+  /**
+   * Request Description
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RequestDescription: string;
+  /**
+   * Election Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /**
+   * Requested By User Id
    * @minLength 1
    * @maxLength 2048
    */
   RequestedByUserId: string;
-  /** @format date */
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
   DateCreated: string;
   /**
-   * @format string
+   * Access Code
    * @minLength 1
    * @maxLength 16
    */
@@ -46,18 +550,19 @@ export interface AccessCodeModel {
 
 export interface AccessCodesRequest {
   /**
-   * @format string
+   * Election Id
    * @minLength 1
    * @maxLength 2048
    */
   ElectionId: string;
   /**
-   * @format string
+   * Request Description
    * @minLength 1
    * @maxLength 2048
    */
   RequestDescription: string;
   /**
+   * Number of Access Codes
    * @format int32
    * @min 0
    * @max 2147483647
@@ -65,202 +570,205 @@ export interface AccessCodesRequest {
   NumberOfAccessCodes: number;
 }
 
-export interface AccessCodesResponse {
+export interface CheckCodeRequest {
   /**
-   * @format string
+   * AccessCode
    * @minLength 1
    * @maxLength 2048
    */
-  RequestId: string;
+  AccessCode: string;
+}
+
+export interface VoterElectionAccessCodeRequest {
   /**
-   * @format string
+   * Election ID
    * @minLength 1
    * @maxLength 2048
    */
   ElectionId: string;
-  AccessCodes: AccessCodeModel[];
+  /**
+   * Voter email address
+   * @format email
+   * @minLength 1
+   * @maxLength 256
+   */
+  VoterEmail: string;
+}
+
+export interface Error500Flag {
+  /** Error */
+  Error: boolean;
 }
 
 export interface AddCandidatesModel {
   /**
-   * @format string
+   * Race Id
    * @minLength 1
    * @maxLength 2048
    */
   RaceId: string;
+  /** Candidate Ids */
   CandidateIds: string[];
 }
 
-export interface AddRacesModel {
+export interface RaceModelList {
   /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
+   * List of Races
+   * @maxItems 2048
    */
-  ElectionId: string;
-  RaceIds: string[];
+  Races: RaceModel[];
 }
 
-export interface BallotHashModel {
+export interface FindRaceModel {
   /**
-   * @format string
+   * Name
    * @minLength 1
    * @maxLength 2048
    */
-  BallotHashId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  BallotId: string;
-  /** @format byte */
-  ServerBallotHash: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  ServerBallotHashS: string;
-  /** @format date */
-  DateCreated: string;
-  /** @format date */
-  DateUpdated: string;
-  /**
-   * @format string
-   * @maxLength 2048
-   */
-  TimestampId?: string | null;
+  Name: string;
 }
 
-export interface BallotIdInfo {
+export interface StatusModel {
   /**
-   * @format string
+   * Current Time
+   * @maxLength 2048
+   */
+  CurrentTime?: string | null;
+  /**
+   * Stopwatch time to run this method
+   * @format int64
+   * @min 0
+   * @max 9223372036854780000
+   */
+  ExecutionTime?: number;
+  /**
+   * Stopwatch time to run this method (message)
+   * @maxLength 2048
+   */
+  ExecutionTimeMsg?: string | null;
+  /** True if method responds. Likely never false */
+  Responds?: boolean;
+  /**
+   * True if method responds. Likely never false (message)
+   * @maxLength 2048
+   */
+  RespondsMsg?: string | null;
+  /** Build information model */
+  BuildInfo?: BuildInfo | null;
+  /**
+   * Timestamp this Build information data model was populated
+   * @maxLength 2048
+   */
+  BuildInfoReadTime?: string;
+}
+
+export interface BuildInfo {
+  /**
+   * Git branch of instance
+   * @maxLength 2048
+   */
+  Branch?: string;
+  /**
+   * Timestamp build was created
+   * @maxLength 2048
+   */
+  BuildTime?: string;
+  /**
+   * Git tag of instance
+   * @maxLength 2048
+   */
+  LastTag?: string;
+  /**
+   * Git commit hash of instance
+   * @maxLength 2048
+   */
+  Commit?: string;
+}
+
+export interface TimestampModel {
+  /**
+   * Timestamp Id
    * @minLength 1
    * @maxLength 2048
    */
-  BallotId: string;
+  TimestampId: string;
+  /**
+   * MerkleRoot
+   * @format byte
+   * @minLength 1
+   */
+  MerkleRoot: string;
+  /**
+   * MerkleRootHash
+   * @format byte
+   * @minLength 1
+   */
+  MerkleRootHash: string;
+  /**
+   * TimestampHash
+   * @format byte
+   * @minLength 1
+   */
+  TimestampHash: string;
+  /**
+   * TimestampHash String
+   * @minLength 1
+   * @maxLength 2048
+   */
+  TimestampHashS: string;
   /** @format date-time */
+  TimestampAt?: string;
+  /**
+   * CalendarServerUrl
+   * @format uri
+   * @minLength 1
+   * @maxLength 2048
+   */
+  CalendarServerUrl: string;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
   DateCreated: string;
 }
 
-export interface BallotList {
-  /** @maxItems 2048 */
-  Ballots: BallotModel[];
-  /** @maxItems 2048 */
-  BallotHashes: BallotHashModel[];
+export interface FindTimestampModel {
+  /**
+   * DateCreatedStart
+   * @format date
+   * @minLength 1
+   */
+  DateCreatedStart: string;
+  /**
+   * DateCreatedEnd
+   * @format date
+   * @minLength 1
+   */
+  DateCreatedEnd: string;
 }
 
-export interface BallotModel {
+export interface UserModel {
   /**
-   * @format string
+   * User Id
    * @minLength 1
    * @maxLength 2048
    */
-  BallotId: string;
+  UserId: string;
   /**
-   * @format string
+   * Nostr PubKey
    * @minLength 1
    * @maxLength 2048
    */
-  ElectionId: string;
-  Election: ElectionModel;
-  /** @format date */
-  DateCreated: string;
-}
-
-export interface BaseCandidateModel {
+  NostrPubKey: string;
   /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-  /**
-   * @format string
-   * @maxLength 2048
-   */
-  PartyAffiliation?: string | null;
-  /**
-   * @format string
-   * @maxLength 1024
-   */
-  CandidateImageUrl?: string | null;
-  /** @format date */
-  DateCreated: string;
-  Selected: boolean;
-  /**
-   * @format string
-   * @maxLength 1024
-   */
-  SelectedMetadata?: string | null;
-}
-
-export interface BaseElectionModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 32768
-   */
-  Description: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 1024
-   */
-  HeaderImageUrl: string;
-  /** @format date */
-  StartDate: string;
-  /** @format date */
-  EndDate: string;
-  Races: BaseRaceModel[];
-}
-
-export interface BaseRaceModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-  RaceType: RaceTypes;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  RaceTypeName: string;
-  /** @format date */
-  DateCreated: string;
-  /**
-   * @format int32
-   * @min 0
-   * @max 2147483647
-   */
-  MaxNumberOfChoices: number;
-  /**
-   * @format int32
-   * @min 0
-   * @max 2147483647
-   */
-  MinNumberOfChoices: number;
-  BaseCandidates: BaseCandidateModel[];
-}
-
-export interface BaseUserModel {
-  /**
-   * @format string
+   * Full Name
    * @minLength 1
    * @maxLength 2048
    */
   FullName: string;
   /**
+   * Email Address
    * @format email
    * @minLength 1
    * @maxLength 2048
@@ -268,76 +776,247 @@ export interface BaseUserModel {
    */
   Email: string;
   /**
-   * @format string
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
+  DateCreated: string;
+  /**
+   * DateUpdated
+   * @format date
+   * @minLength 1
+   */
+  DateUpdated: string;
+  /** UserPreferences */
+  UserPreferences: UserPreferencesModel;
+}
+
+export interface UserPreferencesModel {
+  /** Notification: New Elections */
+  NotificationNewElections?: boolean;
+  /** Notification: Election Start */
+  NotificationElectionStart?: boolean;
+  /** Notification: Election End */
+  NotificationElectionEnd?: boolean;
+  /** Notification: New TrueVote Features */
+  NotificationNewTrueVoteFeatures?: boolean;
+}
+
+export interface BaseUserModel {
+  /**
+   * Full Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  FullName: string;
+  /**
+   * Email Address
+   * @format email
+   * @minLength 1
+   * @maxLength 2048
+   * @pattern ^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$
+   */
+  Email: string;
+  /**
+   * Nostr Public Key
    * @minLength 1
    * @maxLength 2048
    */
   NostrPubKey: string;
 }
 
-export interface BuildInfo {
-  /** @maxLength 2048 */
-  Branch?: string | null;
-  /** @maxLength 2048 */
-  BuildTime?: string | null;
-  /** @maxLength 2048 */
-  LastTag?: string | null;
-  /** @maxLength 2048 */
-  Commit?: string | null;
+export interface UserModelList {
+  /**
+   * List of Users
+   * @maxItems 2048
+   */
+  Users: UserModel[];
 }
 
-export interface CandidateModel {
+export interface FindUserModel {
   /**
-   * @format string
+   * Full Name
    * @minLength 1
    * @maxLength 2048
    */
-  Name: string;
+  FullName: string;
   /**
-   * @format string
+   * Email Address
+   * @format email
+   * @maxLength 2048
+   * @pattern ^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$
+   */
+  Email?: string;
+}
+
+export interface SignInResponse {
+  /** User */
+  User: UserModel;
+  /**
+   * Token
+   * @minLength 1
    * @maxLength 2048
    */
-  PartyAffiliation?: string | null;
+  Token: string;
+}
+
+export interface SignInEventModel {
+  /** Kind */
+  Kind: NostrKind;
   /**
-   * @format string
-   * @maxLength 1024
+   * PubKey
+   * @minLength 1
+   * @maxLength 2048
    */
-  CandidateImageUrl?: string | null;
-  /** @format date */
+  PubKey: string;
+  /**
+   * CreatedAt
+   * @format date-time
+   * @minLength 1
+   */
+  CreatedAt: string;
+  /**
+   * Signature
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Signature: string;
+  /**
+   * Content
+   * @minLength 1
+   * @maxLength 2048
+   */
+  Content: string;
+}
+
+export enum NostrKind {
+  Metadata = 0,
+  ShortTextNote = 1,
+  RecommendRelay = 2,
+  Contacts = 3,
+  EncryptedDm = 4,
+  EventDeletion = 5,
+  Reserved = 6,
+  Reaction = 7,
+  BadgeAward = 8,
+  GenericRepost = 16,
+  ChannelCreation = 40,
+  ChannelMetadata = 41,
+  ChannelMessage = 42,
+  ChannelHideMessage = 43,
+  ChanelMuteUser = 44,
+  Uint8ArrayMetadata = 1063,
+  LiveChatMessage = 1311,
+  Reporting = 1984,
+  Label = 1985,
+  ZapRequest = 9734,
+  Zap = 9735,
+  MuteList = 10000,
+  PinList = 10001,
+  RelayListMetadata = 10002,
+  WalletInfo = 13194,
+  ClientAuthentication = 22242,
+  WalletRequest = 23194,
+  WalletResponse = 23195,
+  NostrConnect = 24133,
+  HttpAuth = 27235,
+  CategorizedPeopleList = 30000,
+  CategorizedBookmarkList = 30001,
+  ProfileBadges = 30008,
+  BadgeDefinition = 30009,
+  LongFormContent = 30023,
+  DraftLongFormContent = 30024,
+  ApplicationSpecificData = 30078,
+  LiveEvent = 30311,
+  ClassifiedListing = 30402,
+}
+
+export interface FeedbackModel {
+  /**
+   * Feedback Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  FeedbackId: string;
+  /**
+   * User Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  UserId: string;
+  /**
+   * DateCreated
+   * @format date
+   * @minLength 1
+   */
   DateCreated: string;
-  Selected: boolean;
   /**
-   * @format string
-   * @maxLength 1024
-   */
-  SelectedMetadata?: string | null;
-  /**
-   * @format string
+   * Feedback
    * @minLength 1
    * @maxLength 2048
    */
-  CandidateId: string;
+  Feedback: string;
 }
 
-export interface CandidateModelList {
-  /** @maxItems 2048 */
-  Candidates: CandidateModel[];
+export interface ElectionResults {
+  /**
+   * Election Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  ElectionId: string;
+  /**
+   * Total number of ballots cast
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  TotalBallots: number;
+  /**
+   * Total number of ballots hashed
+   * @format int32
+   * @min 0
+   * @max 2147483647
+   */
+  TotalBallotsHashed: number;
+  /** List of Race Results */
+  Races: RaceResult[];
+  /** List of ballot IDs and ballot dates for the current page */
+  PaginatedBallotIds: PaginatedBallotIds;
+}
+
+export interface RaceResult {
+  /**
+   * Race Id
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceId: string;
+  /**
+   * Race Name
+   * @minLength 1
+   * @maxLength 2048
+   */
+  RaceName: string;
+  /** List of Candidate Results */
+  CandidateResults: CandidateResult[];
 }
 
 export interface CandidateResult {
   /**
-   * @format string
+   * Candidate Id
    * @minLength 1
    * @maxLength 2048
    */
   CandidateId: string;
   /**
-   * @format string
+   * Candidate Name
    * @minLength 1
    * @maxLength 2048
    */
   CandidateName: string;
   /**
+   * Total votes received by the candidate
    * @format int32
    * @min 0
    * @max 2147483647
@@ -345,318 +1024,25 @@ export interface CandidateResult {
   TotalVotes: number;
 }
 
-export interface CheckCodeRequest {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  AccessCode: string;
-}
-
-export interface CommunicationEventModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 50
-   */
-  Type: string;
-  CommunicationMethod: Record<string, string>;
-  RelatedEntities: Record<string, string>;
-  Metadata?: Record<string, string>;
-  communicationMethodJson?: string | null;
-  relatedEntitiesJson?: string | null;
-  metadataJson?: string | null;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  CommunicationEventId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 50
-   */
-  Status: string;
-  /** @format date */
-  DateCreated: string;
-  /** @format date */
-  DateUpdated: string;
-  /** @format date-time */
-  DateProcessed?: string | null;
-  /**
-   * @format string
-   * @maxLength 4096
-   */
-  ErrorMessage?: string | null;
-  /** @format int32 */
-  TimeToLive?: number | null;
-}
-
-export interface CommunicationEventUpdateModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  CommunicationEventId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 50
-   */
-  Status: string;
-  /** @format date-time */
-  DateUpdated?: string;
-  /** @format date-time */
-  DateProcessed: string;
-  /**
-   * @format string
-   * @maxLength 4096
-   */
-  ErrorMessage?: string | null;
-}
-
-export interface CountBallotModel {
-  /** @format date */
-  DateCreatedStart: string;
-  /** @format date */
-  DateCreatedEnd: string;
-}
-
-export interface CountBallotModelResponse {
-  /**
-   * @format int64
-   * @min 0
-   */
-  BallotCount: number;
-}
-
-export interface ElectionModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 32768
-   */
-  Description: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 1024
-   */
-  HeaderImageUrl: string;
-  /** @format date */
-  StartDate: string;
-  /** @format date */
-  EndDate: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  ElectionId: string;
-  /**
-   * @format string
-   * @maxLength 2048
-   */
-  ParentElectionId?: string | null;
-  /** @format date */
-  DateCreated: string;
-  Races: RaceModel[];
-}
-
-export interface ElectionModelList {
-  /** @maxItems 2048 */
-  Elections: ElectionModel[];
-}
-
-export interface ElectionResults {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  ElectionId: string;
-  /**
-   * @format int32
-   * @min 0
-   * @max 2147483647
-   */
-  TotalBallots: number;
-  /**
-   * @format int32
-   * @min 0
-   * @max 2147483647
-   */
-  TotalBallotsHashed: number;
-  Races: RaceResult[];
-  BallotIds: PaginatedBallotIds;
-}
-
-export interface Error500Flag {
-  Error: boolean;
-}
-
-export interface FeedbackModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  FeedbackId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  UserId: string;
-  /** @format date */
-  DateCreated: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Feedback: string;
-}
-
-export interface FindBallotHashModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  BallotId: string;
-}
-
-export interface FindBallotModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  BallotId: string;
-}
-
-export interface FindCandidateModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-  /**
-   * @format string
-   * @maxLength 2048
-   */
-  PartyAffiliation?: string | null;
-}
-
-export interface FindElectionModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-}
-
-export interface FindRaceModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-}
-
-export interface FindTimestampModel {
-  /** @format date */
-  DateCreatedStart: string;
-  /** @format date */
-  DateCreatedEnd: string;
-}
-
-export interface FindUserModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  FullName: string;
-  /**
-   * @format email
-   * @maxLength 2048
-   * @pattern ^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$
-   */
-  Email?: string | null;
-}
-
-/** @format int32 */
-export enum NostrKind {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-  Value3 = 3,
-  Value4 = 4,
-  Value5 = 5,
-  Value6 = 6,
-  Value7 = 7,
-  Value8 = 8,
-  Value16 = 16,
-  Value40 = 40,
-  Value41 = 41,
-  Value42 = 42,
-  Value43 = 43,
-  Value44 = 44,
-  Value1063 = 1063,
-  Value1311 = 1311,
-  Value1984 = 1984,
-  Value1985 = 1985,
-  Value9734 = 9734,
-  Value9735 = 9735,
-  Value10000 = 10000,
-  Value10001 = 10001,
-  Value10002 = 10002,
-  Value13194 = 13194,
-  Value22242 = 22242,
-  Value23194 = 23194,
-  Value23195 = 23195,
-  Value24133 = 24133,
-  Value27235 = 27235,
-  Value30000 = 30000,
-  Value30001 = 30001,
-  Value30008 = 30008,
-  Value30009 = 30009,
-  Value30023 = 30023,
-  Value30024 = 30024,
-  Value30078 = 30078,
-  Value30311 = 30311,
-  Value30402 = 30402,
-}
-
 export interface PaginatedBallotIds {
+  /** List of ballot IDs and ballot dates for the current page */
   Items: BallotIdInfo[];
   /**
+   * Total number of ballot IDs across all pages
    * @format int32
    * @min 0
    * @max 2147483647
    */
   TotalCount: number;
   /**
+   * Number of items to skip (starting position)
    * @format int32
    * @min 0
    * @max 2147483647
    */
   Offset: number;
   /**
+   * Maximum number of items to return per page
    * @format int32
    * @min 1
    * @max 2147483647
@@ -664,257 +1050,28 @@ export interface PaginatedBallotIds {
   Limit: number;
 }
 
-export interface RaceModel {
+export interface BallotIdInfo {
   /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Name: string;
-  RaceType: RaceTypes;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  RaceTypeName: string;
-  /** @format date */
-  DateCreated: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  RaceId: string;
-  /**
-   * @format int32
-   * @min 0
-   * @max 2147483647
-   */
-  MaxNumberOfChoices?: number | null;
-  /**
-   * @format int32
-   * @min 0
-   * @max 2147483647
-   */
-  MinNumberOfChoices?: number | null;
-  Candidates: CandidateModel[];
-}
-
-export interface RaceModelList {
-  /** @maxItems 2048 */
-  Races: RaceModel[];
-}
-
-export interface RaceResult {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  RaceId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  RaceName: string;
-  CandidateResults: CandidateResult[];
-}
-
-/** @format int32 */
-export enum RaceTypes {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-}
-
-export interface SecureString {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Value: string;
-}
-
-export interface ServiceBusCommsMessage {
-  Metadata: Record<string, string>;
-  CommunicationMethod: Record<string, string>;
-  RelatedEntities: Record<string, string>;
-  MessageData?: Record<string, string>;
-}
-
-export interface SignInEventModel {
-  Kind: NostrKind;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  PubKey: string;
-  /** @format date-time */
-  CreatedAt: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Signature: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Content: string;
-}
-
-export interface SignInResponse {
-  User: UserModel;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  Token: string;
-}
-
-export interface StatusModel {
-  /** @maxLength 2048 */
-  CurrentTime?: string | null;
-  /**
-   * @format int64
-   * @min 0
-   */
-  ExecutionTime?: number;
-  /** @maxLength 2048 */
-  ExecutionTimeMsg?: string | null;
-  Responds?: boolean;
-  /** @maxLength 2048 */
-  RespondsMsg?: string | null;
-  BuildInfo?: BuildInfo;
-  /** @maxLength 2048 */
-  BuildInfoReadTime?: string | null;
-}
-
-export interface SubmitBallotModel {
-  Election: ElectionModel;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 16
-   */
-  AccessCode: string;
-}
-
-export interface SubmitBallotModelResponse {
-  /**
-   * @format string
+   * Ballot Id
    * @minLength 1
    * @maxLength 2048
    */
   BallotId: string;
   /**
-   * @format string
+   * Date the ballot was created
+   * @format date-time
    * @minLength 1
-   * @maxLength 2048
    */
-  ElectionId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 32768
-   */
-  Message: string;
-}
-
-export interface TimestampModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  TimestampId: string;
-  /** @format byte */
-  MerkleRoot: string;
-  /** @format byte */
-  MerkleRootHash: string;
-  /** @format byte */
-  TimestampHash: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  TimestampHashS: string;
-  /** @format date-time */
-  timestampAt?: string;
-  /**
-   * @format uri
-   * @minLength 1
-   * @maxLength 2048
-   */
-  CalendarServerUrl: string;
-  /** @format date */
   DateCreated: string;
 }
 
-export interface UserModel {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  UserId: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  NostrPubKey: string;
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  FullName: string;
-  /**
-   * @format email
-   * @minLength 1
-   * @maxLength 2048
-   * @pattern ^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$
-   */
-  Email: string;
-  /** @format date */
-  DateCreated: string;
-  /** @format date */
-  DateUpdated: string;
-  UserPreferences: UserPreferencesModel;
-}
-
-export interface UserModelList {
-  /** @maxItems 2048 */
-  Users: UserModel[];
-}
-
-export interface UserPreferencesModel {
-  NotificationNewElections?: boolean;
-  NotificationElectionStart?: boolean;
-  NotificationElectionEnd?: boolean;
-  NotificationNewTrueVoteFeatures?: boolean;
-}
-
-export interface VoterElectionAccessCodeRequest {
-  /**
-   * @format string
-   * @minLength 1
-   * @maxLength 2048
-   */
-  ElectionId: string;
-  /**
-   * @format email
-   * @minLength 1
-   * @maxLength 256
-   */
-  VoterEmail: string;
+export interface ServiceBusCommsMessage {
+  /** Required message metadata (Type, CommunicationEventId, etc) */
+  Metadata: Record<string, string>;
+  /** Communication method and destination (Email, SMS, etc) */
+  CommunicationMethod: Record<string, string>;
+  /** Related entity IDs (ElectionId, BallotId, etc) */
+  RelatedEntities: Record<string, string>;
+  /** Type-specific message payload data */
+  MessageData?: Record<string, string>;
 }
