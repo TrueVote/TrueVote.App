@@ -16,27 +16,25 @@ import { ModalsProvider } from '@mantine/modals';
 import { createClient } from 'graphql-ws';
 import { FC } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { EnvConfig } from './EnvConfig';
 import { GlobalProvider } from './Global';
 import { ROUTES } from './Routes';
-import { getJwt } from './services/RESTDataClient';
+import { ApiRoot, getJwt } from './services/RESTDataClient';
 import { AppLaunchModal } from './ui/AppLaunchModal';
 import { TrueVoteSpinnerLoader } from './ui/CustomLoader';
 import { VersionChecker } from './ui/VersionChecker';
 
 export const App: FC = () => {
-  const apiRoot: string | undefined = EnvConfig.apiRoot;
-  console.info('ApiRoot', apiRoot);
+  console.info('ApiRoot', ApiRoot);
 
   // Set up the HTTP link
   const httpLink: ApolloLink = createHttpLink({
-    uri: apiRoot + `/api/graphql/`,
+    uri: ApiRoot + `/graphql/`,
   });
 
   const wssLink: string =
-    !apiRoot || apiRoot === '' || apiRoot === undefined // Probably running locally
+    !ApiRoot || ApiRoot === '' || ApiRoot === undefined // Probably running locally
       ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/graphql/`
-      : `${apiRoot?.replace(/^https?/, 'wss')}/api/graphql/`;
+      : `${ApiRoot?.replace(/^https?/, 'wss')}/graphql/`;
 
   // get the authentication token from local storage if it exists
   const token: string | null = getJwt();

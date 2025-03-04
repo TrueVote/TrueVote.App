@@ -15,7 +15,7 @@ import {
 } from '../src/TrueVote.Api';
 import { signInWithNostr } from './SignInWithNostr';
 
-const API_BASE_URL = process.env.API_BASE_URL || 'https://api.truevote.org';
+const API_BASE_URL = process.env.API_BASE_URL || 'https://api.truevote.org/api';
 console.info('API_BASE_URL:', API_BASE_URL);
 
 interface FetchResult {
@@ -36,7 +36,7 @@ const DBUserSignIn = async (
   //console.info('DBUserSignIn->signinEventModel', signInEventModel);
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/user/signin`, signInEventModel);
+    const response = await axios.post(`${API_BASE_URL}/user/signin`, signInEventModel);
 
     if (response.status === 200) {
       return {

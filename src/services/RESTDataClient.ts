@@ -1,4 +1,3 @@
-import { EnvConfig } from '@/EnvConfig';
 import {
   CheckCodeRequest,
   ElectionModel,
@@ -14,6 +13,8 @@ import {
 import { FetchHelper } from './FetchHelper';
 
 const JwtStorageKey: string = 'jwt_token';
+declare const __API_URL__: string;
+export const ApiRoot: string = __API_URL__;
 
 export const storeJwt = (token: string | null | undefined): void => {
   localStorage.setItem(JwtStorageKey, token ?? '');
@@ -43,15 +44,11 @@ export const DBSubmitBallot = async (
   const body: string = JSON.stringify(submitBallotModel);
   console.info('Body: /ballot/submitballot', body);
 
-  return await FetchHelper.fetchWithToken(
-    getJwt(),
-    EnvConfig.apiRoot + '/api/ballot/submitballot',
-    {
-      method: 'POST',
-      body: body,
-      headers: setHeaders(),
-    },
-  )
+  return await FetchHelper.fetchWithToken(getJwt(), __API_URL__ + '/ballot/submitballot', {
+    method: 'POST',
+    body: body,
+    headers: setHeaders(),
+  })
     .then(async (res: Response) => {
       console.info('Response: /ballot/submitballot', res);
       if (res.status !== 201) {
@@ -80,7 +77,7 @@ export const APIStatus = async (): Promise<StatusModel> => {
   console.info('Request: /status');
 
   try {
-    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/status', {
+    const response = await FetchHelper.fetchWithToken(getJwt(), __API_URL__ + '/status', {
       method: 'GET',
       headers: setHeaders(),
     });
@@ -106,7 +103,7 @@ export const APIPing = async (): Promise<SecureString> => {
   console.info('Request: /ping');
 
   try {
-    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/ping', {
+    const response = await FetchHelper.fetchWithToken(getJwt(), __API_URL__ + '/ping', {
       method: 'GET',
       headers: setHeaders(),
     });
@@ -132,7 +129,7 @@ export const APIAdd = async (): Promise<SecureString> => {
   console.info('Request: /add');
 
   try {
-    const response = await FetchHelper.fetchWithToken(getJwt(), EnvConfig.apiRoot + '/api/add', {
+    const response = await FetchHelper.fetchWithToken(getJwt(), __API_URL__ + '/add', {
       method: 'GET',
       headers: setHeaders(),
     });
@@ -165,7 +162,7 @@ export const DBUserSignIn = async (signInEventModel: SignInEventModel): Promise<
       await new Promise((resolve) => setTimeout(resolve, FetchHelper.debugDelay));
     }
 
-    const response = await fetch(EnvConfig.apiRoot + '/api/user/signin', {
+    const response = await fetch(__API_URL__ + '/user/signin', {
       method: 'POST',
       body: body,
       headers: setHeaders(),
@@ -195,15 +192,11 @@ export const DBSaveUser = async (user: UserModel): Promise<UserModel> => {
     const body: string = JSON.stringify(user);
     console.info('Body: /user/saveuser', body);
 
-    const response = await FetchHelper.fetchWithToken(
-      getJwt(),
-      EnvConfig.apiRoot + '/api/user/saveuser',
-      {
-        method: 'PUT',
-        body: body,
-        headers: setHeaders(),
-      },
-    );
+    const response = await FetchHelper.fetchWithToken(getJwt(), __API_URL__ + '/user/saveuser', {
+      method: 'PUT',
+      body: body,
+      headers: setHeaders(),
+    });
 
     console.info('Response: /user/saveuser', response);
 
@@ -234,7 +227,7 @@ export const DBSaveFeedback = async (feedback: FeedbackModel): Promise<SecureStr
 
     const response = await FetchHelper.fetchWithToken(
       getJwt(),
-      EnvConfig.apiRoot + '/api/user/savefeedback',
+      __API_URL__ + '/user/savefeedback',
       {
         method: 'POST',
         body: body,
@@ -274,7 +267,7 @@ export const DBCheckAccessCode = async (
 
     const response = await FetchHelper.fetchWithToken(
       getJwt(),
-      EnvConfig.apiRoot + '/api/election/checkaccesscode?' + queryParams.toString(),
+      __API_URL__ + '/election/checkaccesscode?' + queryParams.toString(),
       {
         method: 'GET',
         headers: setHeaders(),
