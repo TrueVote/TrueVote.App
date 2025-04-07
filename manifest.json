@@ -9,8 +9,30 @@
       "type": "image/svg+xml"
     }
   ],
+  "shortcuts": [],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "url": "url"
+    }
+  },
   "start_url": "/",
   "display": "standalone",
   "background_color": "#34A26B",
-  "theme_color": "#5E77B3"
+  "theme_color": "#5E77B3",
+  "protocol_handlers": [
+    {
+      "protocol": "web+truevote",
+      "url": "/%s"
+    }
+  ],
+  "url_handlers": [
+    {
+      "origin": "https://app.truevote.org",
+      "patterns": ["https://app.truevote.org/*"]
+    }
+  ],
+  "capture_links": "existing_client_event",
+  "id": "com.truevote.app"
 }

@@ -281,11 +281,7 @@ export const BallotView: FC = () => {
                   <Table.Tr>
                     <Table.Td className={classes.tdRight}>Timestamp Id:</Table.Td>
                     <Table.Td>
-                      {ballotHash.TimestampId ? (
-                        ballotHash.TimestampId
-                      ) : (
-                        <span className={classes.textAlert}>Pending</span>
-                      )}
+                      {ballotHash.TimestampId ?? <span className={classes.textAlert}>Pending</span>}
                     </Table.Td>
                   </Table.Tr>
                 </Table.Tbody>

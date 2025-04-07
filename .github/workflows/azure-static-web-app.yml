@@ -51,4 +51,4 @@ jobs:
           output_location: 'dist' # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
         env:
-          API_ROOT: https://api.truevote.org
+          API_ROOT: https://api.truevote.org/api

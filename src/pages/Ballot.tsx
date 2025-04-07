@@ -88,7 +88,7 @@ export const Ballot: FC = () => {
       election={election}
       electionBallot={electionBallot}
       navigate={navigate}
-      accessCodeProp={params.accessCode ? params.accessCode : ''}
+      accessCodeProp={params.accessCode ?? ''}
     />
   );
 };

@@ -23,7 +23,8 @@ module.exports = [
           jsx: true,
         },
         endOfLine: 'auto',
-        project: './tsconfig.json',
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        tsconfigRootDir: __dirname,
       },
     },
     rules: {

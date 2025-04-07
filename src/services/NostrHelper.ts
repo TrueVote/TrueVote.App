@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
-import { nip19, SimplePool } from 'nostr-tools';
-import { SubCloser } from 'nostr-tools/lib/types/abstract-pool';
 import {
   finalizeEvent,
   generateSecretKey,
   getEventHash,
   getPublicKey,
+  nip19,
+  SimplePool,
   validateEvent,
   VerifiedEvent,
   verifyEvent,
-} from 'nostr-tools/pure';
+} from 'nostr-tools';
+import { SubCloser } from 'nostr-tools/lib/types/abstract-pool';
 import React from 'react';
 
 const hexchars: string = '0123456789abcdef';
