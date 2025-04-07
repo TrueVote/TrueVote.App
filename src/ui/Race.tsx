@@ -31,7 +31,10 @@ const RaceGroup: React.FC<{
   avatarCount: number;
   onSelectionChange: () => void;
 }): JSX.Element => {
-  const [values, setValues] = useState<string[]>([]);
+  const [values, setValues] = useState<string[]>(() => {
+    // Initialize values from the race's Candidates array
+    return race.Candidates?.filter((c) => c.Selected).map((c) => c.Name) || [];
+  });
   const [resetTrigger, setResetTrigger] = useState(0);
 
   const maxNumberOfChoices = Number(race.MaxNumberOfChoices) || 0;
@@ -52,7 +55,13 @@ const RaceGroup: React.FC<{
 
   const handleChange = (selected: string[]): void => {
     if (maxNumberOfChoices > 0) {
-      setValues(selected.slice(0, maxNumberOfChoices));
+      const newValues = selected.slice(0, maxNumberOfChoices);
+      setValues(newValues);
+
+      // Update the race's Candidates array to match the selected values
+      race.Candidates?.forEach((candidate: CandidateModel) => {
+        candidate.Selected = newValues.includes(candidate.Name);
+      });
     }
     onSelectionChange();
   };
@@ -69,6 +78,12 @@ const RaceGroup: React.FC<{
     }
 
     candidate.Selected = isChecked;
+    // Update local state to match
+    if (isChecked) {
+      setValues((prev) => [...prev, candidate.Name]);
+    } else {
+      setValues((prev) => prev.filter((v) => v !== candidate.Name));
+    }
     onSelectionChange();
   };
 
