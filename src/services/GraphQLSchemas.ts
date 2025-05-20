@@ -135,7 +135,7 @@ export const electionResultsByIdQuery = gql`
       ElectionId
       TotalBallots
       TotalBallotsHashed
-      BallotIds {
+      PaginatedBallotIds {
         Items {
           BallotId
           DateCreated
@@ -163,7 +163,7 @@ export const electionResultsByIdSubscription = gql`
       ElectionId
       TotalBallots
       TotalBallotsHashed
-      BallotIds {
+      PaginatedBallotIds {
         Items {
           BallotId
           DateCreated
