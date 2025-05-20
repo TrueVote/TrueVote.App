@@ -81,7 +81,7 @@ export const nostrKeyKeyHandler: (e: React.ChangeEvent<HTMLInputElement>) => {
       return { error, message, valid };
     } else {
       // Attempt to decode to detect errors
-      const decoded: nip19.DecodeResult = nip19.decode(val);
+      const decoded = nip19.decode(val) as { type: 'npub' | 'nsec'; data: string | Uint8Array };
       console.info(decoded);
 
       if (decoded.type === 'npub') {
@@ -134,7 +134,7 @@ export const getNostrProfileInfo: any = async (
   nostrPublicRelays: string[],
   nostrPrivateRelays: string[],
 ): Promise<NostrProfile | undefined> => {
-  const pubKey: any = nip19.decode(npub);
+  const pubKey = nip19.decode(npub) as { type: 'npub'; data: string };
   const nprofile: any = nip19.nprofileEncode({ pubkey: pubKey.data, relays: nostrPrivateRelays });
   const { type, data } = nip19.decode(nprofile);
   console.info('Data', data);
@@ -266,7 +266,7 @@ const signProfile: any = async (
   nsec: string,
   profile: NostrProfile,
 ): Promise<VerifiedEvent | null> => {
-  const pubKey: nip19.DecodeResult = nip19.decode(npub);
+  const pubKey = nip19.decode(npub) as { type: 'npub'; data: string };
 
   // Create a Kind 0 event to create the profile
   const event: any = {
@@ -296,10 +296,9 @@ const signProfile: any = async (
 
   let finalEvent: VerifiedEvent;
   try {
-    const privKey: nip19.DecodeResult = nip19.decode(nsec);
-    const privKeyArray: Uint8Array = privKey.data as Uint8Array;
-    console.info('signProfile keys', nsec, npub, privKey, privKeyArray);
-    finalEvent = finalizeEvent(event, privKeyArray);
+    const privKey: Uint8Array = nip19.decode(nsec).data as Uint8Array;
+    console.info('signProfile keys', nsec, npub, privKey);
+    finalEvent = finalizeEvent(event, privKey);
   } catch (e: any) {
     console.error('finalizeEvent->Signature Error', e);
     return null;
@@ -358,7 +357,7 @@ export const signEvent: any = async (
   content: string,
   createdAt: string,
 ): Promise<string> => {
-  const privKey: nip19.DecodeResult = nip19.decode(nsec);
+  const privKey = nip19.decode(nsec) as { type: 'nsec'; data: Uint8Array };
   const privKeyArray: Uint8Array = privKey.data as Uint8Array;
   const pubKey: any = getPublicKey(privKeyArray);
   console.info('signEvent keys', nsec, npub, pubKey, privKey, privKeyArray);
@@ -422,7 +421,7 @@ export const signEvent: any = async (
 };
 
 export const npubfromnsec: any = (nsec: string): string => {
-  const privKey: nip19.DecodeResult = nip19.decode(nsec);
+  const privKey = nip19.decode(nsec) as { type: 'nsec'; data: Uint8Array };
   const privKeyArray: Uint8Array = privKey.data as Uint8Array;
   const pubKey: any = getPublicKey(privKeyArray);
   const npub: string = nip19.npubEncode(pubKey);
