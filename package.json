@@ -38,7 +38,7 @@
     "@mantine/hooks": "^8.0.1",
     "@mantine/modals": "^8.0.1",
     "@mantine/notifications": "^8.0.1",
-    "axios": "^1.12.0",
+    "axios": "^1.13.5",
     "graphql": "^16.11.0",
     "graphql-ws": "^6.0.5",
     "jspdf": "^4.1.0",
