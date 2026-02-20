@@ -41,7 +41,7 @@
     "axios": "^1.13.5",
     "graphql": "^16.11.0",
     "graphql-ws": "^6.0.5",
-    "jspdf": "^4.1.0",
+    "jspdf": "^4.2.0",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "nostr-tools": "^2.13.0",
